@@ -2,3 +2,7 @@
   border: 1px solid black;
   margin-top: 20px;
 }
+
+.enabled {
+  border: 3px solid blue;
+}

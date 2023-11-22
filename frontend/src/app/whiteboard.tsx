@@ -1,13 +1,11 @@
 'use client'
 
-import Image from 'next/image'
 import styles from './whiteboard.module.css'
 
 import { useEffect, useState, useRef } from 'react';
 
 export default function Whiteboard(props: { image: any | undefined, draw: any, enable: boolean }) {
     const [ctx, setCtx] = useState<any>();
-    const [state, setState] = useState<string>();
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const CANVAS_SIZE = 500;
 
@@ -18,7 +16,6 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
     useEffect(() => {
         if (canvasRef && canvasRef.current) {
             setCtx(canvasRef.current.getContext('2d'));
-            //var ctx = canvasRef.current.getContext('2d');
             var pos = { x: 0, y: 0 };
 
             if (props.enable) {
@@ -68,14 +65,6 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
         if (ctx) {
             props.draw(ctx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE).data);
         }
-
-        // if (canvasRef && canvasRef.current) {
-        //     let canvasContext = canvasRef.current.getContext("2d")
-
-        //     if (canvasContext) {
-        //         props.draw(canvasContext.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE).data);
-        //     }
-        // }
     }
 
     function load() {
@@ -84,29 +73,12 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
 
             ctx.putImageData(new ImageData(array, 500, 500), 0, 0);
         }
-
-        // if (canvasRef && canvasRef.current) {
-        //     let canvasContext = canvasRef.current.getContext("2d")
-
-        //     if (canvasContext && props.image) {
-        //         console.log(props.image);
-        //         console.log("^");
-
-        //         var array = new Uint8ClampedArray(props.image);
-
-        //         canvasContext.putImageData(new ImageData(array, 500, 500), 0, 0);
-        //     } else {
-        //         console.log("error");
-        //     }
-        // }
     }
 
     return (
         <>
             {props.enable ? "enabled" : "disabled"}
-            <canvas className={styles.canvas} ref={canvasRef} width={CANVAS_SIZE} height={CANVAS_SIZE} />
-            <button onClick={save}>save</button>
-            <button onClick={load}>load</button>
+            <canvas className={`${styles.canvas} ${props.enable ? styles.enabled : ''}`} ref={canvasRef} width={CANVAS_SIZE} height={CANVAS_SIZE} />
         </>
     )
 }

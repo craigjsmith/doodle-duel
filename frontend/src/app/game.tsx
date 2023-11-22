@@ -96,32 +96,28 @@ const GameComponent = () => {
 
   return (
     <>
-      <h1 className={styles.title}>Pictionary!</h1>
+      <h1 className={styles.title}>Doodle Duel!</h1>
+      <p>{JSON.stringify(gameState)}</p>
 
-      <h2>turn: {gameState?.players[gameState.turn]}</h2>
-
-      {console.log("turn: " + gameState?.players[gameState.turn])}
-
-      <h2>{JSON.stringify(gameState)}</h2>
-
-      <h2>Socket is {isConnected ? "connected" : "not connected"}</h2>
-
-      <input type="text" onChange={(event) => { setUsername(event.target.value) }}></input>
-      <button onClick={() => {
-        login();
-        setLoggedIn(true);
-      }}>Login</button>
-
-      <h2>Secret word: {gameState ? gameState.word : undefined}</h2>
-
-      <input type="text" onChange={(event) => { setWordGuess(event.target.value) }}></input>
-      <button onClick={() => {
-        guess();
-      }}>guess</button>
-
-      <br />
-
-      {loggedIn ? <Whiteboard image={image} draw={draw} enable={isItMyTurn()} /> : undefined}
+      {loggedIn ?
+        <>
+          <Whiteboard image={image} draw={draw} enable={isItMyTurn()} />
+          <br />
+          <input type="text" onChange={(event) => { setWordGuess(event.target.value) }}></input>
+          <button onClick={() => {
+            guess();
+          }}>guess</button>
+        </>
+        :
+        <>
+          <h3>Login</h3>
+          <input type="text" onChange={(event) => { setUsername(event.target.value) }}></input>
+          <button onClick={() => {
+            login();
+            setLoggedIn(true);
+          }}>Login</button>
+        </>
+      }
     </>
   )
 }
