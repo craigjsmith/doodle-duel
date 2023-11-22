@@ -42,12 +42,14 @@ io.on('connection', (socket) => {
 
         var guess = msg; // TODO: sanitize
 
-        let gameState = await db.getGameState(true);
-        let secretWord = gameState.word.toString();
+        if (guess) {
+            let gameState = await db.getGameState(true);
+            let secretWord = gameState.word.toString();
 
-        if (!secretWord.localeCompare(guess.toLowerCase())) {
-            // Correct answer
-            setNewWord();
+            if (!secretWord.localeCompare(guess.toLowerCase())) {
+                // Correct answer
+                setNewWord();
+            }
         }
     }
 
