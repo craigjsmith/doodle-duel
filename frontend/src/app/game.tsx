@@ -23,6 +23,7 @@ const GameComponent = () => {
   const [image, setImage] = useState<any>();
   const [wordGuess, setWordGuess] = useState<string>();
   const [username, setUsername] = useState<string>();
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
   useEffect(() => {
     console.log("drawing changed");
@@ -97,8 +98,6 @@ const GameComponent = () => {
     <>
       <h1 className={styles.title}>Pictionary!</h1>
 
-      <h2>{isItMyTurn() ? "It is your turn" : "Not your turn"}</h2>
-
       <h2>turn: {gameState?.players[gameState.turn]}</h2>
 
       {console.log("turn: " + gameState?.players[gameState.turn])}
@@ -110,6 +109,7 @@ const GameComponent = () => {
       <input type="text" onChange={(event) => { setUsername(event.target.value) }}></input>
       <button onClick={() => {
         login();
+        setLoggedIn(true);
       }}>Login</button>
 
       <h2>Secret word: {gameState ? gameState.word : undefined}</h2>
@@ -121,7 +121,7 @@ const GameComponent = () => {
 
       <br />
 
-      <Whiteboard image={image} draw={draw} username={username} currentArtist={gameState?.players[gameState.turn]} />
+      {loggedIn ? <Whiteboard image={image} draw={draw} enable={isItMyTurn()} /> : undefined}
     </>
   )
 }

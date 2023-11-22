@@ -5,30 +5,15 @@ import styles from './whiteboard.module.css'
 
 import { useEffect, useState, useRef } from 'react';
 
-export default function Whiteboard(props: { image: any | undefined, draw: any, username: string, currentArtist: string }) {
+export default function Whiteboard(props: { image: any | undefined, draw: any, enable: boolean }) {
     const [ctx, setCtx] = useState<any>();
     const [state, setState] = useState<string>();
-    const [enableDrawing, setEnableDrawing] = useState<boolean>(false);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const CANVAS_SIZE = 500;
 
-    //var img: any;
-
     useEffect(() => {
-        if (props.username?.localeCompare(props.currentArtist)) {
-            console.log("Not my turn");
-            load();
-            setEnableDrawing(false);
-        } else {
-            setEnableDrawing(true);
-        }
-    }, [props.image]);
-
-    // useEffect(() => {
-    //     if (enableDrawing) {
-    //         setInterval(save, 1000);
-    //     }
-    // }, [enableDrawing]);
+        load();
+    }, [props.image])
 
     useEffect(() => {
         if (canvasRef && canvasRef.current) {
@@ -36,7 +21,7 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, u
             //var ctx = canvasRef.current.getContext('2d');
             var pos = { x: 0, y: 0 };
 
-            if (enableDrawing) {
+            if (props.enable) {
                 canvasRef.current.addEventListener('mousemove', draw);
                 canvasRef.current.addEventListener('mousedown', setPosition);
                 canvasRef.current.addEventListener('mouseenter', setPosition);
@@ -118,7 +103,7 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, u
 
     return (
         <>
-            {enableDrawing ? "enabled" : "disabled"}
+            {props.enable ? "enabled" : "disabled"}
             <canvas className={styles.canvas} ref={canvasRef} width={CANVAS_SIZE} height={CANVAS_SIZE} />
             <button onClick={save}>save</button>
             <button onClick={load}>load</button>
