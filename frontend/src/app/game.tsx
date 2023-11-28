@@ -107,10 +107,14 @@ const GameComponent = () => {
         <>
           <Whiteboard image={image} draw={draw} enable={isItMyTurn()} />
           <br />
-          <input type="text" onChange={(event) => { setWordGuess(event.target.value) }}></input>
-          <button onClick={() => {
-            guess();
-          }}>guess</button>
+          {!isItMyTurn() ?
+            <>
+              <input type="text" onChange={(event) => { setWordGuess(event.target.value) }}></input>
+              <button onClick={() => {
+                guess();
+              }}>guess</button>
+            </>
+            : undefined}
         </>
         :
         <>
