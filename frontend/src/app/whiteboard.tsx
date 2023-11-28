@@ -69,9 +69,18 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
 
     function load() {
         if (ctx) {
-            var array = new Uint8ClampedArray(props.image);
+            if (!props.image) {
+                clear();
+            } else {
+                var array = new Uint8ClampedArray(props.image);
+                ctx.putImageData(new ImageData(array, 500, 500), 0, 0);
+            }
+        }
+    }
 
-            ctx.putImageData(new ImageData(array, 500, 500), 0, 0);
+    function clear() {
+        if (ctx) {
+            ctx.clearRect(0, 0, 500, 500);
         }
     }
 

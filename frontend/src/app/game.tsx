@@ -56,11 +56,16 @@ const GameComponent = () => {
       setImage(img);
     }
 
+    function onClear() {
+      setImage(null);
+    }
+
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
     socket.on('WORD', onWord);
     socket.on('GAME', onGame);
     socket.on('DRAW', onDraw);
+    socket.on('CLEAR', onClear);
 
     return () => {
       socket.off('connect', onConnect);
