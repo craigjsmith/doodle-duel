@@ -58,4 +58,20 @@ function setPlayers(value) {
     });
 }
 
-module.exports = { getGameState, setWord, setPlayers };
+function setTurn(value) {
+    return new Promise((resolve, reject) => {
+
+        const query = 'UPDATE game SET turn = ? WHERE id = ?';
+        const values = [value, 1];
+
+        connection.query(query, values, (err, rows) => {
+            if (err) {
+                return reject(err);
+            }
+
+            return resolve(rows[0]);
+        })
+    });
+}
+
+module.exports = { getGameState, setWord, setPlayers, setTurn };

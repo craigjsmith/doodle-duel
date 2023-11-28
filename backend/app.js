@@ -48,7 +48,9 @@ io.on('connection', (socket) => {
 
             if (!secretWord.localeCompare(guess.toLowerCase())) {
                 // Correct answer
-                setNewWord();
+                await setNextPlayerAsArtist();
+                await setNewWord();
+                await emitGameState();
             }
         }
     }
@@ -80,7 +82,15 @@ io.on('connection', (socket) => {
 const setNewWord = async () => {
     let newWord = WORDS[Math.floor(Math.random() * WORDS.length)];
     db.setWord(newWord);
-    emitGameState();
+}
+
+const setNextPlayerAsArtist = async () => {
+    let gameState = await db.getGameState(true);
+    let currentArtist = gameState.turn;
+    let players = JSON.parse(gameState.players);
+    let numberOfPlayers = players.length;
+    let nextArtist = (currentArtist + 1) % numberOfPlayers;
+    db.setTurn(nextArtist);
 }
 
 const emitGameState = async () => {
