@@ -85,9 +85,6 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
     }
 
     return (
-        <>
-            {props.enable ? "enabled" : "disabled"}
-            <canvas className={`${styles.canvas} ${props.enable ? styles.enabled : ''}`} ref={canvasRef} width={CANVAS_SIZE} height={CANVAS_SIZE} />
-        </>
+        <canvas className={`${styles.canvas} ${props.enable ? styles.enabled : ''}`} ref={canvasRef} width={CANVAS_SIZE} height={CANVAS_SIZE} />
     )
 }

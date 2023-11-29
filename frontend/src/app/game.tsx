@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 interface GameState {
   id: number;
   word: string;
+  previousWord: string;
   solved: boolean;
   players: Array<string>;
   turn: number;
@@ -24,6 +25,7 @@ const GameComponent = () => {
   const [wordGuess, setWordGuess] = useState<string>();
   const [username, setUsername] = useState<string>();
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const [revealWord, setRevealWord] = useState<boolean>(false);
 
   useEffect(() => {
     console.log("drawing changed");
@@ -31,8 +33,12 @@ const GameComponent = () => {
   }, [image]);
 
   useEffect(() => {
-    setImage(null);
-  }, [gameState?.word])
+    setRevealWord(true);
+    setTimeout(() => {
+      setImage(null);
+      setRevealWord(false);
+    }, 2000);
+  }, [gameState?.previousWord])
 
   useEffect(() => {
     socket.connect();
@@ -45,15 +51,6 @@ const GameComponent = () => {
       setIsConnected(false);
     }
 
-    function onWord(msg: string) {
-      setGameState({ id: 1, word: msg });
-    }
-
-    function onGame(msg: any) {
-      setGameState({ id: msg.id, word: msg.word, solved: msg.solved, players: JSON.parse(msg.players), turn: msg.turn });
-      //setGameState(msg);
-    }
-
     function onDraw(img: any) {
       console.log("GOT DRAWING");
       console.log(img);
@@ -62,7 +59,6 @@ const GameComponent = () => {
 
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
-    socket.on('WORD', onWord);
     socket.on('GAME', onGame);
     socket.on('DRAW', onDraw);
 
@@ -70,11 +66,10 @@ const GameComponent = () => {
       socket.off('connect', onConnect);
       socket.off('disconnect', onDisconnect);
     };
-  }, []);
+  }, [gameState]);
 
   useEffect(() => {
     console.log(gameState);
-
   }, [gameState]);
 
   const guess = async () => {
@@ -98,6 +93,10 @@ const GameComponent = () => {
     return false;
   }
 
+  function onGame(msg: any) {
+    setGameState({ id: msg.id, word: msg.word, previousWord: msg.previousWord, solved: msg.solved, players: JSON.parse(msg.players), turn: msg.turn });
+  }
+
   return (
     <>
       <h1 className={styles.title}>Doodle Duel!</h1>
@@ -105,6 +104,7 @@ const GameComponent = () => {
 
       {loggedIn ?
         <>
+          {revealWord ? <h1>{gameState?.previousWord}</h1> : undefined}
           <Whiteboard image={image} draw={draw} enable={isItMyTurn()} />
           <br />
           {!isItMyTurn() ?

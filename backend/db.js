@@ -42,6 +42,22 @@ function setWord(value) {
     });
 }
 
+function setPreviousWord(value) {
+    return new Promise((resolve, reject) => {
+
+        const query = 'UPDATE game SET previousWord = ? WHERE id = ?';
+        const values = [value, 1];
+
+        connection.query(query, values, (err, rows) => {
+            if (err) {
+                return reject(err);
+            }
+
+            return resolve(rows[0]);
+        })
+    });
+}
+
 function setPlayers(value) {
     return new Promise((resolve, reject) => {
 
@@ -74,4 +90,4 @@ function setTurn(value) {
     });
 }
 
-module.exports = { getGameState, setWord, setPlayers, setTurn };
+module.exports = { getGameState, setWord, setPreviousWord, setPlayers, setTurn };

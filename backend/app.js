@@ -80,8 +80,16 @@ io.on('connection', (socket) => {
 });
 
 const setNewWord = async () => {
-    let newWord = WORDS[Math.floor(Math.random() * WORDS.length)];
-    db.setWord(newWord);
+    let gameState = await db.getGameState(true);
+    let previousWord = gameState.word;
+    let newWord = previousWord
+
+    while (!previousWord.localeCompare(newWord)) {
+        newWord = WORDS[Math.floor(Math.random() * WORDS.length)];
+    }
+
+    await db.setWord(newWord);
+    await db.setPreviousWord(previousWord);
 }
 
 const setNextPlayerAsArtist = async () => {
