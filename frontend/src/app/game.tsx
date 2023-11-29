@@ -15,6 +15,7 @@ interface GameState {
   solved: boolean;
   players: Array<string>;
   turn: number;
+  guesses: Array<string>;
 }
 
 const GameComponent = () => {
@@ -62,7 +63,7 @@ const GameComponent = () => {
   }
 
   function onGame(msg: any) {
-    setGameState({ id: msg.id, word: msg.word, previousWord: msg.previousWord, solved: msg.solved, players: JSON.parse(msg.players), turn: msg.turn });
+    setGameState({ id: msg.id, word: msg.word, previousWord: msg.previousWord, solved: msg.solved, players: JSON.parse(msg.players), turn: msg.turn, guesses: JSON.parse(msg.guesses) });
   }
 
   function onDraw(img: any) {

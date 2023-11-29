@@ -74,6 +74,22 @@ function setPlayers(value) {
     });
 }
 
+function setGuesses(value) {
+    return new Promise((resolve, reject) => {
+
+        const query = 'UPDATE game SET guesses = ? WHERE id = ?';
+        const values = [value, 1];
+
+        connection.query(query, values, (err, rows) => {
+            if (err) {
+                return reject(err);
+            }
+
+            return resolve(rows[0]);
+        })
+    });
+}
+
 function setTurn(value) {
     return new Promise((resolve, reject) => {
 
@@ -90,4 +106,4 @@ function setTurn(value) {
     });
 }
 
-module.exports = { getGameState, setWord, setPreviousWord, setPlayers, setTurn };
+module.exports = { getGameState, setWord, setPreviousWord, setPlayers, setGuesses, setTurn };

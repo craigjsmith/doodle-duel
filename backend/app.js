@@ -64,14 +64,22 @@ async function onGuess(msg) {
 
     if (guess) {
         let gameState = await db.getGameState(true);
-        let secretWord = gameState.word.toString();
 
+        // Add guess to list of guesses
+        let guesses = JSON.parse(gameState.guesses) ?? [];
+        guesses.push(guess);
+        db.setGuesses(JSON.stringify(guesses));
+
+        // Check if guess is correct
+        let secretWord = gameState.word.toString();
         if (!secretWord.localeCompare(guess.toLowerCase())) {
             // Correct answer
+            db.setGuesses(JSON.stringify([]));
             await setNextPlayerAsArtist();
             await setNewWord();
-            await emitGameState();
         }
+
+        await emitGameState();
     }
 }
 
