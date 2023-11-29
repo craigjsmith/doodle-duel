@@ -8,6 +8,7 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
     const [ctx, setCtx] = useState<any>();
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const CANVAS_SIZE = 500;
+    var pos = { x: 0, y: 0 };
 
     useEffect(() => {
         load();
@@ -16,7 +17,6 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
     useEffect(() => {
         if (canvasRef && canvasRef.current) {
             setCtx(canvasRef.current.getContext('2d'));
-            var pos = { x: 0, y: 0 };
 
             if (props.enable) {
                 canvasRef.current.addEventListener('mousemove', draw);
@@ -27,39 +27,37 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
                 canvasRef.current.removeEventListener('mousemove', draw);
                 canvasRef.current.removeEventListener('mousedown', setPosition);
                 canvasRef.current.removeEventListener('mouseenter', setPosition);
-            }
-        }
-
-        function setPosition(e: any) {
-            var left = 0;
-            var top = 0;
-            if (canvasRef && canvasRef.current) {
-                left = canvasRef.current.getBoundingClientRect().left;
-                top = canvasRef.current.getBoundingClientRect().top;
-            }
-
-            pos.x = e.clientX - left;
-            pos.y = e.clientY - top;
-        }
-
-        function draw(e: any) {
-            if (e.buttons !== 1) return;
-
-            if (ctx) {
-                ctx.beginPath();
-
-                ctx.lineWidth = 5;
-                ctx.lineCap = 'round';
-                ctx.strokeStyle = '#0000ff';
-
-                ctx.moveTo(pos.x, pos.y); // from
-                setPosition(e);
-                ctx.lineTo(pos.x, pos.y); // to
-
-                ctx.stroke();
+                canvasRef.current.removeEventListener('mouseup', save);
             }
         }
     });
+
+    function setPosition(e: any) {
+        var left = 0;
+        var top = 0;
+        if (canvasRef && canvasRef.current) {
+            left = canvasRef.current.getBoundingClientRect().left;
+            top = canvasRef.current.getBoundingClientRect().top;
+        }
+        pos.x = e.clientX - left;
+        pos.y = e.clientY - top;
+    }
+
+    function draw(e: any) {
+        if (e.buttons !== 1) return;
+
+        ctx?.beginPath();
+
+        ctx.lineWidth = 5;
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = '#0000ff';
+
+        ctx?.moveTo(pos.x, pos.y); // from
+        setPosition(e);
+        ctx?.lineTo(pos.x, pos.y); // to
+
+        ctx?.stroke();
+    }
 
     function save() {
         if (ctx) {
@@ -68,20 +66,16 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
     }
 
     function load() {
-        if (ctx) {
-            if (!props.image) {
-                clear();
-            } else {
-                var array = new Uint8ClampedArray(props.image);
-                ctx.putImageData(new ImageData(array, 500, 500), 0, 0);
-            }
+        if (!props.image) {
+            clear();
+        } else {
+            var array = new Uint8ClampedArray(props.image);
+            ctx?.putImageData(new ImageData(array, 500, 500), 0, 0);
         }
     }
 
     function clear() {
-        if (ctx) {
-            ctx.clearRect(0, 0, 500, 500);
-        }
+        ctx?.clearRect(0, 0, 500, 500);
     }
 
     return (

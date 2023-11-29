@@ -37,36 +37,6 @@ io.on('connection', (socket) => {
     console.log('a user connected: ' + socket.id);
     emitGameState();
 
-    async function onGuess(msg) {
-        console.log('SOCKET MESSAGE: ' + msg);
-
-        var guess = msg; // TODO: sanitize
-
-        if (guess) {
-            let gameState = await db.getGameState(true);
-            let secretWord = gameState.word.toString();
-
-            if (!secretWord.localeCompare(guess.toLowerCase())) {
-                // Correct answer
-                await setNextPlayerAsArtist();
-                await setNewWord();
-                await emitGameState();
-            }
-        }
-    }
-
-    async function onDraw(msg) {
-        io.emit('DRAW', msg);
-    }
-
-    async function onLogin(msg) {
-        console.log('SOCKET MESSAGE (DRAW): ' + msg);
-        SocketIdUsernameMap[socket.id] = msg;
-        console.log(SocketIdUsernameMap);
-        db.setPlayers(JSON.stringify(Object.values(SocketIdUsernameMap)));
-        emitGameState();
-    }
-
     socket.on('guess', onGuess);
     socket.on('NEWDRAW', onDraw);
     socket.on('LOGIN', onLogin);
@@ -77,7 +47,37 @@ io.on('connection', (socket) => {
         db.setPlayers(JSON.stringify(Object.values(SocketIdUsernameMap)));
         emitGameState();
     });
+
+    async function onLogin(msg) {
+        console.log('SOCKET MESSAGE (DRAW): ' + msg);
+        SocketIdUsernameMap[socket.id] = msg;
+        console.log(SocketIdUsernameMap);
+        db.setPlayers(JSON.stringify(Object.values(SocketIdUsernameMap)));
+        emitGameState();
+    }
 });
+
+async function onGuess(msg) {
+    console.log('SOCKET MESSAGE: ' + msg);
+
+    var guess = msg; // TODO: sanitize
+
+    if (guess) {
+        let gameState = await db.getGameState(true);
+        let secretWord = gameState.word.toString();
+
+        if (!secretWord.localeCompare(guess.toLowerCase())) {
+            // Correct answer
+            await setNextPlayerAsArtist();
+            await setNewWord();
+            await emitGameState();
+        }
+    }
+}
+
+async function onDraw(msg) {
+    io.emit('DRAW', msg);
+}
 
 const setNewWord = async () => {
     let gameState = await db.getGameState(true);

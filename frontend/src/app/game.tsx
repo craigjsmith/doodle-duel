@@ -3,7 +3,6 @@
 import { socket } from './socket';
 import dynamic from 'next/dynamic'
 
-import Image from 'next/image'
 import styles from './page.module.css'
 import Whiteboard from './whiteboard';
 
@@ -19,7 +18,6 @@ interface GameState {
 }
 
 const GameComponent = () => {
-  const [isConnected, setIsConnected] = useState(socket.connected);
   const [gameState, setGameState] = useState<GameState>();
   const [image, setImage] = useState<any>();
   const [wordGuess, setWordGuess] = useState<string>();
@@ -28,11 +26,7 @@ const GameComponent = () => {
   const [revealWord, setRevealWord] = useState<boolean>(false);
 
   useEffect(() => {
-    console.log("drawing changed");
-    console.log(image);
-  }, [image]);
-
-  useEffect(() => {
+    // Reveal solution when round ends
     setRevealWord(true);
     setTimeout(() => {
       setImage(null);
@@ -42,34 +36,8 @@ const GameComponent = () => {
 
   useEffect(() => {
     socket.connect();
-
-    function onConnect() {
-      setIsConnected(true);
-    }
-
-    function onDisconnect() {
-      setIsConnected(false);
-    }
-
-    function onDraw(img: any) {
-      console.log("GOT DRAWING");
-      console.log(img);
-      setImage(img);
-    }
-
-    socket.on('connect', onConnect);
-    socket.on('disconnect', onDisconnect);
     socket.on('GAME', onGame);
     socket.on('DRAW', onDraw);
-
-    return () => {
-      socket.off('connect', onConnect);
-      socket.off('disconnect', onDisconnect);
-    };
-  }, [gameState]);
-
-  useEffect(() => {
-    console.log(gameState);
   }, [gameState]);
 
   const guess = async () => {
@@ -95,6 +63,12 @@ const GameComponent = () => {
 
   function onGame(msg: any) {
     setGameState({ id: msg.id, word: msg.word, previousWord: msg.previousWord, solved: msg.solved, players: JSON.parse(msg.players), turn: msg.turn });
+  }
+
+  function onDraw(img: any) {
+    console.log("GOT DRAWING");
+    console.log(img);
+    setImage(img);
   }
 
   return (
