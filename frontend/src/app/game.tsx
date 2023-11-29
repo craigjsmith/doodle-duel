@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic'
 
 import styles from './page.module.css'
 import Whiteboard from './whiteboard';
+import Timer from './timer';
 
 import { useEffect, useState } from 'react';
 
@@ -16,6 +17,7 @@ interface GameState {
   players: Array<string>;
   turn: number;
   guesses: Array<string>;
+  endTimestamp: number;
 }
 
 const GameComponent = () => {
@@ -63,7 +65,7 @@ const GameComponent = () => {
   }
 
   function onGame(msg: any) {
-    setGameState({ id: msg.id, word: msg.word, previousWord: msg.previousWord, solved: msg.solved, players: JSON.parse(msg.players), turn: msg.turn, guesses: JSON.parse(msg.guesses) });
+    setGameState({ id: msg.id, word: msg.word, previousWord: msg.previousWord, solved: msg.solved, players: JSON.parse(msg.players), turn: msg.turn, guesses: JSON.parse(msg.guesses), endTimestamp: msg.endTimestamp });
   }
 
   function onDraw(img: any) {
@@ -80,6 +82,7 @@ const GameComponent = () => {
       {loggedIn ?
         <>
           {revealWord ? <h1>{gameState?.previousWord}</h1> : undefined}
+          <Timer endTimestamp={gameState?.endTimestamp ?? 0} duration={60} />
           <Whiteboard image={image} draw={draw} enable={isItMyTurn()} />
           <br />
           {!isItMyTurn() ?

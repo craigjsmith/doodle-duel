@@ -75,8 +75,14 @@ async function onGuess(msg) {
         if (!secretWord.localeCompare(guess.toLowerCase())) {
             // Correct answer
             db.setGuesses(JSON.stringify([]));
+
             await setNextPlayerAsArtist();
             await setNewWord();
+
+            var date = new Date();
+            // current time + 60 seconds + 5 second grace
+            date.setTime(date.getTime() + 60 * 1000 + 5000);
+            db.setRoundEndTimestamp(date.getTime());
         }
 
         await emitGameState();
