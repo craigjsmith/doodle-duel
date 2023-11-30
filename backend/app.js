@@ -20,8 +20,13 @@ const io = new Server(server, {
 
 const WORDS = ["monkey", "dog", "cat", "lion", "tiger", "fish", "seal"];
 
+const ROUND_DURATION = 65000;
+
 // key: socket id, value: username
 var SocketIdUsernameMap = {};
+
+// key: game id, value: timeout reference
+var RoundEndTimeoutMap = {};
 
 // Middleware
 app.use(bodyParser.json())
@@ -74,23 +79,39 @@ async function onGuess(msg) {
         let secretWord = gameState.word.toString();
         if (!secretWord.localeCompare(guess.toLowerCase())) {
             // Correct answer
-            db.setGuesses(JSON.stringify([]));
-
-            await setNextPlayerAsArtist();
-            await setNewWord();
-
-            var date = new Date();
-            // current time + 60 seconds + 5 second grace
-            date.setTime(date.getTime() + 60 * 1000 + 5000);
-            db.setRoundEndTimestamp(date.getTime());
+            startNewRound();
+        } else {
+            await emitGameState();
         }
-
-        await emitGameState();
     }
 }
 
 async function onDraw(msg) {
     io.emit('DRAW', msg);
+}
+
+async function startNewRound() {
+    let gameState = await db.getGameState(true);
+
+    clearTimeout(RoundEndTimeoutMap[gameState.id]);
+    delete RoundEndTimeoutMap[gameState.id];
+
+    // Reset guess list
+    await db.setGuesses(JSON.stringify([]));
+
+    await setNextPlayerAsArtist();
+    await setNewWord();
+
+    var date = new Date();
+    date.setTime(date.getTime() + ROUND_DURATION);
+    await db.setRoundEndTimestamp(date.getTime());
+
+    await emitGameState();
+
+    RoundEndTimeoutMap[gameState.id] = setTimeout(() => {
+        console.log("FORCE ROUND END");
+        startNewRound();
+    }, ROUND_DURATION);
 }
 
 const setNewWord = async () => {
@@ -112,7 +133,7 @@ const setNextPlayerAsArtist = async () => {
     let players = JSON.parse(gameState.players);
     let numberOfPlayers = players.length;
     let nextArtist = (currentArtist + 1) % numberOfPlayers;
-    db.setTurn(nextArtist);
+    db.setTurn(nextArtist ?? null);
 }
 
 const emitGameState = async () => {
