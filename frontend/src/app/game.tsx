@@ -8,19 +8,22 @@ import Whiteboard from './whiteboard';
 import Timer from './timer';
 
 import { useEffect, useState } from 'react';
+import LobbyList from './lobby-list';
 
 interface GameState {
   id: number;
   word: string;
   previousWord: string;
   solved: boolean;
-  players: Array<string>;
+  players: any;
   turn: number;
   guesses: Array<string>;
   endTimestamp: number;
+  gameStarted: boolean;
 }
 
 const GameComponent = () => {
+  const [lobby, setLobby] = useState<number | null>(null);
   const [gameState, setGameState] = useState<GameState>();
   const [image, setImage] = useState<any>();
   const [wordGuess, setWordGuess] = useState<string>();
@@ -41,31 +44,40 @@ const GameComponent = () => {
     socket.connect();
     socket.on('GAME', onGame);
     socket.on('DRAW', onDraw);
-  }, [gameState]);
+  }, []);
 
   const guess = async () => {
-    socket.emit('guess', wordGuess);
+    socket.emit('guess', wordGuess, lobby);
   };
 
   const login = async () => {
-    socket.emit('LOGIN', username);
+    socket.emit('LOGIN', username, lobby);
   };
 
   const draw = async (img: any) => {
     console.log("sent to server:");
     console.log(img);
-    socket.emit('NEWDRAW', img);
+    socket.emit('NEWDRAW', img, lobby);
   };
 
   const isItMyTurn = () => {
     if (gameState) {
-      return !username?.localeCompare(gameState.players[gameState.turn]);
+
+      console.log(gameState);
+      console.log("players");
+      console.log(gameState.players);
+      console.log("turn");
+      console.log(gameState.turn);
+
+      return !username?.localeCompare(gameState.players[gameState.turn][1]);
+
     }
     return false;
   }
 
   function onGame(msg: any) {
-    setGameState({ id: msg.id, word: msg.word, previousWord: msg.previousWord, solved: msg.solved, players: JSON.parse(msg.players), turn: msg.turn, guesses: JSON.parse(msg.guesses), endTimestamp: msg.endTimestamp });
+    console.log(msg);
+    setGameState({ id: msg.id, word: msg.word, previousWord: msg.previousWord, solved: msg.solved, players: msg.players, turn: msg.turn, guesses: JSON.parse(msg.guesses), endTimestamp: msg.endTimestamp, gameStarted: msg.gameStarted });
   }
 
   function onDraw(img: any) {
@@ -79,10 +91,11 @@ const GameComponent = () => {
       <h1 className={styles.title}>Doodle Duel!</h1>
       <p>{JSON.stringify(gameState)}</p>
 
-      {loggedIn ?
+      {loggedIn && gameState ?
         <>
           {revealWord ? <h1>{gameState?.previousWord}</h1> : undefined}
-          <Timer endTimestamp={gameState?.endTimestamp ?? 0} duration={60} />
+          <LobbyList />
+          <Timer endTimestamp={gameState?.endTimestamp ?? 0} duration={10} />
           <Whiteboard image={image} draw={draw} enable={isItMyTurn()} />
           <br />
           {!isItMyTurn() ?
@@ -98,10 +111,13 @@ const GameComponent = () => {
         <>
           <h3>Login</h3>
           <input type="text" onChange={(event) => { setUsername(event.target.value) }}></input>
+          <input type="number" onChange={(event) => { setLobby(Number(event.target.value)) }}></input>
           <button onClick={() => {
             login();
             setLoggedIn(true);
           }}>Login</button>
+
+
         </>
       }
     </>

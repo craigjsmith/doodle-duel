@@ -6,6 +6,7 @@ const db = require('./db')
 const bodyParser = require('body-parser')
 const expressSanitizer = require('express-sanitizer');
 const { Server } = require("socket.io");
+const { LobbyBouncer } = require('./lobbyBouncer');
 
 const app = express()
 const server = createServer(app);
@@ -20,10 +21,17 @@ const io = new Server(server, {
 
 const WORDS = ["monkey", "dog", "cat", "lion", "tiger", "fish", "seal"];
 
-const ROUND_DURATION = 65000;
+const ROUND_DURATION = 10000/*65000*/;
 
-// key: socket id, value: username
-var SocketIdUsernameMap = {};
+let bouncer = new LobbyBouncer();
+
+/*
+{
+    '0' => Map { 'socketId' => 'username', ...},
+    ...
+}
+*/
+// var SocketIdUsernameMap = new Map();
 
 // key: game id, value: timeout reference
 var RoundEndTimeoutMap = {};
@@ -39,83 +47,80 @@ app.use(expressSanitizer())
 
 // Socket Server
 io.on('connection', (socket) => {
-    console.log('a user connected: ' + socket.id);
-    emitGameState();
-
     socket.on('guess', onGuess);
     socket.on('NEWDRAW', onDraw);
     socket.on('LOGIN', onLogin);
 
     socket.on('disconnect', () => {
-        delete SocketIdUsernameMap[socket.id];
-        console.log(SocketIdUsernameMap);
-        db.setPlayers(JSON.stringify(Object.values(SocketIdUsernameMap)));
-        emitGameState();
+        let lobby = bouncer.getLobby(socket.id);
+        bouncer.removeSocket(socket.id);
+        emitGameState(lobby);
     });
 
-    async function onLogin(msg) {
-        console.log('SOCKET MESSAGE (DRAW): ' + msg);
-        SocketIdUsernameMap[socket.id] = msg;
-        console.log(SocketIdUsernameMap);
-        db.setPlayers(JSON.stringify(Object.values(SocketIdUsernameMap)));
-        emitGameState();
+    async function onLogin(msg, id) {
+        bouncer.addSocket(socket, msg);
+        bouncer.joinLobby(socket.id, id);
+        emitGameState(id);
     }
 });
 
-async function onGuess(msg) {
+async function onGuess(msg, id) {
     console.log('SOCKET MESSAGE: ' + msg);
 
     var guess = msg; // TODO: sanitize
 
     if (guess) {
-        let gameState = await db.getGameState(true);
+        let gameState = await getGameState(id);
+
+        console.log("game state");
+        console.log(gameState);
 
         // Add guess to list of guesses
         let guesses = JSON.parse(gameState.guesses) ?? [];
         guesses.push(guess);
-        db.setGuesses(JSON.stringify(guesses));
+        db.setGuesses(id, JSON.stringify(guesses));
 
         // Check if guess is correct
         let secretWord = gameState.word.toString();
         if (!secretWord.localeCompare(guess.toLowerCase())) {
             // Correct answer
-            startNewRound();
+            startNewRound(id);
         } else {
-            await emitGameState();
+            await emitGameState(id);
         }
     }
 }
 
-async function onDraw(msg) {
-    io.emit('DRAW', msg);
+async function onDraw(msg, id) {
+    io.to(id).emit('DRAW', msg);
 }
 
-async function startNewRound() {
-    let gameState = await db.getGameState(true);
+async function startNewRound(id) {
+    // let gameState = await getGameState(id);
 
-    clearTimeout(RoundEndTimeoutMap[gameState.id]);
-    delete RoundEndTimeoutMap[gameState.id];
+    clearTimeout(RoundEndTimeoutMap[id]);
+    delete RoundEndTimeoutMap[id];
 
     // Reset guess list
-    await db.setGuesses(JSON.stringify([]));
+    await db.setGuesses(id, JSON.stringify([]));
 
-    await setNextPlayerAsArtist();
-    await setNewWord();
+    await setNextPlayerAsArtist(id);
+    await setNewWord(id);
 
     var date = new Date();
     date.setTime(date.getTime() + ROUND_DURATION);
-    await db.setRoundEndTimestamp(date.getTime());
+    await db.setRoundEndTimestamp(id, date.getTime());
 
-    await emitGameState();
+    await emitGameState(id);
 
-    RoundEndTimeoutMap[gameState.id] = setTimeout(() => {
+    RoundEndTimeoutMap[id] = setTimeout(() => {
         console.log("FORCE ROUND END");
-        startNewRound();
+        startNewRound(id);
     }, ROUND_DURATION);
 }
 
-const setNewWord = async () => {
-    let gameState = await db.getGameState(true);
+const setNewWord = async (id) => {
+    let gameState = await getGameState(id);
     let previousWord = gameState.word;
     let newWord = previousWord
 
@@ -123,23 +128,46 @@ const setNewWord = async () => {
         newWord = WORDS[Math.floor(Math.random() * WORDS.length)];
     }
 
-    await db.setWord(newWord);
-    await db.setPreviousWord(previousWord);
+    await db.setWord(id, newWord);
+    await db.setPreviousWord(id, previousWord);
 }
 
-const setNextPlayerAsArtist = async () => {
-    let gameState = await db.getGameState(true);
-    let currentArtist = gameState.turn;
-    let players = JSON.parse(gameState.players);
+const setNextPlayerAsArtist = async (id) => {
+    let gameState = await getGameState(id);
+    let players = gameState.players;
+
+    console.log("players: ");
+    console.log(players);
+
+    let currentArtistIndex = gameState.turn;
     let numberOfPlayers = players.length;
-    let nextArtist = (currentArtist + 1) % numberOfPlayers;
-    db.setTurn(nextArtist ?? null);
+
+    console.log("current: " + currentArtistIndex);
+    console.log("number Of Players: " + numberOfPlayers);
+
+    let nextArtist = (currentArtistIndex + 1) % numberOfPlayers;
+
+    console.log("next Artist: " + nextArtist);
+
+    db.setTurn(id, nextArtist);
 }
 
-const emitGameState = async () => {
-    let gameState = await db.getGameState(true);
-    io.emit('GAME', gameState);
+const getGameState = async (id) => {
+    let gameState = await db.getGameState(id, true);
+    if (gameState) {
+        gameState.players = bouncer.toJSON(id);
+    }
+    return gameState;
 }
+
+const emitGameState = async (id) => {
+    io.to(id).emit('GAME', await getGameState(id));
+}
+
+app.get('/lobbies', async (req, res) => {
+    let lobbies = await db.getOpenLobbyList(true);
+    res.send(lobbies)
+})
 
 // Listen
 app.listen(port, () => {

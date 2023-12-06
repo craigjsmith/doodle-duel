@@ -46,17 +46,19 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
     function draw(e: any) {
         if (e.buttons !== 1) return;
 
-        ctx?.beginPath();
+        if (ctx) {
+            ctx.beginPath();
 
-        ctx.lineWidth = 5;
-        ctx.lineCap = 'round';
-        ctx.strokeStyle = '#0000ff';
+            ctx.lineWidth = 5;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = '#0000ff';
 
-        ctx?.moveTo(pos.x, pos.y); // from
-        setPosition(e);
-        ctx?.lineTo(pos.x, pos.y); // to
+            ctx.moveTo(pos.x, pos.y); // from
+            setPosition(e);
+            ctx.lineTo(pos.x, pos.y); // to
 
-        ctx?.stroke();
+            ctx.stroke();
+        }
     }
 
     function save() {

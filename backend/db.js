@@ -10,27 +10,44 @@ const connection = mysql.createConnection({
 
 connection.connect()
 
-function getGameState(revealWord = false) {
+function getGameState(id, revealWord = false) {
     return new Promise((resolve, reject) => {
-        connection.query('SELECT * FROM game WHERE id=1', (err, rows) => {
+        const query = 'SELECT * FROM game WHERE id = ?';
+        const values = [id];
+
+        connection.query(query, values, (err, rows) => {
             if (err) {
                 return reject(err);
             }
 
-            if (!revealWord) {
-                rows[0].word = null;
-            }
+            // if (!revealWord) {
+            //     rows[0].word = null;
+            // }
 
             return resolve(rows[0]);
         })
     });
 }
 
-function setWord(value) {
+function getOpenLobbyList() {
+    return new Promise((resolve, reject) => {
+        connection.query('SELECT id FROM game WHERE gameStarted=0', (err, rows) => {
+            if (err) {
+                return reject(err);
+            }
+
+            let arr = rows.map(item => item.id);
+
+            return resolve(arr);
+        })
+    });
+}
+
+function setWord(id, value) {
     return new Promise((resolve, reject) => {
 
         const query = 'UPDATE game SET word = ? WHERE id = ?';
-        const values = [value, 1];
+        const values = [value, id];
 
         connection.query(query, values, (err, rows) => {
             if (err) {
@@ -42,11 +59,11 @@ function setWord(value) {
     });
 }
 
-function setPreviousWord(value) {
+function setPreviousWord(id, value) {
     return new Promise((resolve, reject) => {
 
         const query = 'UPDATE game SET previousWord = ? WHERE id = ?';
-        const values = [value, 1];
+        const values = [value, id];
 
         connection.query(query, values, (err, rows) => {
             if (err) {
@@ -58,11 +75,11 @@ function setPreviousWord(value) {
     });
 }
 
-function setRoundEndTimestamp(value) {
+function setRoundEndTimestamp(id, value) {
     return new Promise((resolve, reject) => {
 
         const query = 'UPDATE game SET endTimestamp = ? WHERE id = ?';
-        const values = [value, 1];
+        const values = [value, id];
 
         connection.query(query, values, (err, rows) => {
             if (err) {
@@ -74,27 +91,27 @@ function setRoundEndTimestamp(value) {
     });
 }
 
-function setPlayers(value) {
-    return new Promise((resolve, reject) => {
+// function setPlayers(id, value) {
+//     return new Promise((resolve, reject) => {
 
-        const query = 'UPDATE game SET players = ? WHERE id = ?';
-        const values = [value, 1];
+//         const query = 'UPDATE game SET players = ? WHERE id = ?';
+//         const values = [value, id];
 
-        connection.query(query, values, (err, rows) => {
-            if (err) {
-                return reject(err);
-            }
+//         connection.query(query, values, (err, rows) => {
+//             if (err) {
+//                 return reject(err);
+//             }
 
-            return resolve(rows[0]);
-        })
-    });
-}
+//             return resolve(rows[0]);
+//         })
+//     });
+// }
 
-function setGuesses(value) {
+function setGuesses(id, value) {
     return new Promise((resolve, reject) => {
 
         const query = 'UPDATE game SET guesses = ? WHERE id = ?';
-        const values = [value, 1];
+        const values = [value, id];
 
         connection.query(query, values, (err, rows) => {
             if (err) {
@@ -106,11 +123,11 @@ function setGuesses(value) {
     });
 }
 
-function setTurn(value) {
+function setTurn(id, value) {
     return new Promise((resolve, reject) => {
 
         const query = 'UPDATE game SET turn = ? WHERE id = ?';
-        const values = [value, 1];
+        const values = [value, id];
 
         connection.query(query, values, (err, rows) => {
             if (err) {
@@ -122,4 +139,4 @@ function setTurn(value) {
     });
 }
 
-module.exports = { getGameState, setWord, setPreviousWord, setRoundEndTimestamp, setPlayers, setGuesses, setTurn };
+module.exports = { getGameState, getOpenLobbyList, setWord, setPreviousWord, setRoundEndTimestamp, setGuesses, setTurn };
