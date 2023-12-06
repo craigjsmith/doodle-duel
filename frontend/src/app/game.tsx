@@ -9,13 +9,14 @@ import Timer from './timer';
 
 import { useEffect, useState } from 'react';
 import LobbyList from './LobbyList';
+import Lobby from './Lobby';
 
 interface GameState {
   id: number;
   word: string;
   previousWord: string;
   solved: boolean;
-  players: any;
+  players: Array<Array<string>> | undefined;
   turn: number;
   guesses: Array<string>;
   endTimestamp: number;
@@ -59,7 +60,7 @@ const GameComponent = () => {
 
   const login = async () => {
     socket.emit('LOGIN', username, lobby);
-    setScreen(Screens.Game);
+    setScreen(Screens.Lobby);
   };
 
   const draw = async (img: any) => {
@@ -112,7 +113,9 @@ const GameComponent = () => {
     }
 
     case Screens.Lobby: {
-      return (<></>);
+      return (<>
+        <Lobby lobbyId={lobby} players={gameState?.players} startGame={() => { setScreen(Screens.Game) }} />
+      </>);
     }
 
     case Screens.Game: {
