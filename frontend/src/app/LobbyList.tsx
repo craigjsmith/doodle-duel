@@ -4,10 +4,8 @@ import styles from './lobby-list.module.css'
 
 import { useEffect, useState, useRef } from 'react';
 
-export default function LobbyList(props: {}) {
+export default function LobbyList(props: { setLobby: (lobbyId: number) => void }) {
     const [lobbyList, setLobbyList] = useState<Array<number>>();
-
-
 
     useEffect(() => {
         fetch('http://localhost:3001/lobbies')
@@ -30,7 +28,11 @@ export default function LobbyList(props: {}) {
 
     return (
         <>
-            {lobbyList?.toString()}
+            <h1>Open Lobbies</h1>
+
+            <ul>
+                {lobbyList?.map((lobby) => <li key={lobby} onClick={() => { props.setLobby(lobby) }}>{lobby}</li>)}
+            </ul>
         </>
     )
 }

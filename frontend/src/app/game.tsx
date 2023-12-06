@@ -8,7 +8,7 @@ import Whiteboard from './whiteboard';
 import Timer from './timer';
 
 import { useEffect, useState } from 'react';
-import LobbyList from './lobby-list';
+import LobbyList from './LobbyList';
 
 interface GameState {
   id: number;
@@ -22,14 +22,21 @@ interface GameState {
   gameStarted: boolean;
 }
 
+enum Screens {
+  LobbyList,
+  Login,
+  Lobby,
+  Game
+}
+
 const GameComponent = () => {
   const [lobby, setLobby] = useState<number | null>(null);
   const [gameState, setGameState] = useState<GameState>();
   const [image, setImage] = useState<any>();
   const [wordGuess, setWordGuess] = useState<string>();
   const [username, setUsername] = useState<string>();
-  const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [revealWord, setRevealWord] = useState<boolean>(false);
+  const [screen, setScreen] = useState<Screens>(Screens.LobbyList);
 
   useEffect(() => {
     // Reveal solution when round ends
@@ -52,6 +59,7 @@ const GameComponent = () => {
 
   const login = async () => {
     socket.emit('LOGIN', username, lobby);
+    setScreen(Screens.Game);
   };
 
   const draw = async (img: any) => {
@@ -86,15 +94,32 @@ const GameComponent = () => {
     setImage(img);
   }
 
-  return (
-    <>
-      <h1 className={styles.title}>Doodle Duel!</h1>
-      <p>{JSON.stringify(gameState)}</p>
+  switch (screen) {
+    case Screens.LobbyList: {
+      return (<LobbyList setLobby={(lobbyId) => { setLobby(lobbyId); setScreen(Screens.Login) }} />);
+    }
 
-      {loggedIn && gameState ?
+    case Screens.Login: {
+      return (
         <>
+          <h3>Login</h3>
+          <input type="text" onChange={(event) => { setUsername(event.target.value) }}></input>
+          <button onClick={() => {
+            login();
+          }}>Login</button >
+        </>
+      );
+    }
+
+    case Screens.Lobby: {
+      return (<></>);
+    }
+
+    case Screens.Game: {
+      return (
+        <>
+          {JSON.stringify(gameState)}
           {revealWord ? <h1>{gameState?.previousWord}</h1> : undefined}
-          <LobbyList />
           <Timer endTimestamp={gameState?.endTimestamp ?? 0} duration={10} />
           <Whiteboard image={image} draw={draw} enable={isItMyTurn()} />
           <br />
@@ -107,21 +132,10 @@ const GameComponent = () => {
             </>
             : undefined}
         </>
-        :
-        <>
-          <h3>Login</h3>
-          <input type="text" onChange={(event) => { setUsername(event.target.value) }}></input>
-          <input type="number" onChange={(event) => { setLobby(Number(event.target.value)) }}></input>
-          <button onClick={() => {
-            login();
-            setLoggedIn(true);
-          }}>Login</button>
+      );
+    }
 
-
-        </>
-      }
-    </>
-  )
+  }
 }
 
 const Game = dynamic(() => Promise.resolve(GameComponent), {
