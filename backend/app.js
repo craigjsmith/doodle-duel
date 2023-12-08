@@ -54,6 +54,7 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         let lobby = bouncer.getLobby(socket.id);
         bouncer.removeSocket(socket.id);
+        removeLobbyIfEmpty(lobby);
         emitGameState(lobby);
     });
 
@@ -63,6 +64,21 @@ io.on('connection', (socket) => {
         emitGameState(id);
     }
 });
+
+async function removeLobbyIfEmpty(lobbyId) {
+    let gameState = await getGameState(lobbyId);
+
+    if (gameState) {
+        let players = gameState.players;
+
+        console.log(players.length);
+
+        if (players.length == 0) {
+            console.log(`Deleting lobby ${lobbyId}`);
+            db.removeLobby(lobbyId)
+        }
+    }
+}
 
 async function onGuess(msg, id) {
     console.log('SOCKET MESSAGE: ' + msg);

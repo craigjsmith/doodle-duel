@@ -148,14 +148,24 @@ function createLobby() {
             if (err) {
                 return reject(err);
             }
-
-            // let lobbies = Array(rows[0]);
-
-            console.log(rows.insertId);
-
             return resolve(rows.insertId);
         })
     });
 }
 
-module.exports = { getGameState, getOpenLobbyList, setWord, setPreviousWord, setRoundEndTimestamp, setGuesses, setTurn, createLobby };
+function removeLobby(lobbyId) {
+    return new Promise((resolve, reject) => {
+
+        const query = 'DELETE FROM game WHERE id = ?';
+        const values = [lobbyId];
+
+        connection.query(query, values, (err, rows) => {
+            if (err) {
+                return reject(err);
+            }
+            return resolve(rows.insertId);
+        })
+    });
+}
+
+module.exports = { getGameState, getOpenLobbyList, setWord, setPreviousWord, setRoundEndTimestamp, setGuesses, setTurn, createLobby, removeLobby };
