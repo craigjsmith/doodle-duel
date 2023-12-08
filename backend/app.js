@@ -169,6 +169,12 @@ app.get('/lobbies', async (req, res) => {
     res.send(lobbies)
 })
 
+app.post('/createLobby', async (req, res) => {
+    console.log("/createLobby");
+    let newLobbyId = await db.createLobby();
+    res.send({ newLobbyId })
+})
+
 // Listen
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)

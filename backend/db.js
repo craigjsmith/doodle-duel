@@ -139,4 +139,23 @@ function setTurn(id, value) {
     });
 }
 
-module.exports = { getGameState, getOpenLobbyList, setWord, setPreviousWord, setRoundEndTimestamp, setGuesses, setTurn };
+function createLobby() {
+    return new Promise((resolve, reject) => {
+
+        const query = 'INSERT INTO game VALUES ()';
+
+        connection.query(query, (err, rows) => {
+            if (err) {
+                return reject(err);
+            }
+
+            // let lobbies = Array(rows[0]);
+
+            console.log(rows.insertId);
+
+            return resolve(rows.insertId);
+        })
+    });
+}
+
+module.exports = { getGameState, getOpenLobbyList, setWord, setPreviousWord, setRoundEndTimestamp, setGuesses, setTurn, createLobby };
