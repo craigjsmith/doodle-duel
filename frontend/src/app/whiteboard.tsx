@@ -11,6 +11,14 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
     const CANVAS_SIZE = 500;
     var pos = { x: 0, y: 0 };
 
+    const [lastSavedTimestamp, _setLastSavedTimestamp] = useState<any>(0);
+
+    const lastSavedTimestampRef = useRef(lastSavedTimestamp);
+    const setLastSavedTimestamp = (data: number) => {
+        lastSavedTimestampRef.current = data;
+        _setLastSavedTimestamp(data);
+    };
+
     const [scaleFactor, _setScaleFactor] = useState<number>(1);
 
     const scaleFactorRef = useRef(scaleFactor);
@@ -123,7 +131,11 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
     }
 
     function save() {
-        if (ctx) {
+        var date = new Date();
+
+        // Throtle emiting image to a max of 10 times per second
+        if (ctx && (date.getTime() - lastSavedTimestampRef.current) > 100) {
+            setLastSavedTimestamp(date.getTime());
             props.draw(ctx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE).data);
         }
     }
