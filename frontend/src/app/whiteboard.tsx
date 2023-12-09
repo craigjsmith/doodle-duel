@@ -18,17 +18,10 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
         if (canvasRef && canvasRef.current) {
             setCtx(canvasRef.current.getContext('2d'));
 
-            if (props.enable) {
-                canvasRef.current.addEventListener('mousemove', draw);
-                canvasRef.current.addEventListener('mousedown', setPosition);
-                canvasRef.current.addEventListener('mouseenter', setPosition);
-                canvasRef.current.addEventListener('mouseup', save);
-            } else {
-                canvasRef.current.removeEventListener('mousemove', draw);
-                canvasRef.current.removeEventListener('mousedown', setPosition);
-                canvasRef.current.removeEventListener('mouseenter', setPosition);
-                canvasRef.current.removeEventListener('mouseup', save);
-            }
+            canvasRef.current.addEventListener('mousemove', draw);
+            canvasRef.current.addEventListener('mousedown', setPosition);
+            canvasRef.current.addEventListener('mouseenter', setPosition);
+            canvasRef.current.addEventListener('mouseup', save);
         }
     });
 
@@ -81,6 +74,6 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
     }
 
     return (
-        <canvas className={`${styles.canvas} ${props.enable ? styles.enabled : ''}`} ref={canvasRef} width={CANVAS_SIZE} height={CANVAS_SIZE} />
+        <canvas className={`${styles.canvas} ${props.enable ? styles.enabled : styles.disabled}`} ref={canvasRef} width={CANVAS_SIZE} height={CANVAS_SIZE} />
     )
 }
