@@ -17,7 +17,8 @@ enum Screens {
   LobbyList,
   Login,
   Lobby,
-  Game
+  Game,
+  GameOver
 }
 
 const GameComponent = () => {
@@ -48,6 +49,8 @@ const GameComponent = () => {
     socket.connect();
     socket.on('GAME', onGame);
     socket.on('DRAW', onDraw);
+    socket.on('GAMEOVER', () => { setScreen(Screens.GameOver) });
+
   }, []);
 
   const guess = async () => {
@@ -129,6 +132,13 @@ const GameComponent = () => {
         </>
       );
     }
+
+    case Screens.GameOver: {
+      return (<>
+        <h1>Game Over!</h1>
+      </>);
+    }
+
 
   }
 }

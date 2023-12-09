@@ -51,7 +51,7 @@ io.on('connection', (socket) => {
         // Remove disconnected player from records
         bouncer.removeSocket(socket.id);
 
-        // If lobby has no players now, delete it
+        // If lobby has 1 (or less) players, delete it
         if (await removeLobbyIfEmpty(lobbyId)) {
             return;
         }
@@ -79,14 +79,20 @@ io.on('connection', (socket) => {
 });
 
 async function removeLobbyIfEmpty(lobbyId) {
+    // Lobby is considered "empty" if there is 1 or less players
     let gameState = await getGameState(lobbyId);
 
     if (gameState) {
         let players = gameState.players;
 
-        if (players.length == 0) {
+        if (players.length <= 1) {
             console.log(`Deleting lobby ${lobbyId}`);
             db.removeLobby(lobbyId)
+
+            clearTimeout(RoundEndTimeoutMap[lobbyId]);
+            delete RoundEndTimeoutMap[lobbyId];
+
+            io.to(lobbyId).emit('GAMEOVER');
             return true;
         }
     }
