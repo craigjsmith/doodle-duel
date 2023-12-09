@@ -25,14 +25,6 @@ const ROUND_DURATION = 20000/*65000*/;
 
 let bouncer = new LobbyBouncer();
 
-/*
-{
-    '0' => Map { 'socketId' => 'username', ...},
-    ...
-}
-*/
-// var SocketIdUsernameMap = new Map();
-
 // key: game id, value: timeout reference
 var RoundEndTimeoutMap = {};
 
@@ -154,24 +146,52 @@ const setNewWord = async (id) => {
 
 const setNextPlayerAsArtist = async (id) => {
     let gameState = await getGameState(id);
-    console.log(`the id: ${id}`);
-    console.log(gameState);
-    let players = gameState.players;
+    let previousArtistSocketId = gameState.turn;
 
-    console.log("players: ");
-    console.log(players);
+    if (previousArtistSocketId) {
+        let previousArtistIndex = gameState.players.findIndex(player => player.socketId == previousArtistSocketId);
+        console.log("previous Artist index");
+        console.log(previousArtistIndex)
 
-    let currentArtistIndex = gameState.turn ?? -1;
-    let numberOfPlayers = players.length;
+        let numberOfPlayers = gameState.players.length
 
-    console.log("current: " + currentArtistIndex);
-    console.log("number Of Players: " + numberOfPlayers);
+        let nextArtist = gameState.players[(previousArtistIndex + 1) % numberOfPlayers];
 
-    let nextArtist = (currentArtistIndex + 1) % numberOfPlayers;
+        console.log("next Artist");
+        console.log(nextArtist)
 
-    console.log("next Artist: " + nextArtist);
 
-    db.setTurn(id, nextArtist);
+        db.setTurn(id, nextArtist.socketId);
+    } else {
+        let nextArtist = gameState.players[0];
+
+        console.log("next Artist");
+        console.log(nextArtist)
+
+
+        db.setTurn(id, nextArtist.socketId);
+    }
+
+
+    // console.log(`the id: ${id}`);
+    // console.log(gameState);
+    // let players = gameState.players;
+
+    // console.log("players: ");
+    // console.log(players);
+
+    // let currentArtistIndex = gameState.turn ?? -1;
+    // let numberOfPlayers = players.length;
+
+    // console.log("current: " + currentArtistIndex);
+    // console.log("number Of Players: " + numberOfPlayers);
+
+    // let nextArtistIndex = (currentArtistIndex + 1) % numberOfPlayers;
+    // let nextArtistSocketId = gameState.players.find(player => player.socketID === )
+
+    // console.log("next Artist: " + nextArtist);
+
+    // db.setTurn(id, nextArtist);
 }
 
 const getGameState = async (id) => {

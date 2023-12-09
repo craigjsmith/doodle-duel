@@ -71,15 +71,7 @@ const GameComponent = () => {
 
   const isItMyTurn = () => {
     if (gameState) {
-
-      console.log(gameState);
-      console.log("players");
-      console.log(gameState.players);
-      console.log("turn");
-      console.log(gameState.turn);
-
-      return !username?.localeCompare(gameState.players[gameState.turn].username);
-
+      return !socket.id.localeCompare(gameState.turn);
     }
     return false;
   }
