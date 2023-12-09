@@ -20,9 +20,9 @@ function getGameState(id, revealWord = false) {
                 return reject(err);
             }
 
-            // if (!revealWord) {
-            //     rows[0].word = null;
-            // }
+            if (rows[0] && !revealWord) {
+                rows[0].word = null;
+            }
 
             return resolve(rows[0]);
         })

@@ -82,7 +82,7 @@ io.on('connection', (socket) => {
         var guess = msg; // TODO: sanitize
 
         if (guess) {
-            let gameState = await getGameState(id);
+            let gameState = await getGameState(id, true);
 
             // Add guess to list of guesses
             let guesses = JSON.parse(gameState.guesses) ?? [];
@@ -162,7 +162,7 @@ async function startNewRound(id) {
 }
 
 const setNewWord = async (id) => {
-    let gameState = await getGameState(id);
+    let gameState = await getGameState(id, true);
     let previousWord = gameState.word;
 
     let wordsListExcludingPreviousWord = WORDS.filter((word) => word.localeCompare(previousWord));
@@ -194,8 +194,8 @@ const setNextPlayerAsArtist = async (id) => {
     }
 }
 
-const getGameState = async (id) => {
-    let gameState = await db.getGameState(id, true);
+const getGameState = async (id, revealWord = false) => {
+    let gameState = await db.getGameState(id, revealWord);
     if (gameState) {
         gameState.players = bouncer.toJSON(id);
     }
