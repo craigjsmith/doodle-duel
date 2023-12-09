@@ -11,6 +11,28 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
     const CANVAS_SIZE = 500;
     var pos = { x: 0, y: 0 };
 
+    const [scaleFactor, _setScaleFactor] = useState<number>(1);
+
+    const scaleFactorRef = useRef(scaleFactor);
+    const setScaleFactor = (data: number) => {
+        scaleFactorRef.current = data;
+        _setScaleFactor(data);
+    };
+
+    function scaleCanvasToScreen() {
+        if (canvasRef && canvasRef.current) {
+            let smallestDimension = window.innerWidth < window.innerHeight ? window.innerWidth : window.innerHeight;
+            let size = smallestDimension * 0.9;
+            setScaleFactor(size / 500);
+            canvasRef.current.style.transform = `scale(${size / 500})`;
+            canvasRef.current.style.transformOrigin = `top center`;
+        }
+    }
+
+    useEffect(() => {
+        scaleCanvasToScreen();
+    }, [])
+
     useEffect(() => {
         load();
     }, [props.image])
@@ -20,10 +42,21 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
             setLoaded(true);
             setCtx(canvasRef.current.getContext('2d'));
 
+            window.addEventListener("resize", scaleCanvasToScreen);
+
+            canvasRef.current.addEventListener('touchmove', drawTouch);
+            canvasRef.current.addEventListener('touchmove', save);
+            canvasRef.current.addEventListener('touchstart', setPositionTouch);
+            canvasRef.current.addEventListener('touchend', setPositionTouch);
+
             canvasRef.current.addEventListener('mousemove', draw);
             canvasRef.current.addEventListener('mousemove', save);
             canvasRef.current.addEventListener('mousedown', setPosition);
             canvasRef.current.addEventListener('mouseenter', setPosition);
+        }
+
+        return () => {
+
         }
     }, [loaded]);
 
@@ -34,11 +67,25 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
             left = canvasRef.current.getBoundingClientRect().left;
             top = canvasRef.current.getBoundingClientRect().top;
         }
-        pos.x = e.clientX - left;
-        pos.y = e.clientY - top;
+
+        pos.x = (e.clientX - left) / scaleFactorRef.current;
+        pos.y = (e.clientY - top) / scaleFactorRef.current;
+    }
+
+    function setPositionTouch(e: any) {
+        var left = 0;
+        var top = 0;
+        if (canvasRef && canvasRef.current) {
+            left = canvasRef.current.getBoundingClientRect().left;
+            top = canvasRef.current.getBoundingClientRect().top;
+        }
+
+        pos.x = (e.changedTouches[0].clientX - left) / scaleFactorRef.current;
+        pos.y = (e.changedTouches[0].clientY - top) / scaleFactorRef.current;
     }
 
     function draw(e: any) {
+        e.preventDefault();
         if (e.buttons !== 1) return;
 
         if (ctx) {
@@ -50,6 +97,25 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
 
             ctx.moveTo(pos.x, pos.y); // from
             setPosition(e);
+            ctx.lineTo(pos.x, pos.y); // to
+
+            ctx.stroke();
+        }
+    }
+
+    function drawTouch(e: any) {
+        e.preventDefault();
+        // if (e.buttons !== 1) return;
+
+        if (ctx) {
+            ctx.beginPath();
+
+            ctx.lineWidth = 5;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = '#0000ff';
+
+            ctx.moveTo(pos.x, pos.y); // from
+            setPositionTouch(e);
             ctx.lineTo(pos.x, pos.y); // to
 
             ctx.stroke();
@@ -77,6 +143,8 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
     }
 
     return (
-        <canvas className={`${styles.canvas} ${props.enable ? styles.enabled : styles.disabled}`} ref={canvasRef} width={CANVAS_SIZE} height={CANVAS_SIZE} />
+        <div className={styles.canvasContainer}>
+            <canvas className={`${styles.canvas} ${props.enable ? styles.enabled : styles.disabled} `} ref={canvasRef} width={CANVAS_SIZE} height={CANVAS_SIZE} />
+        </div>
     )
 }

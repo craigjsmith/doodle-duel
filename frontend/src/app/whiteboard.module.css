@@ -1,6 +1,12 @@
 .canvas {
   border: 1px solid black;
-  margin-top: 20px;
+  display: flex;
+}
+
+.canvasContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .enabled {
