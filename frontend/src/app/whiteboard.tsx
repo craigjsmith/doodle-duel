@@ -6,16 +6,18 @@ import { useEffect, useState, useRef } from 'react';
 
 export default function Whiteboard(props: { image: any | undefined, draw: any, enable: boolean }) {
     const [ctx, setCtx] = useState<any>();
+    const [loaded, setLoaded] = useState<any>();
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const CANVAS_SIZE = 500;
     var pos = { x: 0, y: 0 };
 
     useEffect(() => {
         load();
-    }, [props.image])
+    }, [props.enable, props.image])
 
     useEffect(() => {
         if (canvasRef && canvasRef.current) {
+            setLoaded(true);
             setCtx(canvasRef.current.getContext('2d'));
 
             canvasRef.current.addEventListener('mousemove', draw);
@@ -23,7 +25,7 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
             canvasRef.current.addEventListener('mouseenter', setPosition);
             canvasRef.current.addEventListener('mouseup', save);
         }
-    });
+    }, [loaded]);
 
     function setPosition(e: any) {
         var left = 0;
