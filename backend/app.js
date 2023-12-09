@@ -21,7 +21,7 @@ const io = new Server(server, {
 
 const WORDS = ["monkey", "dog", "cat", "lion", "tiger", "fish", "seal"];
 
-const ROUND_DURATION = 10000/*65000*/;
+const ROUND_DURATION = 20000/*65000*/;
 
 let bouncer = new LobbyBouncer();
 
@@ -68,6 +68,7 @@ io.on('connection', (socket) => {
     async function onStart(msg) {
         let lobbyId = bouncer.getLobby(socket.id);
         db.setGameStarted(lobbyId, 1)
+        startNewRound(lobbyId);
         emitGameState(lobbyId);
     }
 });
@@ -119,8 +120,6 @@ async function onDraw(msg, id) {
 }
 
 async function startNewRound(id) {
-    // let gameState = await getGameState(id);
-
     clearTimeout(RoundEndTimeoutMap[id]);
     delete RoundEndTimeoutMap[id];
 
@@ -145,11 +144,9 @@ async function startNewRound(id) {
 const setNewWord = async (id) => {
     let gameState = await getGameState(id);
     let previousWord = gameState.word;
-    let newWord = previousWord
 
-    while (!previousWord.localeCompare(newWord)) {
-        newWord = WORDS[Math.floor(Math.random() * WORDS.length)];
-    }
+    let wordsListExcludingPreviousWord = WORDS.filter((word) => word.localeCompare(previousWord));
+    let newWord = wordsListExcludingPreviousWord[Math.floor(Math.random() * wordsListExcludingPreviousWord.length)];
 
     await db.setWord(id, newWord);
     await db.setPreviousWord(id, previousWord);
@@ -157,12 +154,14 @@ const setNewWord = async (id) => {
 
 const setNextPlayerAsArtist = async (id) => {
     let gameState = await getGameState(id);
+    console.log(`the id: ${id}`);
+    console.log(gameState);
     let players = gameState.players;
 
     console.log("players: ");
     console.log(players);
 
-    let currentArtistIndex = gameState.turn;
+    let currentArtistIndex = gameState.turn ?? -1;
     let numberOfPlayers = players.length;
 
     console.log("current: " + currentArtistIndex);
