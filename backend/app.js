@@ -44,11 +44,24 @@ io.on('connection', (socket) => {
     socket.on('LOGIN', onLogin);
     socket.on('START', onStart);
 
-    socket.on('disconnect', () => {
-        let lobby = bouncer.getLobby(socket.id);
+    socket.on('disconnect', async () => {
+        let lobbyId = bouncer.getLobby(socket.id);
+        let gameState = await getGameState(lobbyId);
+
+        // Remove disconnected player from records
         bouncer.removeSocket(socket.id);
-        removeLobbyIfEmpty(lobby);
-        emitGameState(lobby);
+
+        // If lobby has no players now, delete it
+        if (await removeLobbyIfEmpty(lobbyId)) {
+            return;
+        }
+
+        // If current artist leaves, move to next round
+        if (gameState && !socket.id.localeCompare(gameState.turn)) {
+            startNewRound(lobbyId);
+        }
+
+        emitGameState(lobbyId);
     });
 
     async function onLogin(msg, id) {
@@ -71,13 +84,14 @@ async function removeLobbyIfEmpty(lobbyId) {
     if (gameState) {
         let players = gameState.players;
 
-        console.log(players.length);
-
         if (players.length == 0) {
             console.log(`Deleting lobby ${lobbyId}`);
             db.removeLobby(lobbyId)
+            return true;
         }
     }
+
+    return false;
 }
 
 async function onGuess(msg, id) {
@@ -150,48 +164,17 @@ const setNextPlayerAsArtist = async (id) => {
 
     if (previousArtistSocketId) {
         let previousArtistIndex = gameState.players.findIndex(player => player.socketId == previousArtistSocketId);
-        console.log("previous Artist index");
-        console.log(previousArtistIndex)
 
         let numberOfPlayers = gameState.players.length
 
         let nextArtist = gameState.players[(previousArtistIndex + 1) % numberOfPlayers];
 
-        console.log("next Artist");
-        console.log(nextArtist)
-
-
         db.setTurn(id, nextArtist.socketId);
     } else {
         let nextArtist = gameState.players[0];
 
-        console.log("next Artist");
-        console.log(nextArtist)
-
-
         db.setTurn(id, nextArtist.socketId);
     }
-
-
-    // console.log(`the id: ${id}`);
-    // console.log(gameState);
-    // let players = gameState.players;
-
-    // console.log("players: ");
-    // console.log(players);
-
-    // let currentArtistIndex = gameState.turn ?? -1;
-    // let numberOfPlayers = players.length;
-
-    // console.log("current: " + currentArtistIndex);
-    // console.log("number Of Players: " + numberOfPlayers);
-
-    // let nextArtistIndex = (currentArtistIndex + 1) % numberOfPlayers;
-    // let nextArtistSocketId = gameState.players.find(player => player.socketID === )
-
-    // console.log("next Artist: " + nextArtist);
-
-    // db.setTurn(id, nextArtist);
 }
 
 const getGameState = async (id) => {
