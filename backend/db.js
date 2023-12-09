@@ -139,6 +139,23 @@ function setTurn(id, value) {
     });
 }
 
+function setGameStarted(id, value) {
+    return new Promise((resolve, reject) => {
+
+        const query = 'UPDATE game SET gameStarted = ? WHERE id = ?';
+        const values = [value, id];
+
+        connection.query(query, values, (err, rows) => {
+            if (err) {
+                return reject(err);
+            }
+
+            return resolve(rows[0]);
+        })
+    });
+}
+
+
 function createLobby() {
     return new Promise((resolve, reject) => {
 
@@ -168,4 +185,4 @@ function removeLobby(lobbyId) {
     });
 }
 
-module.exports = { getGameState, getOpenLobbyList, setWord, setPreviousWord, setRoundEndTimestamp, setGuesses, setTurn, createLobby, removeLobby };
+module.exports = { getGameState, getOpenLobbyList, setWord, setPreviousWord, setRoundEndTimestamp, setGuesses, setTurn, setGameStarted, createLobby, removeLobby };

@@ -49,6 +49,12 @@ const GameComponent = () => {
   }, [gameState?.previousWord])
 
   useEffect(() => {
+    if (gameState?.gameStarted) {
+      setScreen(Screens.Game);
+    }
+  }, [gameState?.gameStarted])
+
+  useEffect(() => {
     socket.connect();
     socket.on('GAME', onGame);
     socket.on('DRAW', onDraw);
@@ -67,6 +73,10 @@ const GameComponent = () => {
     console.log("sent to server:");
     console.log(img);
     socket.emit('NEWDRAW', img, lobby);
+  };
+
+  const startLobby = async () => {
+    socket.emit('START');
   };
 
   const isItMyTurn = () => {
@@ -114,7 +124,7 @@ const GameComponent = () => {
 
     case Screens.Lobby: {
       return (<>
-        <Lobby lobbyId={lobby} players={gameState?.players} startGame={() => { setScreen(Screens.Game) }} />
+        <Lobby lobbyId={lobby} players={gameState?.players} startGame={() => { startLobby() }} />
       </>);
     }
 

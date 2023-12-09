@@ -50,6 +50,7 @@ io.on('connection', (socket) => {
     socket.on('guess', onGuess);
     socket.on('NEWDRAW', onDraw);
     socket.on('LOGIN', onLogin);
+    socket.on('START', onStart);
 
     socket.on('disconnect', () => {
         let lobby = bouncer.getLobby(socket.id);
@@ -62,6 +63,12 @@ io.on('connection', (socket) => {
         bouncer.addSocket(socket, msg);
         bouncer.joinLobby(socket.id, id);
         emitGameState(id);
+    }
+
+    async function onStart(msg) {
+        let lobbyId = bouncer.getLobby(socket.id);
+        db.setGameStarted(lobbyId, 1)
+        emitGameState(lobbyId);
     }
 });
 
