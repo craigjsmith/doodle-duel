@@ -29,8 +29,22 @@ const GameComponent = () => {
   const [username, setUsername] = useState<string>();
   const [revealWord, setRevealWord] = useState<boolean>(false);
   const [screen, setScreen] = useState<Screens>(Screens.LobbyList);
+  const [secretWord, setSecretWord] = useState<string | null>(null);
+  const [isMyTurn, setIsMyTurn] = useState<boolean>(false);
+
 
   useEffect(() => {
+    if (gameState) {
+      setIsMyTurn(!socket.id.localeCompare(gameState?.turn));
+    }
+  }, [gameState?.turn]);
+
+  useEffect(() => {
+
+    if (!secretWord?.localeCompare(gameState?.previousWord)) {
+      setSecretWord(null);
+    }
+
     // Reveal solution when round ends
     setRevealWord(true);
     setTimeout(() => {
@@ -49,6 +63,7 @@ const GameComponent = () => {
     socket.connect();
     socket.on('GAME', onGame);
     socket.on('DRAW', onDraw);
+    socket.on('REVEAL', onReveal);
     socket.on('GAMEOVER', () => { setScreen(Screens.GameOver) });
 
   }, []);
@@ -72,13 +87,6 @@ const GameComponent = () => {
     socket.emit('START');
   };
 
-  const isItMyTurn = () => {
-    if (gameState) {
-      return !socket.id.localeCompare(gameState.turn);
-    }
-    return false;
-  }
-
   function onGame(msg: any) {
     console.log(msg);
     setGameState({ id: msg.id, word: msg.word, previousWord: msg.previousWord, solved: msg.solved, players: msg.players, turn: msg.turn, guesses: JSON.parse(msg.guesses), endTimestamp: msg.endTimestamp, gameStarted: msg.gameStarted });
@@ -88,6 +96,10 @@ const GameComponent = () => {
     console.log("GOT DRAWING");
     console.log(img);
     setImage(img);
+  }
+
+  function onReveal(msg: any) {
+    setSecretWord(msg);
   }
 
   switch (screen) {
@@ -116,12 +128,13 @@ const GameComponent = () => {
     case Screens.Game: {
       return (
         <>
+          {secretWord ? <h1>{secretWord}</h1> : undefined}
           {JSON.stringify(gameState)}
           {revealWord ? <h1>{gameState?.previousWord}</h1> : undefined}
           <Timer endTimestamp={gameState?.endTimestamp ?? 0} duration={20} />
-          <Whiteboard image={image} draw={draw} enable={isItMyTurn()} />
+          <Whiteboard image={image} draw={draw} enable={isMyTurn} />
           <br />
-          {!isItMyTurn() ?
+          {!isMyTurn ?
             <>
               <input type="text" onChange={(event) => { setWordGuess(event.target.value) }}></input>
               <button onClick={() => {

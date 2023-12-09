@@ -1,10 +1,11 @@
 'use client'
 
+import { Player } from './Models/Player';
 import styles from './lobby-list.module.css'
 
 import { useEffect, useState, useRef } from 'react';
 
-export default function Lobby(props: { lobbyId: number | null, players: Array<Array<string>> | undefined, startGame: () => void | undefined }) {
+export default function Lobby(props: { lobbyId: number | null, players: Player[] | undefined, startGame: () => void | undefined }) {
     const [lobbyList, setLobbyList] = useState<Array<number>>();
 
     useEffect(() => {

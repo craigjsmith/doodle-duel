@@ -170,6 +170,9 @@ const setNewWord = async (id) => {
 
     await db.setWord(id, newWord);
     await db.setPreviousWord(id, previousWord);
+
+    // Reveal secret word only to the artist
+    io.to(gameState.turn).emit('REVEAL', newWord);
 }
 
 const setNextPlayerAsArtist = async (id) => {
