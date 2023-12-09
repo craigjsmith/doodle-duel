@@ -35,7 +35,7 @@ export default function Lobby(props: { lobbyId: number | null, players: Array<Ar
 
             <h2>Players</h2>
             <ul>
-                {props.players?.map((player) => <li key={player[1]}>{player[1]}</li>)}
+                {props.players?.map((player) => <li key={player.socketId}>{player.username}</li>)}
             </ul>
 
             <button onClick={() => { props.startGame() }}>Start</button>

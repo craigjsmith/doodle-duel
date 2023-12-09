@@ -62,7 +62,7 @@ class LobbyBouncer {
             console.log("socketId: " + socketId);
             console.log("id: " + id);
             if (this.lobbyBySocketId.get(socketId) == id) {
-                list.push([socketId, username]);
+                list.push({ "socketId": socketId, "username": username });
             }
         })
         return list;

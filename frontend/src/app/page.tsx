@@ -11,17 +11,7 @@ import { useEffect, useState } from 'react';
 import LobbyList from './LobbyList';
 import Lobby from './Lobby';
 
-interface GameState {
-  id: number;
-  word: string;
-  previousWord: string;
-  solved: boolean;
-  players: Array<Array<string>> | undefined;
-  turn: number;
-  guesses: Array<string>;
-  endTimestamp: number;
-  gameStarted: boolean;
-}
+import { GameState } from './Models/GameState';
 
 enum Screens {
   LobbyList,
@@ -88,7 +78,7 @@ const GameComponent = () => {
       console.log("turn");
       console.log(gameState.turn);
 
-      return !username?.localeCompare(gameState.players[gameState.turn][1]);
+      return !username?.localeCompare(gameState.players[gameState.turn].username);
 
     }
     return false;
