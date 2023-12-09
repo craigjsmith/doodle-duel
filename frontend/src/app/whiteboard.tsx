@@ -13,7 +13,7 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
 
     useEffect(() => {
         load();
-    }, [props.enable, props.image])
+    }, [props.image])
 
     useEffect(() => {
         if (canvasRef && canvasRef.current) {
@@ -21,9 +21,9 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
             setCtx(canvasRef.current.getContext('2d'));
 
             canvasRef.current.addEventListener('mousemove', draw);
+            canvasRef.current.addEventListener('mousemove', save);
             canvasRef.current.addEventListener('mousedown', setPosition);
             canvasRef.current.addEventListener('mouseenter', setPosition);
-            canvasRef.current.addEventListener('mouseup', save);
         }
     }, [loaded]);
 
@@ -65,7 +65,8 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
     function load() {
         if (!props.image) {
             clear();
-        } else {
+        } else if (!props.enable) {
+            // Only update whiteboard if you're not the artist
             var array = new Uint8ClampedArray(props.image);
             ctx?.putImageData(new ImageData(array, 500, 500), 0, 0);
         }
