@@ -76,6 +76,30 @@ io.on('connection', (socket) => {
         startNewRound(lobbyId);
         emitGameState(lobbyId);
     }
+
+    async function onGuess(msg, id) {
+        var guess = msg; // TODO: sanitize
+
+        if (guess) {
+            let gameState = await getGameState(id);
+
+            // Add guess to list of guesses
+            let guesses = JSON.parse(gameState.guesses) ?? [];
+            guesses.push(guess);
+            db.setGuesses(id, JSON.stringify(guesses));
+
+            // Check if guess is correct
+            let secretWord = gameState.word.toString();
+            if (!secretWord.localeCompare(guess.toLowerCase())) {
+                // Correct answer
+                bouncer.awardPoints(socket.id);
+                bouncer.awardPoints(gameState.turn);
+                startNewRound(id);
+            } else {
+                await emitGameState(id);
+            }
+        }
+    }
 });
 
 async function removeLobbyIfEmpty(lobbyId) {
@@ -98,33 +122,6 @@ async function removeLobbyIfEmpty(lobbyId) {
     }
 
     return false;
-}
-
-async function onGuess(msg, id) {
-    console.log('SOCKET MESSAGE: ' + msg);
-
-    var guess = msg; // TODO: sanitize
-
-    if (guess) {
-        let gameState = await getGameState(id);
-
-        console.log("game state");
-        console.log(gameState);
-
-        // Add guess to list of guesses
-        let guesses = JSON.parse(gameState.guesses) ?? [];
-        guesses.push(guess);
-        db.setGuesses(id, JSON.stringify(guesses));
-
-        // Check if guess is correct
-        let secretWord = gameState.word.toString();
-        if (!secretWord.localeCompare(guess.toLowerCase())) {
-            // Correct answer
-            startNewRound(id);
-        } else {
-            await emitGameState(id);
-        }
-    }
 }
 
 async function onDraw(msg, id) {

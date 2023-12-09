@@ -4,17 +4,20 @@ class LobbyBouncer {
         this.sockets = new Map(); // key: socketId, value: socket object
         this.lobbyBySocketId = new Map(); // key: socketId, value: lobbyId
         this.usernameBySocketId = new Map(); // key: socketId, value: username
+        this.pointsBySocketId = new Map(); // key: socketId, value: points
     }
 
     addSocket(socket, username) {
         this.sockets.set(socket.id, socket);
         this.usernameBySocketId.set(socket.id, username);
+        this.pointsBySocketId.set(socket.id, 0)
     }
 
     removeSocket(socketId) {
         this.leaveLobby(socketId)
         this.usernameBySocketId.delete(socketId);
         this.lobbyBySocketId.delete(socketId);
+        this.pointsBySocketId.delete(socketId);
         this.sockets.delete(socketId);
     }
 
@@ -38,8 +41,9 @@ class LobbyBouncer {
             socket.leave(currentLobby);
         }
 
-        // Remove record
+        // Remove records
         delete this.lobbyBySocketId[socketId];
+        delete this.pointsBySocketId[socketId];
     }
 
     getLobby(socketId) {
@@ -56,13 +60,16 @@ class LobbyBouncer {
         return this.usernameBySocketId;
     }
 
+    awardPoints(socketId) {
+        let currentPoints = this.pointsBySocketId.get(socketId);
+        this.pointsBySocketId.set(socketId, currentPoints + 1);
+    }
+
     toJSON(id) {
         let list = [];
         this.usernameBySocketId.forEach((username, socketId) => {
-            console.log("socketId: " + socketId);
-            console.log("id: " + id);
             if (this.lobbyBySocketId.get(socketId) == id) {
-                list.push({ "socketId": socketId, "username": username });
+                list.push({ "socketId": socketId, "username": username, "points": this.pointsBySocketId.get(socketId) });
             }
         })
         return list;
@@ -73,6 +80,7 @@ class LobbyBouncer {
             console.log("Socket ID: " + k);
             console.log("Username: " + this.usernameBySocketId.get(k));
             console.log("Lobby: " + this.lobbyBySocketId.get(k));
+            console.log("Points: " + this.pointsBySocketId.get(k));
             console.log("----");
         })
     }
