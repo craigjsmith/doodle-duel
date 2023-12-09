@@ -12,7 +12,7 @@ export default function LobbyList(props: { setLobby: (lobbyId: number) => void }
     }, []);
 
     const getLobbies = () => {
-        fetch('http://localhost:3001/lobbies')
+        fetch('http://192.168.0.24:3001/lobbies')
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -32,7 +32,7 @@ export default function LobbyList(props: { setLobby: (lobbyId: number) => void }
     const createLobby = () => {
         console.log("createLobby");
 
-        fetch('http://localhost:3001/createLobby', { method: "POST", })
+        fetch('http://192.168.0.24:3001/createLobby', { method: "POST", })
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);

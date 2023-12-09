@@ -9,7 +9,7 @@ export default function Lobby(props: { lobbyId: number | null, players: Player[]
     const [lobbyList, setLobbyList] = useState<Array<number>>();
 
     useEffect(() => {
-        fetch('http://localhost:3001/lobbies')
+        fetch('http://192.168.0.24:3001/lobbies')
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);

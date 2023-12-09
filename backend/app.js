@@ -8,14 +8,17 @@ const expressSanitizer = require('express-sanitizer');
 const { Server } = require("socket.io");
 const { LobbyBouncer } = require('./lobbyBouncer');
 
+const cors = require('cors')
 const app = express()
 const server = createServer(app);
 const port = 3001
 const socketPort = 4000
 
+app.use(cors())
+
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:3000"
+        origin: "*"
     }
 });
 
