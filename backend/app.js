@@ -20,6 +20,7 @@ const io = new Server(server, {
 });
 
 const WORDS = ["monkey", "dog", "cat", "lion", "tiger", "fish", "seal"];
+const POINTS_TO_WIN = 10;
 
 const ROUND_DURATION = 20000/*65000*/;
 
@@ -91,9 +92,15 @@ io.on('connection', (socket) => {
             // Check if guess is correct
             let secretWord = gameState.word.toString();
             if (!secretWord.localeCompare(guess.toLowerCase())) {
-                // Correct answer
+                // If correct answer, award points to guesser and artist
                 bouncer.awardPoints(socket.id);
                 bouncer.awardPoints(gameState.turn);
+
+                // Check if either point earner has won game
+                if (bouncer.getPoints(socket.id) >= POINTS_TO_WIN || bouncer.getPoints(gameState.turn) >= POINTS_TO_WIN) {
+                    gameOver(id);
+                }
+
                 startNewRound(id);
             } else {
                 await emitGameState(id);
@@ -116,7 +123,7 @@ async function removeLobbyIfEmpty(lobbyId) {
             clearTimeout(RoundEndTimeoutMap[lobbyId]);
             delete RoundEndTimeoutMap[lobbyId];
 
-            io.to(lobbyId).emit('GAMEOVER');
+            gameOver(lobbyId);
             return true;
         }
     }
@@ -126,6 +133,10 @@ async function removeLobbyIfEmpty(lobbyId) {
 
 async function onDraw(msg, id) {
     io.to(id).emit('DRAW', msg);
+}
+
+async function gameOver(lobbyId) {
+    io.to(lobbyId).emit('GAMEOVER');
 }
 
 async function startNewRound(id) {

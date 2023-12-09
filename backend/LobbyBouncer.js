@@ -61,8 +61,12 @@ class LobbyBouncer {
     }
 
     awardPoints(socketId) {
-        let currentPoints = this.pointsBySocketId.get(socketId);
+        let currentPoints = this.getPoints(socketId);
         this.pointsBySocketId.set(socketId, currentPoints + 1);
+    }
+
+    getPoints(socketId) {
+        return this.pointsBySocketId.get(socketId);
     }
 
     toJSON(id) {
