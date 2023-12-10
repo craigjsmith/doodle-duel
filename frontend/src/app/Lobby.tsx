@@ -1,5 +1,8 @@
 'use client'
 
+import { Container, Flex, Title, List, ThemeIcon, rem, Button, Loader, Text } from '@mantine/core';
+import { IconUser } from '@tabler/icons-react';
+
 import { Player } from './Models/Player';
 import styles from './lobby-list.module.css'
 
@@ -28,18 +31,52 @@ export default function Lobby(props: { lobbyId: number | null, players: Player[]
     }, []);
 
     return (
-        <>
-            <h1>{`Lobby: ${props.lobbyId}`}</h1>
+        <Container>
+            <Flex
+                mih={50}
+                gap="md"
+                justify="center"
+                align="center"
+                direction="column"
+                wrap="wrap"
+            >
+                <Title order={1} my={20}>{`Lobby ${props.lobbyId}`}</Title>
 
-            {console.log('PLAYERS')}
-            {console.log(props.players)}
+                <List
+                    spacing="xs"
+                    size="sm"
+                    center
+                    icon={
+                        <ThemeIcon variant="light" size={33} radius="xl">
+                            <IconUser style={{ width: rem(16), height: rem(16) }} />
+                        </ThemeIcon>
+                    }
+                >
+                    {props.players?.map((player) => <List.Item><Text size="xl">{player.username}</Text></List.Item>)}
+                </List>
 
-            <h2>Players</h2>
-            <ul>
-                {props.players?.map((player) => <li key={player.socketId}>{player.username}</li>)}
-            </ul>
+                {
+                    (props.players?.length ?? 0) > 1 ?
+                        <Button
+                            variant="filled"
+                            radius="xl"
+                            my={20}
+                            onClick={() => { props.startGame() }}
+                        >
+                            Start
+                        </Button>
+                        :
+                        <Flex
+                            my={20}
+                            justify="center"
+                            align="center"
+                            direction="column">
+                            <Loader type="dots" />
+                            <Text size="sm">Waiting for more players</Text>
+                        </Flex>
+                }
 
-            <button onClick={() => { props.startGame() }}>Start</button>
-        </>
+            </Flex>
+        </Container>
     )
 }
