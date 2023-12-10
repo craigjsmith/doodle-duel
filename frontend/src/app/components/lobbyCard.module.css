@@ -1,0 +1,4 @@
+.lobbyButton:hover {
+    border: #D55580 1px solid;
+    cursor: pointer;
+}

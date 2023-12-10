@@ -32,7 +32,6 @@ const GameComponent = () => {
   const [secretWord, setSecretWord] = useState<string | null>(null);
   const [isMyTurn, setIsMyTurn] = useState<boolean>(false);
 
-
   useEffect(() => {
     if (gameState) {
       setIsMyTurn(!socket.id.localeCompare(gameState?.turn));
@@ -102,58 +101,66 @@ const GameComponent = () => {
     setSecretWord(msg);
   }
 
-  switch (screen) {
-    case Screens.LobbyList: {
-      return (<LobbyList setLobby={(lobbyId) => { setLobby(lobbyId); setScreen(Screens.Login) }} />);
+  function router() {
+    switch (screen) {
+      case Screens.LobbyList: {
+        return (<LobbyList setLobby={setLobby} setUsername={setUsername} login={login} />);
+      }
+
+      case Screens.Login: {
+        return (
+          <>
+            <h3>Login</h3>
+            <input type="text" onChange={(event) => { setUsername(event.target.value) }}></input>
+            <button onClick={() => {
+              login();
+            }}>Login</button >
+          </>
+        );
+      }
+
+      case Screens.Lobby: {
+        return (<>
+          <Lobby lobbyId={lobby} players={gameState?.players} startGame={() => { startLobby() }} />
+        </>);
+      }
+
+      case Screens.Game: {
+        return (
+          <>
+            {secretWord ? <h1>{secretWord}</h1> : undefined}
+            {JSON.stringify(gameState)}
+            {revealWord ? <h1>{gameState?.previousWord}</h1> : undefined}
+            <Timer endTimestamp={gameState?.endTimestamp ?? 0} duration={20} />
+            <Whiteboard image={image} draw={draw} enable={isMyTurn} />
+            <br />
+            {!isMyTurn ?
+              <>
+                <input type="text" onChange={(event) => { setWordGuess(event.target.value) }}></input>
+                <button onClick={() => {
+                  guess();
+                }}>guess</button>
+              </>
+              : undefined}
+          </>
+        );
+      }
+
+      case Screens.GameOver: {
+        return (<>
+          <h1>Game Over!</h1>
+        </>);
+      }
+
+
     }
-
-    case Screens.Login: {
-      return (
-        <>
-          <h3>Login</h3>
-          <input type="text" onChange={(event) => { setUsername(event.target.value) }}></input>
-          <button onClick={() => {
-            login();
-          }}>Login</button >
-        </>
-      );
-    }
-
-    case Screens.Lobby: {
-      return (<>
-        <Lobby lobbyId={lobby} players={gameState?.players} startGame={() => { startLobby() }} />
-      </>);
-    }
-
-    case Screens.Game: {
-      return (
-        <>
-          {secretWord ? <h1>{secretWord}</h1> : undefined}
-          {JSON.stringify(gameState)}
-          {revealWord ? <h1>{gameState?.previousWord}</h1> : undefined}
-          <Timer endTimestamp={gameState?.endTimestamp ?? 0} duration={20} />
-          <Whiteboard image={image} draw={draw} enable={isMyTurn} />
-          <br />
-          {!isMyTurn ?
-            <>
-              <input type="text" onChange={(event) => { setWordGuess(event.target.value) }}></input>
-              <button onClick={() => {
-                guess();
-              }}>guess</button>
-            </>
-            : undefined}
-        </>
-      );
-    }
-
-    case Screens.GameOver: {
-      return (<>
-        <h1>Game Over!</h1>
-      </>);
-    }
-
-
   }
+
+  return (
+
+    router()
+
+  );
 }
 
 const Game = dynamic(() => Promise.resolve(GameComponent), {

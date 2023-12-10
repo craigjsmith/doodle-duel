@@ -1,11 +1,16 @@
 'use client'
 
-import styles from './lobby-list.module.css'
+import styles from './lobbyList.module.css'
+
+import { useDisclosure } from '@mantine/hooks';
+import { Container, Flex, Title, Button, Text, SimpleGrid, Modal, Input, Group, Center } from '@mantine/core';
 
 import { useEffect, useState, useRef } from 'react';
+import LobbyCard from './components/LobbyCard';
 
-export default function LobbyList(props: { setLobby: (lobbyId: number) => void }) {
+export default function LobbyList(props: { setLobby: (lobbyId: number) => void, setUsername: (username: string) => void, login: () => void }) {
     const [lobbyList, setLobbyList] = useState<Array<number>>();
+    const [opened, { open, close }] = useDisclosure(false);
 
     useEffect(() => {
         getLobbies();
@@ -49,22 +54,62 @@ export default function LobbyList(props: { setLobby: (lobbyId: number) => void }
     }
 
     return (
-        <>
-            <h1>Open Lobbies</h1>
+        <Container>
+            <Flex
+                mih={50}
+                gap="md"
+                justify="center"
+                align="center"
+                direction="column"
+                wrap="wrap"
+            >
+                <Title order={1} my={20}>Doodle Duel</Title>
 
-            <table>
-                <tr>
-                    <th>Lobby</th>
-                </tr>
-                {lobbyList?.map((lobby) =>
-                    <tr key={lobby} onClick={() => { props.setLobby(lobby) }}>
-                        <td>{lobby}</td>
-                    </tr>
-                    // <li key={lobby} onClick={() => { props.setLobby(lobby) }}>{lobby}</li>
-                )}
-            </table>
+                <Button
+                    variant="filled"
+                    radius="xl"
+                    my={15}
+                    onClick={() => { createLobby(); open(); }}
+                >
+                    Create a Lobby
+                </Button>
 
-            <button onClick={() => { createLobby(); }}>New Lobby</button>
-        </>
+                <Text size="lg" my={20}>or join a lobby!</Text>
+
+                <SimpleGrid cols={2} style={{ width: '80%' }}>
+                    {lobbyList?.map((lobby) =>
+                        <LobbyCard lobbyId={lobby} playerCount={2} onClick={() => {
+                            props.setLobby(lobby);
+                            open();
+                        }} />
+                    )}
+                </SimpleGrid>
+
+                <Modal opened={opened} onClose={close} title="Login">
+                    <Center>
+                        <Group>
+                            <Input
+                                size="s"
+                                radius="md"
+                                type="text"
+                                placeholder="Your username"
+                                onChange={(event) => { props.setUsername(event.target.value) }}
+                            />
+
+                            <Button
+                                variant="filled"
+                                size="s"
+                                radius="md"
+                                my={15}
+                                onClick={() => { props.login(); }}
+                            >
+                                Go
+                            </Button>
+                        </Group>
+                    </Center>
+                </Modal>
+
+            </Flex>
+        </Container>
     )
 }
