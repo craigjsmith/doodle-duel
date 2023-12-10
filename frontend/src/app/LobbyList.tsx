@@ -7,6 +7,7 @@ import { Container, Flex, Title, Button, Text, SimpleGrid, Modal, Input, Group, 
 
 import { useEffect, useState, useRef } from 'react';
 import LobbyCard from './components/LobbyCard';
+import Login from './Login';
 
 export default function LobbyList(props: { setLobby: (lobbyId: number) => void, setUsername: (username: string) => void, login: () => void }) {
     const [lobbyList, setLobbyList] = useState<Array<number>>();
@@ -86,27 +87,7 @@ export default function LobbyList(props: { setLobby: (lobbyId: number) => void, 
                 </SimpleGrid>
 
                 <Modal opened={opened} onClose={close} title="Login">
-                    <Center>
-                        <Group>
-                            <Input
-                                size="s"
-                                radius="md"
-                                type="text"
-                                placeholder="Your username"
-                                onChange={(event) => { props.setUsername(event.target.value) }}
-                            />
-
-                            <Button
-                                variant="filled"
-                                size="s"
-                                radius="md"
-                                my={15}
-                                onClick={() => { props.login(); }}
-                            >
-                                Go
-                            </Button>
-                        </Group>
-                    </Center>
+                    <Login setUsername={props.setUsername} login={props.login} />
                 </Modal>
 
             </Flex>

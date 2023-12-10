@@ -107,9 +107,9 @@ const GameComponent = () => {
       }
 
       case Screens.Lobby: {
-        return (<>
+        return (
           <Lobby lobbyId={lobby} players={gameState?.players} startGame={() => { startLobby() }} />
-        </>);
+        );
       }
 
       case Screens.Game: {
