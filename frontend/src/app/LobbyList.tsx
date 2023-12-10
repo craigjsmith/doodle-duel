@@ -1,11 +1,9 @@
 'use client'
 
-import styles from './lobbyList.module.css'
-
 import { useDisclosure } from '@mantine/hooks';
-import { Container, Flex, Title, Button, Text, SimpleGrid, Modal, Input, Group, Center } from '@mantine/core';
+import { Container, Flex, Title, Button, Text, SimpleGrid, Modal } from '@mantine/core';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import LobbyCard from './components/LobbyCard';
 import Login from './Login';
 
