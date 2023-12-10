@@ -29,8 +29,11 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
 
     function scaleCanvasToScreen() {
         if (canvasRef && canvasRef.current) {
-            let smallestDimension = window.innerWidth < window.innerHeight ? window.innerWidth : window.innerHeight;
-            let size = smallestDimension * 0.9;
+            let desiredDimension = window.innerWidth * 0.9;
+            let limitingDimension = window.innerHeight * 0.7;
+            let size = limitingDimension < desiredDimension ? limitingDimension : desiredDimension;
+            // let smallestDimension = window.innerWidth < window.innerHeight ? window.innerWidth : window.innerHeight;
+            // let size = smallestDimension * 0.9;
             setScaleFactor(size / 500);
             canvasRef.current.style.transform = `scale(${size / 500})`;
             canvasRef.current.style.transformOrigin = `top center`;
