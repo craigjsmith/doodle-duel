@@ -15,7 +15,6 @@ import { GameState } from './Models/GameState';
 
 enum Screens {
   LobbyList,
-  Login,
   Lobby,
   Game,
   GameOver
@@ -105,18 +104,6 @@ const GameComponent = () => {
     switch (screen) {
       case Screens.LobbyList: {
         return (<LobbyList setLobby={setLobby} setUsername={setUsername} login={login} />);
-      }
-
-      case Screens.Login: {
-        return (
-          <>
-            <h3>Login</h3>
-            <input type="text" onChange={(event) => { setUsername(event.target.value) }}></input>
-            <button onClick={() => {
-              login();
-            }}>Login</button >
-          </>
-        );
       }
 
       case Screens.Lobby: {
