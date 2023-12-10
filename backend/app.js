@@ -113,13 +113,15 @@ io.on('connection', (socket) => {
 });
 
 async function removeLobbyIfEmpty(lobbyId) {
-    // Lobby is considered "empty" if there is 1 or less players
+    // Lobby is considered "empty" if there is 1 or less players while game is in progress, and 0 if game is not in progress
     let gameState = await getGameState(lobbyId);
 
     if (gameState) {
         let players = gameState.players;
 
-        if (players.length <= 1) {
+        let minimumPlayers = gameState.gameStarted ? 2 : 1
+
+        if (players.length < minimumPlayers) {
             console.log(`Deleting lobby ${lobbyId}`);
             db.removeLobby(lobbyId)
 
