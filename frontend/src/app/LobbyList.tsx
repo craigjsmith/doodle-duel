@@ -63,20 +63,20 @@ export default function LobbyList(props: { setLobby: (lobbyId: number) => void, 
                 direction="column"
                 wrap="wrap"
             >
-                <Title order={1} my={20}>Doodle Duel</Title>
+                <Title order={1} mt={20}>Doodle Duel</Title>
 
                 <Button
                     variant="filled"
                     radius="xl"
-                    my={15}
+                    mt={20}
                     onClick={() => { createLobby(); open(); }}
                 >
                     Create a Lobby
                 </Button>
 
-                <Text size="lg" my={20}>or join a lobby!</Text>
+                <Text size="lg" mt={20}>or join a lobby!</Text>
 
-                <SimpleGrid cols={2} style={{ width: '80%' }}>
+                <SimpleGrid my={20} cols={2} style={{ width: '80%' }}>
                     {lobbyList?.map((lobby) =>
                         <LobbyCard lobbyId={lobby} playerCount={2} onClick={() => {
                             props.setLobby(lobby);
