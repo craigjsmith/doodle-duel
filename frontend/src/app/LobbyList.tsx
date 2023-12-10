@@ -66,18 +66,18 @@ export default function LobbyList(props: { setLobby: (lobbyId: number) => void, 
 
                 <Button
                     variant="filled"
-                    radius="xl"
+                    radius="lg"
                     mt={20}
                     onClick={() => { createLobby(); open(); }}
                 >
                     Create a Lobby
                 </Button>
 
-                <Text size="lg" mt={20}>or join a lobby!</Text>
+                {(lobbyList?.length ?? 0) > 0 ? <Text size="lg" mt={20}>or join an open lobby!</Text> : undefined}
 
                 <SimpleGrid my={20} cols={2} style={{ width: '80%' }}>
                     {lobbyList?.map((lobby) =>
-                        <LobbyCard lobbyId={lobby} playerCount={2} onClick={() => {
+                        <LobbyCard lobbyId={lobby} onClick={() => {
                             props.setLobby(lobby);
                             open();
                         }} />
@@ -89,6 +89,6 @@ export default function LobbyList(props: { setLobby: (lobbyId: number) => void, 
                 </Modal>
 
             </Flex>
-        </Container>
+        </Container >
     )
 }

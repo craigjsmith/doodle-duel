@@ -72,7 +72,7 @@ export default function Lobby(props: { lobbyId: number | null, players: Player[]
                             align="center"
                             direction="column">
                             <Loader type="dots" />
-                            <Text size="sm">Waiting for more players</Text>
+                            <Text size="md">Waiting for more players</Text>
                         </Flex>
                 }
 
