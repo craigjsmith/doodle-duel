@@ -12,6 +12,7 @@ import LobbyList from './LobbyList';
 import Lobby from './Lobby';
 
 import { GameState } from './Models/GameState';
+import Game from './game';
 
 enum Screens {
   LobbyList,
@@ -20,7 +21,7 @@ enum Screens {
   GameOver
 }
 
-const GameComponent = () => {
+const PageComponent = () => {
   const [lobby, setLobby] = useState<number | null>(null);
   const [gameState, setGameState] = useState<GameState>();
   const [image, setImage] = useState<any>();
@@ -114,22 +115,33 @@ const GameComponent = () => {
 
       case Screens.Game: {
         return (
-          <>
-            {secretWord ? <h1>{secretWord}</h1> : undefined}
-            {JSON.stringify(gameState)}
-            {revealWord ? <h1>{gameState?.previousWord}</h1> : undefined}
-            <Timer endTimestamp={gameState?.endTimestamp ?? 0} duration={20} />
-            <Whiteboard image={image} draw={draw} enable={isMyTurn} />
-            <br />
-            {!isMyTurn ?
-              <>
-                <input type="text" onChange={(event) => { setWordGuess(event.target.value) }}></input>
-                <button onClick={() => {
-                  guess();
-                }}>guess</button>
-              </>
-              : undefined}
-          </>
+          <Game
+            secretWord={secretWord}
+            revealWord={revealWord}
+            previousWord={gameState?.previousWord ?? null}
+            endTimestamp={gameState?.endTimestamp ?? 0}
+            image={image}
+            draw={draw}
+            isMyTurn={isMyTurn}
+            setWordGuess={setWordGuess}
+            guess={guess}
+          />
+          // <>
+          //   {secretWord ? <h1>{secretWord}</h1> : undefined}
+          //   {JSON.stringify(gameState)}
+          //   {revealWord ? <h1>{gameState?.previousWord}</h1> : undefined}
+          //   <Timer endTimestamp={gameState?.endTimestamp ?? 0} duration={20} />
+          //   <Whiteboard image={image} draw={draw} enable={isMyTurn} />
+          //   <br />
+          //   {!isMyTurn ?
+          //     <>
+          //       <input type="text" onChange={(event) => { setWordGuess(event.target.value) }}></input>
+          //       <button onClick={() => {
+          //         guess();
+          //       }}>guess</button>
+          //     </>
+          //     : undefined}
+          // </>
         );
       }
 
@@ -153,8 +165,8 @@ const GameComponent = () => {
   );
 }
 
-const Game = dynamic(() => Promise.resolve(GameComponent), {
+const Page = dynamic(() => Promise.resolve(PageComponent), {
   ssr: false,
 })
 
-export default Game
+export default Page
