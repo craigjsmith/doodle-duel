@@ -30,8 +30,11 @@ export default function Game(props: {
 
     useEffect(() => {
         setTopBarHeight(topBarRef.current?.clientHeight ?? 0);
-    }, []);
+    });
 
+    useEffect(() => {
+        console.log("topBarHeight: " + topBarHeight);
+    }, [topBarHeight]);
 
     useEffect(() => {
         if (!props.gameStage?.localeCompare("LEADERBOARD")) {
@@ -42,7 +45,7 @@ export default function Game(props: {
     }, [props.gameStage]);
 
     return (
-        <>
+        <div className={styles.game}>
             <div className={styles.fixedTextBox} ref={topBarRef}>
                 <Center>
                     {/* Show reveal word on reveal and leaderboard stage */}
@@ -80,13 +83,14 @@ export default function Game(props: {
                     </Box>
                 </Center>
             </div >
+
             <Flex pt={100} direction="column">
                 <Whiteboard image={props.image} draw={props.draw} enable={props.isMyTurn} unusuableHeight={topBarHeight} />
             </Flex>
 
             <Modal opened={opened} onClose={close} title="Leaderboard">
-                <Leaderboard players={props.players} />
+                <Leaderboard players={props.players ?? []} />
             </Modal>
-        </>
+        </div>
     )
 }

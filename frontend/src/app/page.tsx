@@ -44,36 +44,6 @@ const PageComponent = () => {
     }
   }, [gameState?.gameStage])
 
-  // useEffect(() => {
-  //   console.log("PREVIOUS WORD CHANGE: " + gameState?.previousWord);
-  //   // New round
-  //   if (!secretWord?.localeCompare(gameState?.previousWord)) {
-  //     setSecretWord(null);
-  //   }
-
-  //   // Reveal solution when round ends (if not first round)
-  //   if (gameState?.previousWord) {
-  //     setRevealWord(true);
-  //   }
-
-  //   setTimeout(() => {
-  //     // Show leaderboard (if not first round)
-  //     if (gameState?.previousWord) {
-  //       setShowLeaderboard(true);
-  //     }
-
-
-  //     setTimeout(() => {
-  //       // Reset game
-  //       setShowLeaderboard(false);
-  //       setImage(null);
-  //       setRevealWord(false);
-  //     }, 3000);
-
-
-  //   }, 3000);
-  // }, [gameState?.previousWord])
-
   useEffect(() => {
     if (gameState?.gameStarted) {
       setScreen(Screens.Game);
@@ -86,7 +56,6 @@ const PageComponent = () => {
     socket.on('DRAW', onDraw);
     socket.on('REVEAL', onReveal);
     socket.on('GAMEOVER', () => { setScreen(Screens.GameOver) });
-
   }, []);
 
   const guess = async () => {

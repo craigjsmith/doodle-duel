@@ -25,7 +25,19 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
         _setScaleFactor(data);
     };
 
+    const [unusuableHeight, _setUnusuableHeight] = useState<number>(0);
+
+    const unusuableHeightRef = useRef(unusuableHeight);
+    const setUnusuableHeight = (data: number) => {
+        unusuableHeightRef.current = data;
+        _setUnusuableHeight(data);
+    };
+
     const canvasRef = useRef<HTMLCanvasElement>(null);
+
+    useEffect(() => {
+        setUnusuableHeight(props.unusuableHeight)
+    }, [props.unusuableHeight])
 
     useEffect(() => {
         // Update scaling when unusable height changes
@@ -71,8 +83,8 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
     }, [listenersInstalled]);
 
     function scaleCanvasToScreen() {
-        let padding = 20;
-        let maxHeight = (window.visualViewport?.height ?? 0) - (props.unusuableHeight + padding);
+        let padding = 35;
+        let maxHeight = (window.visualViewport?.height ?? 0) - (unusuableHeightRef.current + padding);
         let maxWidth = window.innerWidth - (padding * 2);
         let size = maxHeight < maxWidth ? maxHeight : maxWidth;
         setScaleFactor(size / CANVAS_SIZE);
