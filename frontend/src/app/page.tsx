@@ -125,6 +125,7 @@ const PageComponent = () => {
             isMyTurn={isMyTurn}
             setWordGuess={setWordGuess}
             guess={guess}
+            players={gameState?.players}
           />
         );
       }

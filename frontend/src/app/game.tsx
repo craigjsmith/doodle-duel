@@ -2,11 +2,14 @@
 
 import styles from './game.module.css'
 
-import { Button, Input, Center, Group, Flex, Box } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import { Button, Input, Center, Group, Flex, Box, Modal } from '@mantine/core';
 
 import { useEffect, useState, useRef } from 'react';
 import Timer from './timer';
 import Whiteboard from './whiteboard';
+import Leaderboard from './Leaderboard';
+import { Player } from './Models/Player';
 
 export default function Game(props: {
     secretWord: string | null,
@@ -18,8 +21,10 @@ export default function Game(props: {
     isMyTurn: boolean
     setWordGuess: (guess: string) => void,
     guess: () => void,
+    players: Player[] | undefined
 }) {
 
+    const [opened, { open, close }] = useDisclosure(false);
     const [topBarHeight, setTopBarHeight] = useState<number>(0);
     const topBarRef = useRef<HTMLDivElement>(null);
 
@@ -65,6 +70,12 @@ export default function Game(props: {
             <Flex pt={100} direction="column">
                 <Whiteboard image={props.image} draw={props.draw} enable={props.isMyTurn} unusuableHeight={topBarHeight} />
             </Flex>
+
+            <Modal opened={opened} onClose={close} title="Leaderboard">
+                <Leaderboard players={props.players} />
+            </Modal>
+
+            <Button onClick={open}>Open modal</Button>
         </>
     )
 }
