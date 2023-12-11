@@ -4,14 +4,14 @@ import styles from './whiteboard.module.css'
 
 import { useEffect, useState, useRef } from 'react';
 
-export default function Whiteboard(props: { image: any | undefined, draw: any, enable: boolean }) {
-    const [ctx, setCtx] = useState<any>();
-    const [loaded, setLoaded] = useState<any>();
-    const canvasRef = useRef<HTMLCanvasElement>(null);
+export default function Whiteboard(props: { image: any | undefined, draw: any, enable: boolean, unusuableHeight: number }) {
     const CANVAS_SIZE = 500;
     var pos = { x: 0, y: 0 };
 
+    const [ctx, setCtx] = useState<any>();
+    const [listenersInstalled, setListenersInstalled] = useState<boolean>(false);
     const [lastSavedTimestamp, _setLastSavedTimestamp] = useState<any>(0);
+    const [scaleFactor, _setScaleFactor] = useState<number>(1);
 
     const lastSavedTimestampRef = useRef(lastSavedTimestamp);
     const setLastSavedTimestamp = (data: number) => {
@@ -19,45 +19,38 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
         _setLastSavedTimestamp(data);
     };
 
-    const [scaleFactor, _setScaleFactor] = useState<number>(1);
-
     const scaleFactorRef = useRef(scaleFactor);
     const setScaleFactor = (data: number) => {
         scaleFactorRef.current = data;
         _setScaleFactor(data);
     };
 
-    function scaleCanvasToScreen() {
-        if (canvasRef && canvasRef.current) {
-            let maxHeight = (window.visualViewport?.height ?? 0) - 200;
-            let maxWidth = window.innerWidth - 40;
-            let size = maxHeight < maxWidth ? maxHeight : maxWidth;
-            setScaleFactor(size / 500);
-            canvasRef.current.style.transform = `scale(${size / 500})`;
-            canvasRef.current.style.transformOrigin = `top center`;
-        }
-    }
+    const canvasRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
+        // Update scaling when unusable height changes
         scaleCanvasToScreen();
-    }, [])
+    }, [props.unusuableHeight])
 
     useEffect(() => {
+        // Update canvas image when recieved
         load();
     }, [props.image])
 
     useEffect(() => {
         if (canvasRef && canvasRef.current) {
-            setLoaded(true);
+            setListenersInstalled(true);
             setCtx(canvasRef.current.getContext('2d'));
 
             window.visualViewport?.addEventListener("resize", scaleCanvasToScreen);
 
+            // Touch events
             canvasRef.current.addEventListener('touchmove', drawTouch);
             canvasRef.current.addEventListener('touchmove', save);
             canvasRef.current.addEventListener('touchstart', setPositionTouch);
             canvasRef.current.addEventListener('touchend', setPositionTouch);
 
+            // Mouse events
             canvasRef.current.addEventListener('mousemove', draw);
             canvasRef.current.addEventListener('mousemove', save);
             canvasRef.current.addEventListener('mousedown', setPosition);
@@ -65,9 +58,30 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
         }
 
         return () => {
+            canvasRef.current?.removeEventListener('touchmove', drawTouch);
+            canvasRef.current?.removeEventListener('touchmove', save);
+            canvasRef.current?.removeEventListener('touchstart', setPositionTouch);
+            canvasRef.current?.removeEventListener('touchend', setPositionTouch);
 
+            canvasRef.current?.removeEventListener('mousemove', draw);
+            canvasRef.current?.removeEventListener('mousemove', save);
+            canvasRef.current?.removeEventListener('mousedown', setPosition);
+            canvasRef.current?.removeEventListener('mouseenter', setPosition);
         }
-    }, [loaded]);
+    }, [listenersInstalled]);
+
+    function scaleCanvasToScreen() {
+        let padding = 20;
+        let maxHeight = (window.visualViewport?.height ?? 0) - (props.unusuableHeight + padding);
+        let maxWidth = window.innerWidth - (padding * 2);
+        let size = maxHeight < maxWidth ? maxHeight : maxWidth;
+        setScaleFactor(size / CANVAS_SIZE);
+
+        if (canvasRef && canvasRef.current) {
+            canvasRef.current.style.transform = `scale(${size / CANVAS_SIZE})`;
+            canvasRef.current.style.transformOrigin = `top center`;
+        }
+    }
 
     function setPosition(e: any) {
         var left = 0;
@@ -147,12 +161,12 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
         } else if (!props.enable) {
             // Only update whiteboard if you're not the artist
             var array = new Uint8ClampedArray(props.image);
-            ctx?.putImageData(new ImageData(array, 500, 500), 0, 0);
+            ctx?.putImageData(new ImageData(array, CANVAS_SIZE, CANVAS_SIZE), 0, 0);
         }
     }
 
     function clear() {
-        ctx?.clearRect(0, 0, 500, 500);
+        ctx?.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
     }
 
     return (

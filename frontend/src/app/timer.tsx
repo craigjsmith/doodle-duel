@@ -28,7 +28,7 @@ export default function Timer(props: { endTimestamp: number, duration: number })
 
     return (
         <h3>
-            {secondsRemaining ? `Time remaining: ${secondsRemaining}` : "Round end!"}
+            {secondsRemaining}
         </h3>
     )
 }

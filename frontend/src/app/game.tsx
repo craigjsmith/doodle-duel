@@ -19,11 +19,17 @@ export default function Game(props: {
     setWordGuess: (guess: string) => void,
     guess: () => void,
 }) {
-    const [lobbyList, setLobbyList] = useState<Array<number>>();
+
+    const [topBarHeight, setTopBarHeight] = useState<number>(0);
+    const topBarRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        setTopBarHeight(topBarRef.current?.clientHeight ?? 0);
+    }, []);
 
     return (
         <>
-            <div className={styles.fixedTextBox}>
+            <div className={styles.fixedTextBox} ref={topBarRef}>
                 {!props.isMyTurn ?
                     <Center>
                         <Group>
@@ -45,20 +51,20 @@ export default function Game(props: {
                                 Guess
                             </Button>
                         </Group>
+
+                        <Center>
+                            <Timer endTimestamp={props.endTimestamp ?? 0} duration={20} />
+                        </Center>
                     </Center>
 
                     :
                     <Center>
-                        {props.revealWord ? <h1>{props.previousWord}</h1> : (props.secretWord ? <h1>You are drawing: {props.secretWord}</h1> : undefined)}
+                        {props.revealWord ? <h3>{props.previousWord}</h3> : (props.secretWord ? <h3>You are drawing: {props.secretWord}</h3> : undefined)}
                     </Center>
                 }
             </div>
             <Flex pt={100} direction="column">
-                <Center>
-                    <Timer endTimestamp={props.endTimestamp ?? 0} duration={20} />
-                </Center>
-
-                <Whiteboard image={props.image} draw={props.draw} enable={props.isMyTurn} />
+                <Whiteboard image={props.image} draw={props.draw} enable={props.isMyTurn} unusuableHeight={topBarHeight} />
             </Flex>
         </>
     )
