@@ -60,9 +60,9 @@ class LobbyBouncer {
         return this.usernameBySocketId;
     }
 
-    awardPoints(socketId) {
+    awardPoints(socketId, amount) {
         let currentPoints = this.getPoints(socketId);
-        this.pointsBySocketId.set(socketId, currentPoints + 1);
+        this.pointsBySocketId.set(socketId, currentPoints + amount);
     }
 
     getPoints(socketId) {

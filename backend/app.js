@@ -96,8 +96,8 @@ io.on('connection', (socket) => {
             let secretWord = gameState.word.toString();
             if (!secretWord.localeCompare(guess.toLowerCase())) {
                 // If correct answer, award points to guesser and artist
-                bouncer.awardPoints(socket.id);
-                bouncer.awardPoints(gameState.turn);
+                bouncer.awardPoints(socket.id, 2);
+                bouncer.awardPoints(gameState.turn, 1);
 
                 // Check if either point earner has won game
                 if (bouncer.getPoints(socket.id) >= POINTS_TO_WIN || bouncer.getPoints(gameState.turn) >= POINTS_TO_WIN) {
