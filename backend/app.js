@@ -25,7 +25,7 @@ const io = new Server(server, {
 const WORDS = ["monkey", "dog", "cat", "lion", "tiger", "fish", "seal"];
 const POINTS_TO_WIN = 10;
 
-const ROUND_DURATION = 20000/*65000*/;
+const ROUND_DURATION = 24000/*65000*/;
 
 let bouncer = new LobbyBouncer();
 

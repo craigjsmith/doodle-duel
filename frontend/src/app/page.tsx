@@ -49,7 +49,7 @@ const PageComponent = () => {
     setTimeout(() => {
       setImage(null);
       setRevealWord(false);
-    }, 1000);
+    }, 3000);
   }, [gameState?.previousWord])
 
   useEffect(() => {
@@ -126,22 +126,6 @@ const PageComponent = () => {
             setWordGuess={setWordGuess}
             guess={guess}
           />
-          // <>
-          //   {secretWord ? <h1>{secretWord}</h1> : undefined}
-          //   {JSON.stringify(gameState)}
-          //   {revealWord ? <h1>{gameState?.previousWord}</h1> : undefined}
-          //   <Timer endTimestamp={gameState?.endTimestamp ?? 0} duration={20} />
-          //   <Whiteboard image={image} draw={draw} enable={isMyTurn} />
-          //   <br />
-          //   {!isMyTurn ?
-          //     <>
-          //       <input type="text" onChange={(event) => { setWordGuess(event.target.value) }}></input>
-          //       <button onClick={() => {
-          //         guess();
-          //       }}>guess</button>
-          //     </>
-          //     : undefined}
-          // </>
         );
       }
 

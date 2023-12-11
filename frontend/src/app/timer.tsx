@@ -9,7 +9,7 @@ export default function Timer(props: { endTimestamp: number, duration: number })
 
     useEffect(() => {
         const interval = setInterval(() => {
-            if (props.endTimestamp - Date.now() > props.duration * 2000) {
+            if (props.endTimestamp - Date.now() > props.duration * 1000) {
                 /* Any built in "grace period" on timestamp is hidden from UI. This helps compensate for pauses
                 between rounds and socket IO delay */
                 setSecondsRemaining(props.duration);
@@ -27,8 +27,8 @@ export default function Timer(props: { endTimestamp: number, duration: number })
     }, [props.endTimestamp, secondsRemaining]);
 
     return (
-        <>
-            <h3>Time remaining: {secondsRemaining}</h3>
-        </>
+        <h3>
+            {secondsRemaining ? `Time remaining: ${secondsRemaining}` : "Round end!"}
+        </h3>
     )
 }

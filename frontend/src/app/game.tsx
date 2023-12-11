@@ -2,7 +2,7 @@
 
 import styles from './game.module.css'
 
-import { Button, Input, Center, Group } from '@mantine/core';
+import { Button, Input, Center, Group, Flex } from '@mantine/core';
 
 import { useEffect, useState, useRef } from 'react';
 import Timer from './timer';
@@ -20,21 +20,9 @@ export default function Game(props: {
     guess: () => void,
 }) {
     const [lobbyList, setLobbyList] = useState<Array<number>>();
-    const guessBox = useRef<HTMLInputElement>(null);
-
-    useEffect(() => {
-        window.addEventListener("resize", () => {
-            if (guessBox.current) {
-                guessBox.current.style.bottom = (window.innerHeight - window.innerHeight) + 'px';
-            }
-        });
-    }, []);
 
     return (
         <>
-            <Timer endTimestamp={props.endTimestamp ?? 0} duration={20} />
-            <Whiteboard image={props.image} draw={props.draw} enable={props.isMyTurn} />
-
             <div className={styles.fixedTextBox}>
                 {!props.isMyTurn ?
                     <Center>
@@ -65,6 +53,13 @@ export default function Game(props: {
                     </Center>
                 }
             </div>
+            <Flex pt={100} direction="column">
+                <Center>
+                    <Timer endTimestamp={props.endTimestamp ?? 0} duration={20} />
+                </Center>
+
+                <Whiteboard image={props.image} draw={props.draw} enable={props.isMyTurn} />
+            </Flex>
         </>
     )
 }
