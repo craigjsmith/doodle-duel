@@ -7,7 +7,7 @@ import { useEffect, useState, useRef } from 'react';
 
 export default function Whiteboard(props: { image: any | undefined, draw: any, enable: boolean, unusuableHeight: number }) {
     const CANVAS_SIZE = 500;
-    const COLOR_SELECTOR_SIZE = 50 + 45;
+    const COLOR_SELECTOR_SIZE = 40 + 45;
     const COLORS = ['#EF476F', '#FFD166', '#06D6A0', '#118AB2', '#073B4C']
 
     var pos = { x: 0, y: 0 };
