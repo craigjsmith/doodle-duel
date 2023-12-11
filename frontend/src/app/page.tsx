@@ -27,7 +27,6 @@ const PageComponent = () => {
   const [image, setImage] = useState<any>();
   const [wordGuess, setWordGuess] = useState<string>();
   const [username, setUsername] = useState<string>();
-  const [revealWord, setRevealWord] = useState<boolean>(false);
   const [screen, setScreen] = useState<Screens>(Screens.LobbyList);
   const [secretWord, setSecretWord] = useState<string | null>(null);
   const [isMyTurn, setIsMyTurn] = useState<boolean>(false);
@@ -40,27 +39,10 @@ const PageComponent = () => {
   }, [gameState?.turn]);
 
   useEffect(() => {
-    if (gameState?.previousWord) {
-      // If this is not first round
-      setRevealWord(true);
-
-      setTimeout(() => {
-        // Show leaderboard
-        setShowLeaderboard(true);
-
-        setTimeout(() => {
-          // Reset game
-          setShowLeaderboard(false);
-          setImage(null);
-          setRevealWord(false);
-        }, 3000);
-
-
-      }, 3000);
-    } else {
-      // If this is first round
+    if (gameState?.gameStage == undefined) {
+      setImage(null);
     }
-  }, [gameState?.previousWord])
+  }, [gameState?.gameStage])
 
   // useEffect(() => {
   //   console.log("PREVIOUS WORD CHANGE: " + gameState?.previousWord);
@@ -128,7 +110,7 @@ const PageComponent = () => {
 
   function onGame(msg: any) {
     console.log(msg);
-    setGameState({ id: msg.id, word: msg.word, previousWord: msg.previousWord, solved: msg.solved, players: msg.players, turn: msg.turn, guesses: JSON.parse(msg.guesses), endTimestamp: msg.endTimestamp, gameStarted: msg.gameStarted });
+    setGameState({ id: msg.id, word: msg.word, previousWord: msg.previousWord, solved: msg.solved, players: msg.players, turn: msg.turn, guesses: JSON.parse(msg.guesses), endTimestamp: msg.endTimestamp, gameStarted: msg.gameStarted, gameStage: msg.gameStage });
   }
 
   function onDraw(img: any) {
@@ -157,7 +139,6 @@ const PageComponent = () => {
         return (
           <Game
             secretWord={secretWord}
-            revealWord={revealWord}
             previousWord={gameState?.previousWord ?? null}
             endTimestamp={gameState?.endTimestamp ?? 0}
             image={image}
@@ -166,7 +147,7 @@ const PageComponent = () => {
             setWordGuess={setWordGuess}
             guess={guess}
             players={gameState?.players}
-            showLeaderboard={showLeaderboard}
+            gameStage={gameState?.gameStage}
           />
         );
       }

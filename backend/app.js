@@ -78,7 +78,8 @@ io.on('connection', (socket) => {
 
     async function onStart(msg) {
         let lobbyId = bouncer.getLobby(socket.id);
-        db.setGameStarted(lobbyId, 1)
+        await db.setGameStarted(lobbyId, 1)
+        await db.setGameStage(lobbyId, "NEWGAME");
         startNewRound(lobbyId);
         emitGameState(lobbyId);
     }
@@ -150,22 +151,49 @@ async function startNewRound(id) {
     clearTimeout(RoundEndTimeoutMap[id]);
     delete RoundEndTimeoutMap[id];
 
-    // Reset guess list
-    await db.setGuesses(id, JSON.stringify([]));
+    let firstRound = false;
+    let gameState = await getGameState(id, true);
 
-    await setNextPlayerAsArtist(id);
-    await setNewWord(id);
+    // If first round, skip reveal and leaderboard
+    if (!gameState.gameStage.localeCompare("NEWGAME")) {
+        firstRound = true;
+    }
 
-    var date = new Date();
-    date.setTime(date.getTime() + ROUND_DURATION + END_OF_ROUND_DURATION + GRACE_DURTION);
-    await db.setRoundEndTimestamp(id, date.getTime());
+    if (!firstRound) {
+        // Game stage: Reveal
+        let previousWord = gameState.word;
+        await db.setGameStage(id, "REVEAL");
+        await db.setPreviousWord(id, previousWord);
 
-    await emitGameState(id);
+        await emitGameState(id);
 
-    RoundEndTimeoutMap[id] = setTimeout(() => {
-        console.log("FORCE ROUND END");
-        startNewRound(id);
-    }, ROUND_DURATION + END_OF_ROUND_DURATION + GRACE_DURTION);
+        // Game stage: Leaderboard
+        setTimeout(async () => {
+            await db.setGameStage(id, "LEADERBOARD");
+            await emitGameState(id);
+        }, 3000);
+    }
+
+    // Game stage: New round
+    setTimeout(async () => {
+        onDraw(null, id)
+        await db.setGameStage(id, "GAME");
+        await db.setGuesses(id, JSON.stringify([]));
+
+        await setNextPlayerAsArtist(id);
+        await setNewWord(id);
+
+        var date = new Date();
+        date.setTime(date.getTime() + ROUND_DURATION + GRACE_DURTION);
+        await db.setRoundEndTimestamp(id, date.getTime());
+
+        await emitGameState(id);
+
+        RoundEndTimeoutMap[id] = setTimeout(() => {
+            console.log("FORCE ROUND END");
+            startNewRound(id);
+        }, ROUND_DURATION + GRACE_DURTION);
+    }, firstRound ? 0 : 6000);
 }
 
 const setNewWord = async (id) => {

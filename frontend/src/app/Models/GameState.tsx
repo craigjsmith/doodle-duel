@@ -10,4 +10,5 @@ export interface GameState {
   guesses: Array<string>;
   endTimestamp: number;
   gameStarted: boolean;
+  gameStage: string;
 }
