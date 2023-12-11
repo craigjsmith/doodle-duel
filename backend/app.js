@@ -25,7 +25,9 @@ const io = new Server(server, {
 const WORDS = ["monkey", "dog", "cat", "lion", "tiger", "fish", "seal"];
 const POINTS_TO_WIN = 10;
 
-const ROUND_DURATION = 24000/*65000*/;
+const ROUND_DURATION = 20000;
+const END_OF_ROUND_DURATION = 6000;
+const GRACE_DURTION = 1000;
 
 let bouncer = new LobbyBouncer();
 
@@ -155,7 +157,7 @@ async function startNewRound(id) {
     await setNewWord(id);
 
     var date = new Date();
-    date.setTime(date.getTime() + ROUND_DURATION);
+    date.setTime(date.getTime() + ROUND_DURATION + END_OF_ROUND_DURATION + GRACE_DURTION);
     await db.setRoundEndTimestamp(id, date.getTime());
 
     await emitGameState(id);
@@ -163,7 +165,7 @@ async function startNewRound(id) {
     RoundEndTimeoutMap[id] = setTimeout(() => {
         console.log("FORCE ROUND END");
         startNewRound(id);
-    }, ROUND_DURATION);
+    }, ROUND_DURATION + END_OF_ROUND_DURATION + GRACE_DURTION);
 }
 
 const setNewWord = async (id) => {

@@ -31,6 +31,7 @@ const PageComponent = () => {
   const [screen, setScreen] = useState<Screens>(Screens.LobbyList);
   const [secretWord, setSecretWord] = useState<string | null>(null);
   const [isMyTurn, setIsMyTurn] = useState<boolean>(false);
+  const [showLeaderboard, setShowLeaderboard] = useState<boolean>(false);
 
   useEffect(() => {
     if (gameState) {
@@ -39,18 +40,57 @@ const PageComponent = () => {
   }, [gameState?.turn]);
 
   useEffect(() => {
+    if (gameState?.previousWord) {
+      // If this is not first round
+      setRevealWord(true);
 
-    if (!secretWord?.localeCompare(gameState?.previousWord)) {
-      setSecretWord(null);
+      setTimeout(() => {
+        // Show leaderboard
+        setShowLeaderboard(true);
+
+        setTimeout(() => {
+          // Reset game
+          setShowLeaderboard(false);
+          setImage(null);
+          setRevealWord(false);
+        }, 3000);
+
+
+      }, 3000);
+    } else {
+      // If this is first round
     }
-
-    // Reveal solution when round ends
-    setRevealWord(true);
-    setTimeout(() => {
-      setImage(null);
-      setRevealWord(false);
-    }, 3000);
   }, [gameState?.previousWord])
+
+  // useEffect(() => {
+  //   console.log("PREVIOUS WORD CHANGE: " + gameState?.previousWord);
+  //   // New round
+  //   if (!secretWord?.localeCompare(gameState?.previousWord)) {
+  //     setSecretWord(null);
+  //   }
+
+  //   // Reveal solution when round ends (if not first round)
+  //   if (gameState?.previousWord) {
+  //     setRevealWord(true);
+  //   }
+
+  //   setTimeout(() => {
+  //     // Show leaderboard (if not first round)
+  //     if (gameState?.previousWord) {
+  //       setShowLeaderboard(true);
+  //     }
+
+
+  //     setTimeout(() => {
+  //       // Reset game
+  //       setShowLeaderboard(false);
+  //       setImage(null);
+  //       setRevealWord(false);
+  //     }, 3000);
+
+
+  //   }, 3000);
+  // }, [gameState?.previousWord])
 
   useEffect(() => {
     if (gameState?.gameStarted) {
@@ -126,6 +166,7 @@ const PageComponent = () => {
             setWordGuess={setWordGuess}
             guess={guess}
             players={gameState?.players}
+            showLeaderboard={showLeaderboard}
           />
         );
       }

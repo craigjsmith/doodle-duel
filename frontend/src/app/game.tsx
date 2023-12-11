@@ -21,7 +21,8 @@ export default function Game(props: {
     isMyTurn: boolean
     setWordGuess: (guess: string) => void,
     guess: () => void,
-    players: Player[] | undefined
+    players: Player[] | undefined,
+    showLeaderboard: boolean
 }) {
 
     const [opened, { open, close }] = useDisclosure(false);
@@ -32,11 +33,43 @@ export default function Game(props: {
         setTopBarHeight(topBarRef.current?.clientHeight ?? 0);
     }, []);
 
+
+    useEffect(() => {
+        if (props.showLeaderboard) {
+            open();
+        } else {
+            close();
+        }
+    }, [props.showLeaderboard]);
+
     return (
         <>
             <div className={styles.fixedTextBox} ref={topBarRef}>
                 <Center>
-                    {!props.isMyTurn ?
+
+                    {(props.isMyTurn || props.revealWord) ? <Center>
+                        {props.revealWord ? <h3>{props.previousWord}</h3> : (props.secretWord ? <h3>You are drawing: {props.secretWord}</h3> : undefined)}
+                    </Center> : <Group>
+                        <Input
+                            size="m"
+                            radius="md"
+                            type="text"
+                            placeholder="Your guess"
+                            onChange={(event) => { props.setWordGuess(event.target.value) }}
+                        />
+
+                        <Button
+                            variant="bright"
+                            size="s"
+                            radius="md"
+                            my={15}
+                            onClick={() => { props.guess() }}
+                        >
+                            Guess
+                        </Button>
+                    </Group>}
+
+                    {/* {!props.isMyTurn ?
                         <Group>
                             <Input
                                 size="m"
@@ -60,7 +93,7 @@ export default function Game(props: {
                         <Center>
                             {props.revealWord ? <h3>{props.previousWord}</h3> : (props.secretWord ? <h3>You are drawing: {props.secretWord}</h3> : undefined)}
                         </Center>
-                    }
+                    } */}
 
                     <Box pl={20}>
                         <Timer endTimestamp={props.endTimestamp ?? 0} duration={20} />
@@ -74,8 +107,6 @@ export default function Game(props: {
             <Modal opened={opened} onClose={close} title="Leaderboard">
                 <Leaderboard players={props.players} />
             </Modal>
-
-            <Button onClick={open}>Open modal</Button>
         </>
     )
 }
