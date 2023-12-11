@@ -1,5 +1,8 @@
 'use client'
 
+import { Container, Flex, Title, List, ThemeIcon, rem, Button, Loader, Text, Pill } from '@mantine/core';
+import { IconClockHour3 } from '@tabler/icons-react';
+
 import styles from './timer.module.css'
 
 import { useEffect, useState, useRef } from 'react';
@@ -27,8 +30,20 @@ export default function Timer(props: { endTimestamp: number, duration: number })
     }, [props.endTimestamp, secondsRemaining]);
 
     return (
-        <h3>
-            {secondsRemaining}
-        </h3>
+        <Flex
+            gap="xs"
+            justify="flex-start"
+            align="center"
+            direction="row"
+        >
+            <div className={styles.timerContainer}>
+                <IconClockHour3 color="#BF456C" style={{ width: rem(18), height: rem(18) }} />
+
+                <h3 className={styles.timeNumber}>
+                    {secondsRemaining}
+                </h3>
+            </div>
+
+        </Flex>
     )
 }
