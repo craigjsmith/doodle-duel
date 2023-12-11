@@ -77,14 +77,14 @@ export default function Game(props: {
                             </Button>
                         </Group>
                         : undefined}
-
-                    <Box pl={20}>
-                        <Timer endTimestamp={props.endTimestamp ?? 0} duration={20} />
-                    </Box>
                 </Center>
             </div >
 
             <Flex pt={100} direction="column">
+                <Center pb={10}>
+                    <Timer endTimestamp={props.endTimestamp ?? 0} duration={20} />
+                </Center>
+
                 <Whiteboard image={props.image} draw={props.draw} enable={props.isMyTurn} unusuableHeight={topBarHeight} />
             </Flex>
 

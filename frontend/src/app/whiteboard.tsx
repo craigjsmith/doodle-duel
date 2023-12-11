@@ -7,7 +7,7 @@ import { useEffect, useState, useRef } from 'react';
 
 export default function Whiteboard(props: { image: any | undefined, draw: any, enable: boolean, unusuableHeight: number }) {
     const CANVAS_SIZE = 500;
-    const COLOR_SELECTOR_SIZE = 50;
+    const COLOR_SELECTOR_SIZE = 50 + 45;
     const COLORS = ['#EF476F', '#FFD166', '#06D6A0', '#118AB2', '#073B4C']
 
     var pos = { x: 0, y: 0 };
@@ -93,9 +93,10 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
     }, [listenersInstalled]);
 
     function scaleCanvasToScreen() {
-        let padding = 35;
-        let maxHeight = (window.visualViewport?.height ?? 0) - (unusuableHeightRef.current + padding);
-        let maxWidth = window.innerWidth - (padding * 2);
+        let yPadding = 35;
+        let xPadding = 20;
+        let maxHeight = (window.visualViewport?.height ?? 0) - (unusuableHeightRef.current + yPadding);
+        let maxWidth = window.innerWidth - (xPadding);
         let size = maxHeight < maxWidth ? maxHeight : maxWidth;
         setScaleFactor(size / CANVAS_SIZE);
 
