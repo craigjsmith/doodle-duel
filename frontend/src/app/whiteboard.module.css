@@ -16,3 +16,9 @@
 .disabled {
   pointer-events: none
 }
+
+.colorSwatches {
+  display: flex;
+  justify-content: center;
+  height: 50px;
+}

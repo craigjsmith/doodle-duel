@@ -1,17 +1,29 @@
 'use client'
 
+import ColorButton from './ColorButton';
 import styles from './whiteboard.module.css'
 
 import { useEffect, useState, useRef } from 'react';
 
 export default function Whiteboard(props: { image: any | undefined, draw: any, enable: boolean, unusuableHeight: number }) {
     const CANVAS_SIZE = 500;
+    const COLOR_SELECTOR_SIZE = 50;
+    const COLORS = ['#EF476F', '#FFD166', '#06D6A0', '#118AB2', '#073B4C']
+
     var pos = { x: 0, y: 0 };
 
     const [ctx, setCtx] = useState<any>();
     const [listenersInstalled, setListenersInstalled] = useState<boolean>(false);
+    const [selectedColor, _setSelectedColor] = useState<string>(COLORS[0]);
     const [lastSavedTimestamp, _setLastSavedTimestamp] = useState<any>(0);
     const [scaleFactor, _setScaleFactor] = useState<number>(1);
+    const [unusuableHeight, _setUnusuableHeight] = useState<number>(0);
+
+    const selectedColorRef = useRef(selectedColor);
+    const setSelectedColor = (data: string) => {
+        selectedColorRef.current = data;
+        _setSelectedColor(data);
+    };
 
     const lastSavedTimestampRef = useRef(lastSavedTimestamp);
     const setLastSavedTimestamp = (data: number) => {
@@ -24,8 +36,6 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
         scaleFactorRef.current = data;
         _setScaleFactor(data);
     };
-
-    const [unusuableHeight, _setUnusuableHeight] = useState<number>(0);
 
     const unusuableHeightRef = useRef(unusuableHeight);
     const setUnusuableHeight = (data: number) => {
@@ -127,8 +137,9 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
             ctx.beginPath();
 
             ctx.lineWidth = 5;
+
             ctx.lineCap = 'round';
-            ctx.strokeStyle = '#0000ff';
+            ctx.strokeStyle = selectedColorRef.current;
 
             ctx.moveTo(pos.x, pos.y); // from
             setPosition(e);
@@ -146,8 +157,9 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
             ctx.beginPath();
 
             ctx.lineWidth = 5;
+
             ctx.lineCap = 'round';
-            ctx.strokeStyle = '#0000ff';
+            ctx.strokeStyle = selectedColorRef.current;
 
             ctx.moveTo(pos.x, pos.y); // from
             setPositionTouch(e);
@@ -182,8 +194,19 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
     }
 
     return (
-        <div className={styles.canvasContainer}>
-            <canvas className={`${styles.canvas} ${props.enable ? styles.enabled : styles.disabled} `} ref={canvasRef} width={CANVAS_SIZE} height={CANVAS_SIZE} />
-        </div>
+        <>
+            {props.enable ?
+                <div className={styles.colorSwatches}>
+                    {
+                        COLORS.map((color) =>
+                            <ColorButton color={color} selected={!color.localeCompare(selectedColor)} onClick={() => { setSelectedColor(color) }} />
+                        )
+                    }
+                </div> : undefined}
+
+            <div className={styles.canvasContainer}>
+                <canvas className={`${styles.canvas} ${props.enable ? styles.enabled : styles.disabled} `} ref={canvasRef} width={CANVAS_SIZE} height={CANVAS_SIZE - COLOR_SELECTOR_SIZE} />
+            </div>
+        </>
     )
 }
