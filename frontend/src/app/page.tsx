@@ -13,6 +13,8 @@ import Lobby from './Lobby';
 
 import { GameState } from './Models/GameState';
 import Game from './game';
+import Leaderboard from './Leaderboard';
+import GameOver from './GameOver';
 
 enum Screens {
   LobbyList,
@@ -122,9 +124,9 @@ const PageComponent = () => {
       }
 
       case Screens.GameOver: {
-        return (<>
-          <h1>Game Over!</h1>
-        </>);
+        return (
+          <GameOver players={gameState?.players ?? []} back={() => { setScreen(Screens.LobbyList) }} />
+        );
       }
 
 
