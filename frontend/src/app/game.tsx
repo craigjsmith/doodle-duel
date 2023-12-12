@@ -96,7 +96,7 @@ export default function Game(props: {
                 <Whiteboard image={props.image} draw={props.draw} enable={props.isMyTurn} unusuableHeight={topBarHeight} />
             </Flex>
 
-            <Modal opened={opened} onClose={close} title="Leaderboard">
+            <Modal opened={opened} onClose={close} withCloseButton={false} closeOnClickOutside={false} closeOnEscape={false} title="Leaderboard">
                 <Leaderboard players={props.players ?? []} />
             </Modal>
         </div>
