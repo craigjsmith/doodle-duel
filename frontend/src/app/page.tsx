@@ -3,17 +3,12 @@
 import { socket } from './socket';
 import dynamic from 'next/dynamic'
 
-import styles from './page.module.css'
-import Whiteboard from './whiteboard';
-import Timer from './timer';
-
 import { useEffect, useState } from 'react';
 import LobbyList from './LobbyList';
 import Lobby from './Lobby';
 
 import { GameState } from './Models/GameState';
 import Game from './game';
-import Leaderboard from './Leaderboard';
 import GameOver from './GameOver';
 
 enum Screens {
@@ -121,6 +116,7 @@ const PageComponent = () => {
             guess={guess}
             players={gameState?.players}
             gameStage={gameState?.gameStage}
+            guesses={gameState?.guesses}
           />
         );
       }
@@ -130,8 +126,6 @@ const PageComponent = () => {
           <GameOver players={gameState?.players ?? []} back={() => { setScreen(Screens.LobbyList) }} />
         );
       }
-
-
     }
   }
 

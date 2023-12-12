@@ -5,7 +5,8 @@
   height: 100%;
 }
 
-.fixedTextBox {
+.staticBar {
+  height: 75px;
   position: absolute;
   top: 0;
   width: 100%;

@@ -1,0 +1,24 @@
+.outerContainer {
+    display: block;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+    height: 70px;
+    padding: 4px 4px 10px 4px;
+    border: #f0f0f0 solid 1px;
+    width: 100%;
+}
+
+.innerContainer {
+    display: inline-block;
+    width: 100px;
+    margin-right: 10px;
+}
+
+.wordBox {
+    display: flex;
+    justify-content: flex-start;
+    justify-self: center;
+    height: 50px;
+    justify-content: center;
+}

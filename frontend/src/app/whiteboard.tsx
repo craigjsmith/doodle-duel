@@ -44,6 +44,7 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
     };
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const colorSwatchesRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         setUnusuableHeight(props.unusuableHeight)
@@ -93,9 +94,9 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
     }, [listenersInstalled]);
 
     function scaleCanvasToScreen() {
-        let yPadding = 35;
+        let yPadding = 40;
         let xPadding = 20;
-        let maxHeight = (window.visualViewport?.height ?? 0) - (unusuableHeightRef.current + yPadding);
+        let maxHeight = (window.visualViewport?.height ?? 0) - (unusuableHeightRef.current + (colorSwatchesRef.current?.clientHeight ?? 0) + yPadding);
         let maxWidth = window.innerWidth - (xPadding);
         let size = maxHeight < maxWidth ? maxHeight : maxWidth;
         setScaleFactor(size / CANVAS_SIZE);
@@ -197,7 +198,7 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
     return (
         <>
             {props.enable ?
-                <div className={styles.colorSwatches}>
+                <div className={styles.colorSwatches} ref={colorSwatchesRef}>
                     {
                         COLORS.map((color) =>
                             <ColorButton color={color} selected={!color.localeCompare(selectedColor)} onClick={() => { setSelectedColor(color) }} />

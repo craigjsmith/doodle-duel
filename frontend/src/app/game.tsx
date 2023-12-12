@@ -3,13 +3,14 @@
 import styles from './game.module.css'
 
 import { useDisclosure } from '@mantine/hooks';
-import { Button, Input, Center, Group, Flex, Box, Modal } from '@mantine/core';
+import { Button, Input, Center, Group, Flex, Modal, Title } from '@mantine/core';
 
 import { useEffect, useState, useRef } from 'react';
 import Timer from './timer';
 import Whiteboard from './whiteboard';
 import Leaderboard from './Leaderboard';
 import { Player } from './Models/Player';
+import GuessList from './guessList';
 
 export default function Game(props: {
     secretWord: string | null,
@@ -22,15 +23,17 @@ export default function Game(props: {
     setWordGuess: (guess: string) => void,
     guess: () => void,
     players: Player[] | undefined,
-    gameStage: string | undefined
+    gameStage: string | undefined,
+    guesses: string[] | undefined
 }) {
 
     const [opened, { open, close }] = useDisclosure(false);
     const [topBarHeight, setTopBarHeight] = useState<number>(0);
-    const topBarRef = useRef<HTMLDivElement>(null);
+    const staticBarRef = useRef<HTMLDivElement>(null);
+    const topControlsRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        setTopBarHeight(topBarRef.current?.clientHeight ?? 0);
+        setTopBarHeight((staticBarRef.current?.clientHeight ?? 0) + (topControlsRef.current?.clientHeight ?? 0));
     });
 
     useEffect(() => {
@@ -47,56 +50,62 @@ export default function Game(props: {
 
     return (
         <div className={styles.game}>
-            <div className={styles.fixedTextBox} ref={topBarRef}>
-                <Center>
-                    {/* Show reveal word on reveal and leaderboard stage */}
-                    {props.gameStage?.localeCompare("GAME") ? <h3>{props.previousWord}</h3> : undefined}
+            <Flex justify="center" align="center" className={styles.staticBar} ref={staticBarRef}>
+                {/* Show reveal word on reveal and leaderboard stage */}
+                {props.gameStage?.localeCompare("GAME") ? <Title order={3}>{props.previousWord}</Title> : undefined}
 
-                    {/* Show word to be drawn if it's your turn and it hasn't been revealed yet */}
-                    {(props.isMyTurn && !props.gameStage?.localeCompare("GAME")) ? <h3>You are drawing: {props.secretWord}</h3> : undefined}
+                {/* Show word to be drawn if it's your turn and it hasn't been revealed yet */}
+                {(props.isMyTurn && !props.gameStage?.localeCompare("GAME")) ? <Title order={3}>You are drawing: {props.secretWord}</Title> : undefined}
 
-                    {/* Show guess box if it's not your turn and word hasn't been revealed yet */}
-                    {(!props.isMyTurn && !props.gameStage?.localeCompare("GAME"))
-                        ?
-                        <Group>
-                            <Input
-                                size="m"
-                                radius="md"
-                                type="text"
-                                placeholder="Your guess"
-                                value={props.wordGuess}
-                                onChange={(event) => { props.setWordGuess(event.target.value) }}
-                                onSubmit={() => { console.log("AHHH") }}
-                                onKeyDown={(event) => {
-                                    if (event.key === 'Enter' && props.wordGuess?.length) {
-                                        props.guess();
-                                    }
-                                }}
-                            />
+                {/* Show guess box if it's not your turn and word hasn't been revealed yet */}
+                {(!props.isMyTurn && !props.gameStage?.localeCompare("GAME"))
+                    ?
+                    <Group>
+                        <Input
+                            size="m"
+                            radius="md"
+                            type="text"
+                            placeholder="Your guess"
+                            value={props.wordGuess}
+                            onChange={(event) => { props.setWordGuess(event.target.value) }}
+                            onSubmit={() => { console.log("AHHH") }}
+                            onKeyDown={(event) => {
+                                if (event.key === 'Enter' && props.wordGuess?.length) {
+                                    props.guess();
+                                }
+                            }}
+                        />
 
-                            <Button
-                                variant="bright"
-                                size="s"
-                                radius="md"
-                                my={15}
-                                onClick={() => { props.guess() }}
-                                disabled={!props.wordGuess?.length}
-                                className={styles.guessButton}
-                            >
-                                Guess
-                            </Button>
-                        </Group>
-                        : undefined}
-                </Center>
-            </div >
-
-            <Flex pt={100} direction="column">
-                <Center pb={10}>
-                    <Timer endTimestamp={props.endTimestamp ?? 0} duration={20} />
-                </Center>
-
-                <Whiteboard image={props.image} draw={props.draw} enable={props.isMyTurn} unusuableHeight={topBarHeight} />
+                        <Button
+                            variant="bright"
+                            size="s"
+                            radius="md"
+                            my={15}
+                            onClick={() => { props.guess() }}
+                            disabled={!props.wordGuess?.length}
+                            className={styles.guessButton}
+                        >
+                            Guess
+                        </Button>
+                    </Group>
+                    : undefined}
             </Flex>
+
+            <Flex mt={75} direction="column" ref={staticBarRef}>
+                <div>
+                    <Center mt={20} pb={10} mx={30}>
+                        <GuessList guesses={props.guesses ?? []} />
+                    </Center>
+
+                    <Center pb={10}>
+                        <Timer endTimestamp={props.endTimestamp ?? 0} duration={20} />
+                    </Center>
+                </div>
+
+                {/* <Whiteboard image={props.image} draw={props.draw} enable={props.isMyTurn} unusuableHeight={topBarHeight} /> */}
+            </Flex>
+
+            <Whiteboard image={props.image} draw={props.draw} enable={props.isMyTurn} unusuableHeight={topBarHeight} />
 
             <Modal opened={opened} onClose={close} withCloseButton={false} closeOnClickOutside={false} closeOnEscape={false} title="Leaderboard">
                 <Leaderboard players={props.players ?? []} />
