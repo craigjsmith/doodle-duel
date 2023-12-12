@@ -7,6 +7,7 @@ const bodyParser = require('body-parser')
 const expressSanitizer = require('express-sanitizer');
 const { Server } = require("socket.io");
 const { LobbyBouncer } = require('./lobbyBouncer');
+const WORDS = require('./words.js');
 
 const cors = require('cors')
 const app = express()
@@ -22,7 +23,6 @@ const io = new Server(server, {
     }
 });
 
-const WORDS = ["monkey", "dog", "cat", "lion", "tiger", "fish", "seal"];
 const POINTS_TO_WIN = 10;
 
 const ROUND_DURATION = 20000;
