@@ -68,7 +68,7 @@ export default function Game(props: {
                                 onChange={(event) => { props.setWordGuess(event.target.value) }}
                                 onSubmit={() => { console.log("AHHH") }}
                                 onKeyDown={(event) => {
-                                    if (event.key === 'Enter') {
+                                    if (event.key === 'Enter' && props.wordGuess?.length) {
                                         props.guess();
                                     }
                                 }}
@@ -80,6 +80,8 @@ export default function Game(props: {
                                 radius="md"
                                 my={15}
                                 onClick={() => { props.guess() }}
+                                disabled={!props.wordGuess?.length}
+                                className={styles.guessButton}
                             >
                                 Guess
                             </Button>

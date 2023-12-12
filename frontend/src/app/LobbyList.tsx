@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import LobbyCard from './components/LobbyCard';
 import Login from './Login';
 
-export default function LobbyList(props: { setLobby: (lobbyId: number) => void, setUsername: (username: string) => void, login: () => void }) {
+export default function LobbyList(props: { setLobby: (lobbyId: number) => void, username: string, setUsername: (username: string) => void, login: () => void }) {
     const [lobbyList, setLobbyList] = useState<Array<number>>();
     const [opened, { open, close }] = useDisclosure(false);
 
@@ -85,7 +85,7 @@ export default function LobbyList(props: { setLobby: (lobbyId: number) => void, 
                 </SimpleGrid>
 
                 <Modal opened={opened} onClose={close} title="Login">
-                    <Login setUsername={props.setUsername} login={props.login} />
+                    <Login username={props.username} setUsername={props.setUsername} login={props.login} />
                 </Modal>
 
             </Flex>

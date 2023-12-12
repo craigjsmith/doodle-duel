@@ -6,10 +6,18 @@
 }
 
 .fixedTextBox {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    background-color: #f0f0f0;
-    padding: 10px;
-    box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  background-color: #f0f0f0;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.guessButton {
+  &:disabled,
+  &[data-disabled] {
+    border-color: light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-5));
+    background-color: transparent;
   }
+}

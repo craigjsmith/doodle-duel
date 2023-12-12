@@ -98,7 +98,7 @@ const PageComponent = () => {
   function router() {
     switch (screen) {
       case Screens.LobbyList: {
-        return (<LobbyList setLobby={setLobby} setUsername={setUsername} login={login} />);
+        return (<LobbyList setLobby={setLobby} username={username} setUsername={setUsername} login={login} />);
       }
 
       case Screens.Lobby: {
