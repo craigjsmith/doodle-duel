@@ -1,9 +1,10 @@
 .outerContainer {
-    display: block;
+    position: absolute;
+    bottom: 0;
     overflow-x: scroll;
     overflow-y: hidden;
     white-space: nowrap;
-    height: 70px;
+    height: 50px;
     padding: 4px 4px 10px 4px;
     border: #f0f0f0 solid 1px;
     width: 100%;
@@ -19,6 +20,6 @@
     display: flex;
     justify-content: flex-start;
     justify-self: center;
-    height: 50px;
+    height: 30px;
     justify-content: center;
 }
