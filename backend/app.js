@@ -85,7 +85,7 @@ io.on('connection', (socket) => {
     }
 
     async function onGuess(msg, id) {
-        var guess = msg; // TODO: sanitize
+        var guess = msg.toLowerCase().replace(/[\s-]/g, '');
 
         if (guess) {
             let gameState = await getGameState(id, true);
@@ -96,7 +96,7 @@ io.on('connection', (socket) => {
             db.setGuesses(id, JSON.stringify(guesses));
 
             // Check if guess is correct
-            let secretWord = gameState.word.toString();
+            let secretWord = gameState.word.toLowerCase();
             if (!secretWord.localeCompare(guess.toLowerCase())) {
                 // If correct answer, award points to guesser and artist
                 bouncer.awardPoints(socket.id, 2);
