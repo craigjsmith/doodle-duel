@@ -12,14 +12,15 @@ export default function LobbyList(props: { lobby: number | null, setLobby: (lobb
     const [opened, { open, close }] = useDisclosure(false);
 
     useEffect(() => {
-        if (props.lobby) {
-            console.log("OPEN LOBBY " + props.lobby);
+        getLobbies();
+    }, []);
+
+    useEffect(() => {
+        if (props.lobby && lobbyList?.includes(props.lobby)) {
             props.setLobby(props.lobby);
             open();
-        } else {
-            getLobbies();
         }
-    }, [props.lobby]);
+    }, [lobbyList, props.lobby]);
 
     const getLobbies = () => {
         fetch('http://192.168.0.24:3001/lobbies')

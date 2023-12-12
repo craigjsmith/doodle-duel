@@ -1,15 +1,17 @@
 'use client'
 
-import { Container, Flex, Title, List, ThemeIcon, rem, Button, Loader, Text } from '@mantine/core';
+import { Container, Flex, Title, List, ThemeIcon, rem, Button, Loader, Text, CopyButton, Group, Input } from '@mantine/core';
 import { IconUser } from '@tabler/icons-react';
 
 import { Player } from './Models/Player';
-import styles from './lobby-list.module.css'
+import styles from './lobby.module.css'
 
 import { useEffect, useState, useRef } from 'react';
 
 export default function Lobby(props: { lobbyId: number | null, players: Player[] | undefined, startGame: () => void | undefined }) {
     const [lobbyList, setLobbyList] = useState<Array<number>>();
+
+    const URL = window.location.origin + "/?lobby=" + props.lobbyId;
 
     useEffect(() => {
         fetch('http://192.168.0.24:3001/lobbies')
@@ -42,6 +44,29 @@ export default function Lobby(props: { lobbyId: number | null, players: Player[]
             >
                 <Title order={1} my={20}>{`Lobby ${props.lobbyId}`}</Title>
 
+                <Flex direction="column" align="center" my={50}>
+                    <Text size="md" mb={4}>Share this link to invite players</Text>
+                    <CopyButton value={URL}>
+                        {({ copied, copy }) => (
+                            <Group gap={0}>
+                                <Input
+                                    variant='filled'
+                                    radius={0}
+                                    type="text"
+                                    value={URL}
+                                    className={styles.linkInput}
+                                    onClick={() => { copy() }}
+                                    mx={0}
+                                />
+
+                                <Button onClick={() => { copy() }} radius={0} mx={0}>
+                                    {copied ? 'Copied' : 'Copy'}
+                                </Button>
+                            </Group>
+                        )}
+                    </CopyButton>
+                </Flex>
+
                 <List
                     spacing="xs"
                     size="sm"
@@ -60,14 +85,14 @@ export default function Lobby(props: { lobbyId: number | null, players: Player[]
                         <Button
                             variant="filled"
                             radius="xl"
-                            my={20}
+                            my={40}
                             onClick={() => { props.startGame() }}
                         >
                             Start
                         </Button>
                         :
                         <Flex
-                            my={20}
+                            my={40}
                             justify="center"
                             align="center"
                             direction="column">
