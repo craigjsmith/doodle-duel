@@ -61,7 +61,8 @@ const PageComponent = () => {
   }, []);
 
   const guess = async () => {
-    socket.emit('guess', wordGuess, lobby);
+    await socket.emit('guess', wordGuess, lobby);
+    setWordGuess('');
   };
 
   const login = async () => {
@@ -115,6 +116,7 @@ const PageComponent = () => {
             image={image}
             draw={draw}
             isMyTurn={isMyTurn}
+            wordGuess={wordGuess}
             setWordGuess={setWordGuess}
             guess={guess}
             players={gameState?.players}

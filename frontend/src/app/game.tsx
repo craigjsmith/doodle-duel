@@ -18,6 +18,7 @@ export default function Game(props: {
     image: any,
     draw: (img: any) => void,
     isMyTurn: boolean
+    wordGuess: string | undefined,
     setWordGuess: (guess: string) => void,
     guess: () => void,
     players: Player[] | undefined,
@@ -63,6 +64,7 @@ export default function Game(props: {
                                 radius="md"
                                 type="text"
                                 placeholder="Your guess"
+                                value={props.wordGuess}
                                 onChange={(event) => { props.setWordGuess(event.target.value) }}
                             />
 
