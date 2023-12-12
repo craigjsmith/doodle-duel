@@ -66,6 +66,12 @@ export default function Game(props: {
                                 placeholder="Your guess"
                                 value={props.wordGuess}
                                 onChange={(event) => { props.setWordGuess(event.target.value) }}
+                                onSubmit={() => { console.log("AHHH") }}
+                                onKeyDown={(event) => {
+                                    if (event.key === 'Enter') {
+                                        props.guess();
+                                    }
+                                }}
                             />
 
                             <Button
