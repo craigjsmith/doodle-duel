@@ -63,7 +63,7 @@ io.on('connection', (socket) => {
         }
 
         // If current artist leaves, move to next round
-        if (gameState && !socket.id.localeCompare(gameState.turn)) {
+        if (gameState && !socket.id.localeCompare(gameState.turn.socketId)) {
             startNewRound(lobbyId);
         }
 
@@ -103,7 +103,7 @@ io.on('connection', (socket) => {
                 bouncer.awardPoints(gameState.turn, 1);
 
                 // Check if either point earner has won game
-                if (bouncer.getPoints(socket.id) >= POINTS_TO_WIN || bouncer.getPoints(gameState.turn) >= POINTS_TO_WIN) {
+                if (bouncer.getPoints(socket.id) >= POINTS_TO_WIN || bouncer.getPoints(gameState.turn.socketId) >= POINTS_TO_WIN) {
                     gameOver(id);
                 }
 
@@ -125,18 +125,21 @@ async function removeLobbyIfEmpty(lobbyId) {
         let minimumPlayers = gameState.gameStarted ? 2 : 1
 
         if (players.length < minimumPlayers) {
-            console.log(`Deleting lobby ${lobbyId}`);
-            db.removeLobby(lobbyId)
-
-            clearTimeout(RoundEndTimeoutMap[lobbyId]);
-            delete RoundEndTimeoutMap[lobbyId];
-
             gameOver(lobbyId);
-            return true;
         }
     }
 
     return false;
+}
+
+async function removeLobby(lobbyId) {
+    clearTimeout(RoundEndTimeoutMap[lobbyId]);
+    delete RoundEndTimeoutMap[lobbyId];
+
+    console.log(`Deleting lobby ${lobbyId}`);
+    db.removeLobby(lobbyId)
+
+    return true;
 }
 
 async function onDraw(msg, id) {
@@ -144,6 +147,7 @@ async function onDraw(msg, id) {
 }
 
 async function gameOver(lobbyId) {
+    removeLobby(lobbyId);
     io.to(lobbyId).emit('GAMEOVER');
 }
 
@@ -153,6 +157,10 @@ async function startNewRound(id) {
 
     let firstRound = false;
     let gameState = await getGameState(id, true);
+
+    if (!gameState) {
+        return;
+    }
 
     // If first round, skip reveal and leaderboard
     if (!gameState.gameStage.localeCompare("NEWGAME")) {
@@ -206,26 +214,35 @@ const setNewWord = async (id) => {
     await db.setWord(id, newWord);
     await db.setPreviousWord(id, previousWord);
 
+    let artist = JSON.parse(gameState.turn);
+
     // Reveal secret word only to the artist
-    io.to(gameState.turn).emit('REVEAL', newWord);
+    io.to(artist.socketId).emit('REVEAL', newWord);
 }
 
 const setNextPlayerAsArtist = async (id) => {
     let gameState = await getGameState(id);
-    let previousArtistSocketId = gameState.turn;
+    let previousArtist = JSON.parse(gameState.turn);
 
-    if (previousArtistSocketId) {
-        let previousArtistIndex = gameState.players.findIndex(player => player.socketId == previousArtistSocketId);
+    if (previousArtist) {
+        console.log("previousArtist: ");
+        console.log(previousArtist);
+        console.log("previousArtist.socketId: ");
+        console.log(previousArtist.socketId);
+
+        let previousArtistIndex = gameState.players.findIndex(player => player.socketId == previousArtist.socketId);
+        console.log("previousArtistIndex: " + previousArtistIndex);
 
         let numberOfPlayers = gameState.players.length
 
         let nextArtist = gameState.players[(previousArtistIndex + 1) % numberOfPlayers];
+        console.log("nextArtist: " + nextArtist);
 
-        db.setTurn(id, nextArtist.socketId);
+        db.setTurn(id, JSON.stringify(nextArtist));
     } else {
         let nextArtist = gameState.players[0];
 
-        db.setTurn(id, nextArtist.socketId);
+        db.setTurn(id, JSON.stringify(nextArtist));
     }
 }
 

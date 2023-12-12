@@ -18,6 +18,7 @@ export default function Game(props: {
     endTimestamp: number,
     image: any,
     draw: (img: any) => void,
+    turn: Player | undefined,
     isMyTurn: boolean
     wordGuess: string | undefined,
     setWordGuess: (guess: string) => void,
@@ -92,17 +93,23 @@ export default function Game(props: {
             </Flex>
 
             <Flex mt={75} direction="column" ref={staticBarRef}>
-                <div>
-                    <Center mt={20} pb={10} mx={30}>
-                        <GuessList guesses={props.guesses ?? []} />
-                    </Center>
+                <Center>
+                    <GuessList guesses={props.guesses ?? []} />
+                </Center>
 
-                    <Center pb={10}>
-                        <Timer endTimestamp={props.endTimestamp ?? 0} duration={20} />
-                    </Center>
-                </div>
+                <Center pb={10} mt={10}>
+                    <Timer endTimestamp={props.endTimestamp ?? 0} duration={20} />
+                </Center>
 
-                {/* <Whiteboard image={props.image} draw={props.draw} enable={props.isMyTurn} unusuableHeight={topBarHeight} /> */}
+                {
+                    (!props.isMyTurn
+                        ?
+                        <Center pb={10}>
+                            <Title order={5}>{props.turn?.username} is drawing</Title>
+                        </Center>
+                        : undefined)
+                }
+
             </Flex>
 
             <Whiteboard image={props.image} draw={props.draw} enable={props.isMyTurn} unusuableHeight={topBarHeight} />

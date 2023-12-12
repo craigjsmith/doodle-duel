@@ -6,7 +6,7 @@ export interface GameState {
   previousWord: string;
   solved: boolean;
   players: Array<Player> | undefined;
-  turn: string;
+  turn: Player;
   guesses: Array<string>;
   endTimestamp: number;
   gameStarted: boolean;

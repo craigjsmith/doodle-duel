@@ -31,7 +31,7 @@ const PageComponent = () => {
 
   useEffect(() => {
     if (gameState) {
-      setIsMyTurn(!socket.id.localeCompare(gameState?.turn));
+      setIsMyTurn(!socket.id.localeCompare(gameState?.turn?.socketId));
     }
   }, [gameState?.turn]);
 
@@ -77,7 +77,7 @@ const PageComponent = () => {
 
   function onGame(msg: any) {
     console.log(msg);
-    setGameState({ id: msg.id, word: msg.word, previousWord: msg.previousWord, solved: msg.solved, players: msg.players, turn: msg.turn, guesses: JSON.parse(msg.guesses), endTimestamp: msg.endTimestamp, gameStarted: msg.gameStarted, gameStage: msg.gameStage });
+    setGameState({ id: msg.id, word: msg.word, previousWord: msg.previousWord, solved: msg.solved, players: msg.players, turn: JSON.parse(msg.turn), guesses: JSON.parse(msg.guesses), endTimestamp: msg.endTimestamp, gameStarted: msg.gameStarted, gameStage: msg.gameStage });
   }
 
   function onDraw(img: any) {
@@ -110,6 +110,7 @@ const PageComponent = () => {
             endTimestamp={gameState?.endTimestamp ?? 0}
             image={image}
             draw={draw}
+            turn={gameState?.turn}
             isMyTurn={isMyTurn}
             wordGuess={wordGuess}
             setWordGuess={setWordGuess}
