@@ -7,13 +7,19 @@ import { useEffect, useState } from 'react';
 import LobbyCard from './components/LobbyCard';
 import Login from './Login';
 
-export default function LobbyList(props: { setLobby: (lobbyId: number) => void, username: string, setUsername: (username: string) => void, login: () => void }) {
+export default function LobbyList(props: { lobby: number | null, setLobby: (lobbyId: number) => void, username: string, setUsername: (username: string) => void, login: () => void }) {
     const [lobbyList, setLobbyList] = useState<Array<number>>();
     const [opened, { open, close }] = useDisclosure(false);
 
     useEffect(() => {
-        getLobbies();
-    }, []);
+        if (props.lobby) {
+            console.log("OPEN LOBBY " + props.lobby);
+            props.setLobby(props.lobby);
+            open();
+        } else {
+            getLobbies();
+        }
+    }, [props.lobby]);
 
     const getLobbies = () => {
         fetch('http://192.168.0.24:3001/lobbies')

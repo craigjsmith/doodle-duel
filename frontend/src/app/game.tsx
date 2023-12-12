@@ -27,7 +27,6 @@ export default function Game(props: {
     gameStage: string | undefined,
     guesses: string[] | undefined
 }) {
-
     const [opened, { open, close }] = useDisclosure(false);
     const [topBarHeight, setTopBarHeight] = useState<number>(0);
     const staticBarRef = useRef<HTMLDivElement>(null);

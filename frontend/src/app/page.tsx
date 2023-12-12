@@ -10,6 +10,7 @@ import Lobby from './Lobby';
 import { GameState } from './Models/GameState';
 import Game from './game';
 import GameOver from './GameOver';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 enum Screens {
   LobbyList,
@@ -28,6 +29,14 @@ const PageComponent = () => {
   const [secretWord, setSecretWord] = useState<string | null>(null);
   const [isMyTurn, setIsMyTurn] = useState<boolean>(false);
   const [showLeaderboard, setShowLeaderboard] = useState<boolean>(false);
+
+  const router = useRouter();
+  const lobbyFromURL = useSearchParams().get("lobby");
+
+  useEffect(() => {
+    console.log("lobbyFromURL" + lobbyFromURL);
+    setLobby(Number(lobbyFromURL));
+  }, []);
 
   useEffect(() => {
     if (gameState) {
@@ -90,10 +99,12 @@ const PageComponent = () => {
     setSecretWord(msg);
   }
 
-  function router() {
+  function screenRouter() {
     switch (screen) {
       case Screens.LobbyList: {
-        return (<LobbyList setLobby={setLobby} username={username} setUsername={setUsername} login={login} />);
+        return (
+          <LobbyList lobby={lobby} setLobby={setLobby} username={username} setUsername={setUsername} login={login} />
+        );
       }
 
       case Screens.Lobby: {
@@ -135,7 +146,7 @@ const PageComponent = () => {
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
       </head>
-      {router()}
+      {screenRouter()}
     </>
   );
 }

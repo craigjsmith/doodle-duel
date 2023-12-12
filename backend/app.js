@@ -63,7 +63,7 @@ io.on('connection', (socket) => {
         }
 
         // If current artist leaves, move to next round
-        if (gameState && !socket.id.localeCompare(gameState.turn.socketId)) {
+        if (gameState && (socket.id == gameState.turn?.socketId)) {
             startNewRound(lobbyId);
         }
 
