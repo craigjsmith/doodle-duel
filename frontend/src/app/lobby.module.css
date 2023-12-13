@@ -1,3 +1,13 @@
 .linkInput {
     width: 250px;
 }
+
+.topBar {
+    display: flex;
+    height: 75px;
+    width: 100%;
+    background-color: #f0f0f0;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+}
