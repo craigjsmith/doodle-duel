@@ -8,7 +8,11 @@ const connection = mysql.createConnection({
     database: 'db'
 })
 
-connection.connect()
+connection.connect((error) => {
+    if (error) {
+        console.log(error);
+    }
+})
 
 function getGameState(id, revealWord = false) {
     return new Promise((resolve, reject) => {
