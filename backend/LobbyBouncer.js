@@ -1,6 +1,5 @@
 class LobbyBouncer {
     constructor() {
-        // this.sockets = [];
         this.sockets = new Map(); // key: socketId, value: socket object
         this.lobbyBySocketId = new Map(); // key: socketId, value: lobbyId
         this.usernameBySocketId = new Map(); // key: socketId, value: username

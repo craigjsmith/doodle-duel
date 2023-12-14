@@ -31,7 +31,7 @@ function getGameState(id, revealWord = false) {
 
 function getOpenLobbyList() {
     return new Promise((resolve, reject) => {
-        connection.query('SELECT id FROM game WHERE gameStarted=0', (err, rows) => {
+        connection.query('SELECT id FROM game WHERE gameStarted=0 AND privateLobby=0', (err, rows) => {
             if (err) {
                 return reject(err);
             }
@@ -107,22 +107,6 @@ function setRoundEndTimestamp(id, value) {
     });
 }
 
-// function setPlayers(id, value) {
-//     return new Promise((resolve, reject) => {
-
-//         const query = 'UPDATE game SET players = ? WHERE id = ?';
-//         const values = [value, id];
-
-//         connection.query(query, values, (err, rows) => {
-//             if (err) {
-//                 return reject(err);
-//             }
-
-//             return resolve(rows[0]);
-//         })
-//     });
-// }
-
 function setGuesses(id, value) {
     return new Promise((resolve, reject) => {
 
@@ -172,12 +156,15 @@ function setGameStarted(id, value) {
 }
 
 
-function createLobby() {
+function createLobby(privateLobby) {
     return new Promise((resolve, reject) => {
 
-        const query = 'INSERT INTO game VALUES ()';
+        const query = 'INSERT INTO game (privateLobby) VALUES (?)';
+        const values = [privateLobby];
 
-        connection.query(query, (err, rows) => {
+        console.log(privateLobby);
+
+        connection.query(query, values, (err, rows) => {
             if (err) {
                 return reject(err);
             }

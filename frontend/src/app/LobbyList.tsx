@@ -23,7 +23,7 @@ export default function LobbyList(props: { lobby: number | null, setLobby: (lobb
     }, [lobbyList, props.lobby]);
 
     const getLobbies = () => {
-        fetch('http://192.168.0.24:3001/lobbies')
+        fetch('http://localhost:3001/lobbies')
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -40,10 +40,10 @@ export default function LobbyList(props: { lobby: number | null, setLobby: (lobb
             });
     }
 
-    const createLobby = () => {
+    const createLobby = (privateLobby: Number) => {
         console.log("createLobby");
 
-        fetch('http://192.168.0.24:3001/createLobby', { method: "POST", })
+        fetch(`http://localhost:3001/createLobby/?privateLobby=${privateLobby}`, { method: "POST", })
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -75,9 +75,18 @@ export default function LobbyList(props: { lobby: number | null, setLobby: (lobb
                     variant="filled"
                     radius="lg"
                     mt={20}
-                    onClick={() => { createLobby(); open(); }}
+                    onClick={() => { createLobby(0); open(); }}
                 >
-                    Create a Lobby
+                    Create a Public Lobby
+                </Button>
+
+                <Button
+                    variant="filled"
+                    radius="lg"
+                    mt={20}
+                    onClick={() => { createLobby(1); open(); }}
+                >
+                    Create a Private Lobby
                 </Button>
 
                 {(lobbyList?.length ?? 0) > 0 ? <Text size="lg" mt={20}>or join an open lobby!</Text> : undefined}
