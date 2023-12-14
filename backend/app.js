@@ -6,7 +6,7 @@ const db = require('./db')
 const bodyParser = require('body-parser')
 const expressSanitizer = require('express-sanitizer');
 const { Server } = require("socket.io");
-const { LobbyBouncer } = require('./lobbyBouncer');
+const { LobbyBouncer } = require('./LobbyBouncer');
 const WORDS = require('./words.js');
 
 const cors = require('cors')
