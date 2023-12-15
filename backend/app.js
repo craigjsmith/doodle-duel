@@ -143,7 +143,7 @@ async function removeLobby(lobbyId) {
 }
 
 async function onDraw(msg, id) {
-    io.to(id).emit('DRAW', msg);
+    io.volatile.to(id).emit('DRAW', msg);
 }
 
 async function gameOver(lobbyId) {
