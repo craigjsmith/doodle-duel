@@ -73,7 +73,7 @@ const PageComponent = () => {
     setScreen(Screens.Lobby);
   };
 
-  const draw = async (img: any) => {
+  const draw = (img: any) => {
     socket.volatile.emit('NEWDRAW', img, lobby);
   };
 
