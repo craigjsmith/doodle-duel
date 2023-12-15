@@ -47,6 +47,21 @@ function getOpenLobbyList() {
     });
 }
 
+function getOpenLobbyNamesList() {
+    return new Promise((resolve, reject) => {
+        connection.query('SELECT id, lobbyName FROM game WHERE gameStarted=0 AND privateLobby=0', (err, rows) => {
+            if (err) {
+                return reject(err);
+            }
+
+            console.log(rows);
+            // let arr = rows.map(item => item.id);
+
+            return resolve(rows);
+        })
+    });
+}
+
 function setWord(id, value) {
     return new Promise((resolve, reject) => {
 
@@ -192,4 +207,4 @@ function removeLobby(lobbyId) {
     });
 }
 
-module.exports = { getGameState, getOpenLobbyList, setWord, setGameStage, setPreviousWord, setRoundEndTimestamp, setGuesses, setTurn, setGameStarted, createLobby, removeLobby };
+module.exports = { getGameState, getOpenLobbyList, getOpenLobbyNamesList, setWord, setGameStage, setPreviousWord, setRoundEndTimestamp, setGuesses, setTurn, setGameStarted, createLobby, removeLobby };
