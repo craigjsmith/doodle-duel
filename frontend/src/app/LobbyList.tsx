@@ -1,7 +1,8 @@
 'use client'
 
 import { useDisclosure } from '@mantine/hooks';
-import { Container, Flex, Title, Button, Text, SimpleGrid, Modal } from '@mantine/core';
+import { Container, Flex, Title, Button, Text, SimpleGrid, Modal, Alert } from '@mantine/core';
+import { IconInfoCircle } from '@tabler/icons-react';
 
 import { useEffect, useState } from 'react';
 import LobbyCard from './components/LobbyCard';
@@ -89,7 +90,16 @@ export default function LobbyList(props: { lobby: number | null, setLobby: (lobb
                     Create a Private Lobby
                 </Button>
 
-                {(lobbyList?.length ?? 0) > 0 ? <Text size="lg" mt={20}>or join an open lobby!</Text> : undefined}
+                <Flex mt={20}>
+                    {(lobbyList?.length ?? 0) > 0
+                        ?
+                        <Text size="lg">or join an open lobby!</Text>
+                        :
+                        <Alert variant="light" color="gray" p={30}>
+                            There are no open lobbies
+                        </Alert>
+                    }
+                </Flex>
 
                 <SimpleGrid my={20} cols={2} style={{ width: '80%' }}>
                     {lobbyList?.map((lobby) =>
