@@ -258,6 +258,10 @@ const emitGameState = async (id) => {
     io.to(id).emit('GAME', await getGameState(id));
 }
 
+app.get('/ping', async (req, res) => {
+    res.send("pong")
+})
+
 app.get('/lobbies', async (req, res) => {
     let lobbies = await db.getOpenLobbyList(true);
     res.send(lobbies)
