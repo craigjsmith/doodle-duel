@@ -15,6 +15,10 @@ const server = createServer(app);
 const port = 3001
 const socketPort = 4000
 
+const POINTS_TO_WIN = 10;
+const ROUND_DURATION = 20000;
+const GRACE_DURTION = 1000;
+
 app.use(cors())
 
 const io = new Server(server, {
@@ -22,12 +26,6 @@ const io = new Server(server, {
         origin: "*"
     }
 });
-
-const POINTS_TO_WIN = 10;
-
-const ROUND_DURATION = 20000;
-const END_OF_ROUND_DURATION = 6000;
-const GRACE_DURTION = 1000;
 
 let bouncer = new LobbyBouncer();
 
@@ -121,7 +119,6 @@ async function removeLobbyIfEmpty(lobbyId) {
 
     if (gameState) {
         let players = gameState.players;
-
         let minimumPlayers = gameState.gameStarted ? 2 : 1
 
         if (players.length < minimumPlayers) {
@@ -198,7 +195,6 @@ async function startNewRound(id) {
         await emitGameState(id);
 
         RoundEndTimeoutMap[id] = setTimeout(() => {
-            console.log("FORCE ROUND END");
             startNewRound(id);
         }, ROUND_DURATION + GRACE_DURTION);
     }, firstRound ? 0 : 6000);
@@ -225,23 +221,12 @@ const setNextPlayerAsArtist = async (id) => {
     let previousArtist = JSON.parse(gameState.turn);
 
     if (previousArtist) {
-        console.log("previousArtist: ");
-        console.log(previousArtist);
-        console.log("previousArtist.socketId: ");
-        console.log(previousArtist.socketId);
-
         let previousArtistIndex = gameState.players.findIndex(player => player.socketId == previousArtist.socketId);
-        console.log("previousArtistIndex: " + previousArtistIndex);
-
         let numberOfPlayers = gameState.players.length
-
         let nextArtist = gameState.players[(previousArtistIndex + 1) % numberOfPlayers];
-        console.log("nextArtist: " + nextArtist);
-
         db.setTurn(id, JSON.stringify(nextArtist));
     } else {
         let nextArtist = gameState.players[0];
-
         db.setTurn(id, JSON.stringify(nextArtist));
     }
 }
@@ -263,13 +248,11 @@ app.get('/ping', async (req, res) => {
 })
 
 app.get('/lobbies', async (req, res) => {
-    let lobbies = await db.getOpenLobbyList(true);
+    let lobbies = await db.getOpenLobbyNamesList();
     res.send(lobbies)
 })
 
 app.post('/createLobby', async (req, res) => {
-    console.log("/createLobby");
-
     const privateLobby = req.query.privateLobby;
     let newLobbyId = await db.createLobby(privateLobby);
     res.send({ newLobbyId })
@@ -277,7 +260,7 @@ app.post('/createLobby', async (req, res) => {
 
 // Listen
 app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
+    console.log(`Doodle Duel listening on port ${port}`)
 })
 
 server.listen(socketPort);
