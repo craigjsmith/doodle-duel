@@ -174,8 +174,8 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
     function save() {
         var date = new Date();
 
-        // Throtle emiting image to a max of 10 times per second
-        if (ctx && (date.getTime() - lastSavedTimestampRef.current) > 100) {
+        // Throtle emiting image to a max of 3 times per second
+        if (ctx && (date.getTime() - lastSavedTimestampRef.current) > 333) {
             setLastSavedTimestamp(date.getTime());
             props.draw(ctx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE).data);
         }
