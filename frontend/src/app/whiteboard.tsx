@@ -1,11 +1,12 @@
 'use client'
 
 import ColorButton from './ColorButton';
+import { Player } from './Models/Player';
 import styles from './whiteboard.module.css'
 
 import { useEffect, useState, useRef } from 'react';
 
-export default function Whiteboard(props: { image: any | undefined, draw: any, enable: boolean, unusuableHeight: number }) {
+export default function Whiteboard(props: { image: any | undefined, draw: any, enable: boolean, unusuableHeight: number, turn: Player | undefined, }) {
     const CANVAS_SIZE = 500;
     const COLOR_SELECTOR_SIZE = 40 + 45;
     const COLORS = ['#EF476F', '#FFD166', '#06D6A0', '#118AB2', '#073B4C']
@@ -47,6 +48,16 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
     const colorSwatchesRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        const interval = setInterval(() => {
+            if (props.enable) {
+                props.draw(ctx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE).data);
+            }
+        }, 500);
+
+        return () => clearInterval(interval);
+    }, [props.enable]);
+
+    useEffect(() => {
         setUnusuableHeight(props.unusuableHeight)
     }, [props.unusuableHeight])
 
@@ -69,25 +80,25 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
 
             // Touch events
             canvasRef.current.addEventListener('touchmove', drawTouch);
-            canvasRef.current.addEventListener('touchmove', save);
+            // canvasRef.current.addEventListener('touchmove', save);
             canvasRef.current.addEventListener('touchstart', setPositionTouch);
             canvasRef.current.addEventListener('touchend', setPositionTouch);
 
             // Mouse events
             canvasRef.current.addEventListener('mousemove', draw);
-            canvasRef.current.addEventListener('mousemove', save);
+            // canvasRef.current.addEventListener('mousemove', save);
             canvasRef.current.addEventListener('mousedown', setPosition);
             canvasRef.current.addEventListener('mouseenter', setPosition);
         }
 
         return () => {
             canvasRef.current?.removeEventListener('touchmove', drawTouch);
-            canvasRef.current?.removeEventListener('touchmove', save);
+            // canvasRef.current?.removeEventListener('touchmove', save);
             canvasRef.current?.removeEventListener('touchstart', setPositionTouch);
             canvasRef.current?.removeEventListener('touchend', setPositionTouch);
 
             canvasRef.current?.removeEventListener('mousemove', draw);
-            canvasRef.current?.removeEventListener('mousemove', save);
+            // canvasRef.current?.removeEventListener('mousemove', save);
             canvasRef.current?.removeEventListener('mousedown', setPosition);
             canvasRef.current?.removeEventListener('mouseenter', setPosition);
         }
@@ -173,7 +184,6 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
 
     function save() {
         var date = new Date();
-        props.draw(ctx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE).data);
 
         // Throtle emiting image to a max of 3 times per second
         if (ctx && (date.getTime() - lastSavedTimestampRef.current) > 500) {
@@ -185,9 +195,9 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
     function load() {
         if (!props.image) {
             clear();
-        } else if (!props.enable) {
+        } else if (!props.enable && !props.turn?.socketId.localeCompare(props.image.artist.socketId)) {
             // Only update whiteboard if you're not the artist
-            var array = new Uint8ClampedArray(props.image);
+            var array = new Uint8ClampedArray(props.image.img);
             ctx?.putImageData(new ImageData(array, CANVAS_SIZE, CANVAS_SIZE), 0, 0);
         }
     }
