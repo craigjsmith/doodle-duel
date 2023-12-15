@@ -23,7 +23,6 @@ export default function Lobby(props: { lobbyId: number | null, players: Player[]
             })
             .then(data => {
                 // Handle the data from the response
-                console.log('Lobbies:', data);
                 setLobbyList(data);
             })
             .catch(error => {

@@ -37,10 +37,6 @@ export default function Game(props: {
     });
 
     useEffect(() => {
-        console.log("topBarHeight: " + topBarHeight);
-    }, [topBarHeight]);
-
-    useEffect(() => {
         if (!props.gameStage?.localeCompare("LEADERBOARD")) {
             open();
         } else {

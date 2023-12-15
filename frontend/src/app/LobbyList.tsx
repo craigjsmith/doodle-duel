@@ -35,7 +35,6 @@ export default function LobbyList(props: { lobby: number | null, setLobby: (lobb
             })
             .then(data => {
                 // Handle the data from the response
-                console.log('Lobbies:', data);
                 setLobbyList(data);
             })
             .catch(error => {
@@ -44,8 +43,6 @@ export default function LobbyList(props: { lobby: number | null, setLobby: (lobb
     }
 
     const createLobby = (privateLobby: Boolean) => {
-        console.log("createLobby");
-
         fetch(`https://droplet.craigsmith.dev/createLobby/?privateLobby=${Number(privateLobby)}`, { method: "POST", })
             .then(response => {
                 if (!response.ok) {

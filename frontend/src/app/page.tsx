@@ -34,7 +34,6 @@ const PageComponent = () => {
   const lobbyFromURL = useSearchParams().get("lobby");
 
   useEffect(() => {
-    console.log("lobbyFromURL" + lobbyFromURL);
     setLobby(Number(lobbyFromURL));
   }, []);
 
@@ -75,9 +74,7 @@ const PageComponent = () => {
   };
 
   const draw = async (img: any) => {
-    console.log("sent to server:");
-    console.log(img);
-    socket.emit('NEWDRAW', img, lobby);
+    socket.volatile.emit('NEWDRAW', img, lobby);
   };
 
   const startLobby = async () => {
@@ -85,13 +82,10 @@ const PageComponent = () => {
   };
 
   function onGame(msg: any) {
-    console.log(msg);
     setGameState({ id: msg.id, word: msg.word, previousWord: msg.previousWord, solved: msg.solved, players: msg.players, turn: JSON.parse(msg.turn), guesses: JSON.parse(msg.guesses), endTimestamp: msg.endTimestamp, gameStarted: msg.gameStarted, gameStage: msg.gameStage });
   }
 
   function onDraw(img: any) {
-    console.log("GOT DRAWING");
-    console.log(img);
     setImage(img);
   }
 
