@@ -253,8 +253,9 @@ app.get('/lobbies', async (req, res) => {
 })
 
 app.post('/createLobby', async (req, res) => {
+    const lobbyName = req.query.lobbyName;
     const privateLobby = req.query.privateLobby;
-    let newLobbyId = await db.createLobby(privateLobby);
+    let newLobbyId = await db.createLobby(lobbyName, privateLobby);
     res.send({ newLobbyId })
 })
 

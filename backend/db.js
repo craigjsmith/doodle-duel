@@ -54,9 +54,6 @@ function getOpenLobbyNamesList() {
                 return reject(err);
             }
 
-            console.log(rows);
-            // let arr = rows.map(item => item.id);
-
             return resolve(rows);
         })
     });
@@ -175,13 +172,11 @@ function setGameStarted(id, value) {
 }
 
 
-function createLobby(privateLobby) {
+function createLobby(lobbyName, privateLobby) {
     return new Promise((resolve, reject) => {
 
-        const query = 'INSERT INTO game (privateLobby) VALUES (?)';
-        const values = [privateLobby];
-
-        console.log(privateLobby);
+        const query = 'INSERT INTO game (lobbyName, privateLobby) VALUES (?, ?)';
+        const values = [lobbyName, privateLobby];
 
         connection.query(query, values, (err, rows) => {
             if (err) {
