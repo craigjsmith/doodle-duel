@@ -1,13 +1,14 @@
 'use client'
 
 import { useDisclosure } from '@mantine/hooks';
-import { Container, Flex, Title, Button, Text, SimpleGrid, Modal, Alert } from '@mantine/core';
+import { Container, Flex, Title, Button, Text, SimpleGrid, Modal, Alert, Box } from '@mantine/core';
 import { IconInfoCircle } from '@tabler/icons-react';
 
 import { useEffect, useState } from 'react';
 import LobbyCard from './components/LobbyCard';
 import Login from './Login';
 import LobbyCreator from './LobbyCreator';
+import Image from 'next/image';
 
 export default function LobbyList(props: { lobby: number | null, setLobby: (lobbyId: number) => void, username: string | undefined, setUsername: (username: string) => void, login: () => void }) {
     const [lobbyList, setLobbyList] = useState<Array<number>>();
@@ -69,7 +70,16 @@ export default function LobbyList(props: { lobby: number | null, setLobby: (lobb
                 direction="column"
                 wrap="wrap"
             >
-                <Title order={1} mt={20}>Doodle Duel</Title>
+                <Box mt={20}>
+                    <Image
+                        src="images/icon.svg"
+                        width={85}
+                        height={85}
+                        alt="Doodle Duel"
+                    />
+                </Box>
+
+                <Title order={1}>Doodle Duel</Title>
 
                 <Button
                     variant="filled"

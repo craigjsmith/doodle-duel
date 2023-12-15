@@ -4,7 +4,7 @@ import '@mantine/core/styles.css';
 
 import { MantineProvider, ColorSchemeScript } from '@mantine/core';
 import Head from 'next/head';
-import { Viewport } from 'next';
+import { Metadata, Viewport } from 'next';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -12,6 +12,32 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
+}
+
+export const metadata: Metadata = {
+  title: 'Doodle Duel',
+  description: 'Online multiplayer draw and guess game',
+
+  openGraph: {
+    title: 'Doodle Duel',
+    description: 'Online multiplayer draw and guess game',
+    url: 'https://doodle.craigsmith.dev',
+    siteName: 'Doodle Duel',
+    images: [
+      {
+        url: 'https://doodle.craigsmith.dev/images/og-1200x630.png',
+        width: 1200,
+        height: 630,
+      },
+      {
+        url: 'https://doodle.craigsmith.dev/images/og-800x600.png',
+        width: 800,
+        height: 600,
+      }
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
 }
 
 export default function RootLayout({
@@ -23,7 +49,6 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <ColorSchemeScript />
-        <title>Doodle Duel</title>
         <link rel="shortcut icon" href="/images/icon.svg" />
       </head>
 
