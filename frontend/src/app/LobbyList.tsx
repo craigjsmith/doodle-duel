@@ -7,19 +7,21 @@ import { IconInfoCircle } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import LobbyCard from './components/LobbyCard';
 import Login from './Login';
+import LobbyCreator from './LobbyCreator';
 
 export default function LobbyList(props: { lobby: number | null, setLobby: (lobbyId: number) => void, username: string | undefined, setUsername: (username: string) => void, login: () => void }) {
     const [lobbyList, setLobbyList] = useState<Array<number>>();
-    const [opened, { open, close }] = useDisclosure(false);
+    const [loginOpened, { open: loginOpen, close: loginClose }] = useDisclosure(false);
+    const [lobbyCreatorOpened, { open: lobbyCreatorOpen, close: lobbyCreatorClose }] = useDisclosure(false);
 
     useEffect(() => {
         getLobbies();
     }, []);
 
     useEffect(() => {
-        if (props.lobby && lobbyList?.includes(props.lobby)) {
+        if (props.lobby) {
             props.setLobby(props.lobby);
-            open();
+            loginOpen();
         }
     }, [lobbyList, props.lobby]);
 
@@ -41,10 +43,10 @@ export default function LobbyList(props: { lobby: number | null, setLobby: (lobb
             });
     }
 
-    const createLobby = (privateLobby: Number) => {
+    const createLobby = (privateLobby: Boolean) => {
         console.log("createLobby");
 
-        fetch(`https://droplet.craigsmith.dev/createLobby/?privateLobby=${privateLobby}`, { method: "POST", })
+        fetch(`https://droplet.craigsmith.dev/createLobby/?privateLobby=${Number(privateLobby)}`, { method: "POST", })
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -76,18 +78,9 @@ export default function LobbyList(props: { lobby: number | null, setLobby: (lobb
                     variant="filled"
                     radius="lg"
                     mt={20}
-                    onClick={() => { createLobby(0); open(); }}
+                    onClick={() => { lobbyCreatorOpen(); }}
                 >
-                    Create a Public Lobby
-                </Button>
-
-                <Button
-                    variant="filled"
-                    radius="lg"
-                    mt={20}
-                    onClick={() => { createLobby(1); open(); }}
-                >
-                    Create a Private Lobby
+                    Create a Lobby
                 </Button>
 
                 <Flex mt={20}>
@@ -105,13 +98,21 @@ export default function LobbyList(props: { lobby: number | null, setLobby: (lobb
                     {lobbyList?.map((lobby) =>
                         <LobbyCard lobbyId={lobby} onClick={() => {
                             props.setLobby(lobby);
-                            open();
+                            loginOpen();
                         }} />
                     )}
                 </SimpleGrid>
 
-                <Modal opened={opened} onClose={close} title="Login">
+                <Modal opened={loginOpened} onClose={loginClose} title="Login">
                     <Login username={props.username || ''} setUsername={props.setUsername} login={props.login} />
+                </Modal>
+
+                <Modal opened={lobbyCreatorOpened} onClose={lobbyCreatorClose} title="Create Lobby">
+                    <LobbyCreator createLobby={(privateLobby: Boolean) => {
+                        createLobby(privateLobby);
+                        lobbyCreatorClose();
+                        loginOpen();
+                    }} />
                 </Modal>
 
             </Flex>
