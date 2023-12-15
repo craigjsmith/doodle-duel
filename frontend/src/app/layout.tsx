@@ -3,8 +3,16 @@ import './globals.css'
 import '@mantine/core/styles.css';
 
 import { MantineProvider, ColorSchemeScript } from '@mantine/core';
+import Head from 'next/head';
+import { Viewport } from 'next';
 
 const inter = Inter({ subsets: ['latin'] })
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+}
 
 export default function RootLayout({
   children,
@@ -16,9 +24,9 @@ export default function RootLayout({
       <head>
         <ColorSchemeScript />
         <title>Doodle Duel</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
         <link rel="shortcut icon" href="/images/icon.svg" />
       </head>
+
       <body>
         <MantineProvider
           theme={{
