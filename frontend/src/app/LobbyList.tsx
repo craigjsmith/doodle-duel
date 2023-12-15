@@ -23,7 +23,7 @@ export default function LobbyList(props: { lobby: number | null, setLobby: (lobb
     }, [lobbyList, props.lobby]);
 
     const getLobbies = () => {
-        fetch('http://localhost:3001/lobbies')
+        fetch('https://droplet.craigsmith.dev/lobbies')
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -43,7 +43,7 @@ export default function LobbyList(props: { lobby: number | null, setLobby: (lobb
     const createLobby = (privateLobby: Number) => {
         console.log("createLobby");
 
-        fetch(`http://localhost:3001/createLobby/?privateLobby=${privateLobby}`, { method: "POST", })
+        fetch(`https://droplet.craigsmith.dev/createLobby/?privateLobby=${privateLobby}`, { method: "POST", })
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);

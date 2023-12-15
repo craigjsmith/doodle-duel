@@ -14,7 +14,7 @@ export default function Lobby(props: { lobbyId: number | null, players: Player[]
     const URL = window.location.origin + "/?lobby=" + props.lobbyId;
 
     useEffect(() => {
-        fetch('http://localhost:3001/lobbies')
+        fetch('https://droplet.craigsmith.dev/lobbies')
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
