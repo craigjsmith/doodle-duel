@@ -29,8 +29,6 @@ const ROUND_DURATION = 20000;
 const END_OF_ROUND_DURATION = 6000;
 const GRACE_DURTION = 1000;
 
-let currentArtistId;
-
 let bouncer = new LobbyBouncer();
 
 // key: game id, value: timeout reference
@@ -145,9 +143,7 @@ async function removeLobby(lobbyId) {
 }
 
 function onDraw(msg, id) {
-    if (currentArtistId && !JSON.parse(msg).artist.localeCompare(currentArtistId)) {
-        io.to(id).volatile.emit('DRAW', msg);
-    }
+    io.to(id).volatile.emit('DRAW', msg);
 }
 
 async function gameOver(lobbyId) {
@@ -219,8 +215,6 @@ const setNewWord = async (id) => {
     await db.setPreviousWord(id, previousWord);
 
     let artist = JSON.parse(gameState.turn);
-
-    currentArtistId = artist.socketId;
 
     // Reveal secret word only to the artist
     io.to(artist.socketId).emit('REVEAL', newWord);
