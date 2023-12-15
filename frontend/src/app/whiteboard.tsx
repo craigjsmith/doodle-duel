@@ -107,7 +107,7 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
         }
     }
 
-    function setPosition(e: any) {
+    function setPosition(e: any, isTouch: boolean = false) {
         var left = 0;
         var top = 0;
         if (canvasRef && canvasRef.current) {
@@ -115,59 +115,42 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
             top = canvasRef.current.getBoundingClientRect().top;
         }
 
-        pos.x = (e.clientX - left) / scaleFactorRef.current;
-        pos.y = (e.clientY - top) / scaleFactorRef.current;
+        if (isTouch) {
+            pos.x = (e.changedTouches[0].clientX - left) / scaleFactorRef.current;
+            pos.y = (e.changedTouches[0].clientY - top) / scaleFactorRef.current;
+        } else {
+            pos.x = (e.clientX - left) / scaleFactorRef.current;
+            pos.y = (e.clientY - top) / scaleFactorRef.current;
+        }
     }
 
+    function draw(e: any, isTouch: boolean = false) {
+        e.preventDefault();
+
+        if (!isTouch && e.buttons !== 1) return;
+
+        if (ctx) {
+            ctx.beginPath();
+            ctx.lineWidth = 5;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = selectedColorRef.current;
+
+            ctx.moveTo(pos.x, pos.y); // from
+            setPosition(e, isTouch);
+            ctx.lineTo(pos.x, pos.y); // to
+
+            ctx.stroke();
+        }
+    }
+
+    // Defining this function prevents passing anonymous function to action listener, which cant be unmounted
     function setPositionTouch(e: any) {
-        var left = 0;
-        var top = 0;
-        if (canvasRef && canvasRef.current) {
-            left = canvasRef.current.getBoundingClientRect().left;
-            top = canvasRef.current.getBoundingClientRect().top;
-        }
-
-        pos.x = (e.changedTouches[0].clientX - left) / scaleFactorRef.current;
-        pos.y = (e.changedTouches[0].clientY - top) / scaleFactorRef.current;
+        setPosition(e, true);
     }
 
-    function draw(e: any) {
-        e.preventDefault();
-        if (e.buttons !== 1) return;
-
-        if (ctx) {
-            ctx.beginPath();
-
-            ctx.lineWidth = 5;
-
-            ctx.lineCap = 'round';
-            ctx.strokeStyle = selectedColorRef.current;
-
-            ctx.moveTo(pos.x, pos.y); // from
-            setPosition(e);
-            ctx.lineTo(pos.x, pos.y); // to
-
-            ctx.stroke();
-        }
-    }
-
+    // Defining this function prevents passing anonymous function to action listener, which cant be unmounted
     function drawTouch(e: any) {
-        e.preventDefault();
-
-        if (ctx) {
-            ctx.beginPath();
-
-            ctx.lineWidth = 5;
-
-            ctx.lineCap = 'round';
-            ctx.strokeStyle = selectedColorRef.current;
-
-            ctx.moveTo(pos.x, pos.y); // from
-            setPositionTouch(e);
-            ctx.lineTo(pos.x, pos.y); // to
-
-            ctx.stroke();
-        }
+        draw(e, true);
     }
 
     function save() {
