@@ -90,7 +90,7 @@ io.on('connection', (socket) => {
 
             // Add guess to list of guesses
             let guesses = JSON.parse(gameState.guesses) ?? [];
-            guesses.push(guess);
+            guesses.push({ "guess": guess, "player": { "socketId": socket.id, "username": bouncer.getUsername(socket.id) } });
             db.setGuesses(id, JSON.stringify(guesses));
 
             // Check if guess is correct
