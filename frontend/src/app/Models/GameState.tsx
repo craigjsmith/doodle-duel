@@ -2,6 +2,7 @@ import { Player } from './Player';
 
 export interface GameState {
   id: number;
+  lobbyName: string
   word: string;
   previousWord: string;
   solved: boolean;

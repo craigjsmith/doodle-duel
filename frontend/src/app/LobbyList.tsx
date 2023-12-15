@@ -10,8 +10,8 @@ import Login from './Login';
 import LobbyCreator from './LobbyCreator';
 import Image from 'next/image';
 
-export default function LobbyList(props: { lobby: number | null, setLobby: (lobbyId: number) => void, username: string | undefined, setUsername: (username: string) => void, login: () => void }) {
-    const [lobbyList, setLobbyList] = useState<Array<number>>();
+export default function LobbyList(props: { lobby: number | undefined, setLobby: (lobbyId: number) => void, username: string | undefined, setUsername: (username: string) => void, login: () => void }) {
+    const [lobbyList, setLobbyList] = useState<{ id: number; lobbyName: string | undefined }[]>();
     const [loginOpened, { open: loginOpen, close: loginClose }] = useDisclosure(false);
     const [lobbyCreatorOpened, { open: lobbyCreatorOpen, close: lobbyCreatorClose }] = useDisclosure(false);
 
@@ -36,6 +36,7 @@ export default function LobbyList(props: { lobby: number | null, setLobby: (lobb
             })
             .then(data => {
                 // Handle the data from the response
+                console.log(data);
                 setLobbyList(data);
             })
             .catch(error => {
@@ -43,8 +44,8 @@ export default function LobbyList(props: { lobby: number | null, setLobby: (lobb
             });
     }
 
-    const createLobby = (privateLobby: Boolean) => {
-        fetch(`https://droplet.craigsmith.dev/createLobby/?privateLobby=${Number(privateLobby)}`, { method: "POST", })
+    const createLobby = (lobbyName: string, privateLobby: Boolean) => {
+        fetch(`https://droplet.craigsmith.dev/createLobby/?lobbyName=${lobbyName}&privateLobby=${Number(privateLobby)}`, { method: "POST", })
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -103,8 +104,8 @@ export default function LobbyList(props: { lobby: number | null, setLobby: (lobb
 
                 <SimpleGrid my={20} cols={2} style={{ width: '80%' }}>
                     {lobbyList?.map((lobby) =>
-                        <LobbyCard lobbyId={lobby} onClick={() => {
-                            props.setLobby(lobby);
+                        <LobbyCard lobbyId={lobby.id} lobbyName={lobby.lobbyName} onClick={() => {
+                            props.setLobby(lobby.id);
                             loginOpen();
                         }} />
                     )}
@@ -115,8 +116,8 @@ export default function LobbyList(props: { lobby: number | null, setLobby: (lobb
                 </Modal>
 
                 <Modal opened={lobbyCreatorOpened} onClose={lobbyCreatorClose} title="Create Lobby">
-                    <LobbyCreator createLobby={(privateLobby: Boolean) => {
-                        createLobby(privateLobby);
+                    <LobbyCreator createLobby={(lobbyName: string, privateLobby: Boolean) => {
+                        createLobby(lobbyName, privateLobby);
                         lobbyCreatorClose();
                         loginOpen();
                     }} />
