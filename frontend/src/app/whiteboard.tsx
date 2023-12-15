@@ -16,7 +16,6 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
     const [ctx, setCtx] = useState<any>();
     const [listenersInstalled, setListenersInstalled] = useState<boolean>(false);
     const [selectedColor, _setSelectedColor] = useState<string>(COLORS[0]);
-    const [lastSavedTimestamp, _setLastSavedTimestamp] = useState<any>(0);
     const [scaleFactor, _setScaleFactor] = useState<number>(1);
     const [unusuableHeight, _setUnusuableHeight] = useState<number>(0);
 
@@ -24,12 +23,6 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
     const setSelectedColor = (data: string) => {
         selectedColorRef.current = data;
         _setSelectedColor(data);
-    };
-
-    const lastSavedTimestampRef = useRef(lastSavedTimestamp);
-    const setLastSavedTimestamp = (data: number) => {
-        lastSavedTimestampRef.current = data;
-        _setLastSavedTimestamp(data);
     };
 
     const scaleFactorRef = useRef(scaleFactor);
@@ -50,7 +43,7 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
     useEffect(() => {
         const interval = setInterval(() => {
             if (props.enable) {
-                props.draw(ctx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE).data);
+                save();
             }
         }, 500);
 
@@ -80,25 +73,21 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
 
             // Touch events
             canvasRef.current.addEventListener('touchmove', drawTouch);
-            // canvasRef.current.addEventListener('touchmove', save);
             canvasRef.current.addEventListener('touchstart', setPositionTouch);
             canvasRef.current.addEventListener('touchend', setPositionTouch);
 
             // Mouse events
             canvasRef.current.addEventListener('mousemove', draw);
-            // canvasRef.current.addEventListener('mousemove', save);
             canvasRef.current.addEventListener('mousedown', setPosition);
             canvasRef.current.addEventListener('mouseenter', setPosition);
         }
 
         return () => {
             canvasRef.current?.removeEventListener('touchmove', drawTouch);
-            // canvasRef.current?.removeEventListener('touchmove', save);
             canvasRef.current?.removeEventListener('touchstart', setPositionTouch);
             canvasRef.current?.removeEventListener('touchend', setPositionTouch);
 
             canvasRef.current?.removeEventListener('mousemove', draw);
-            // canvasRef.current?.removeEventListener('mousemove', save);
             canvasRef.current?.removeEventListener('mousedown', setPosition);
             canvasRef.current?.removeEventListener('mouseenter', setPosition);
         }
@@ -164,7 +153,6 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
 
     function drawTouch(e: any) {
         e.preventDefault();
-        // if (e.buttons !== 1) return;
 
         if (ctx) {
             ctx.beginPath();
@@ -183,19 +171,13 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
     }
 
     function save() {
-        var date = new Date();
-
-        // Throtle emiting image to a max of 3 times per second
-        if (ctx && (date.getTime() - lastSavedTimestampRef.current) > 500) {
-            setLastSavedTimestamp(date.getTime());
-            props.draw(ctx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE).data);
-        }
+        props.draw(ctx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE).data);
     }
 
     function load() {
         if (!props.image) {
             clear();
-        } else if (!props.enable && !props.turn?.socketId.localeCompare(props.image.artist.socketId)) {
+        } else if (!props.enable && !props.turn?.socketId.localeCompare(props.image.artist)) {
             // Only update whiteboard if you're not the artist
             var array = new Uint8ClampedArray(props.image.img);
             ctx?.putImageData(new ImageData(array, CANVAS_SIZE, CANVAS_SIZE), 0, 0);
