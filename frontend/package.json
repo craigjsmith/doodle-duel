@@ -24,6 +24,7 @@
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.0.3",
+    "eslint-config-prettier": "^9.1.0",
     "postcss": "^8.4.32",
     "postcss-preset-mantine": "^1.11.1",
     "postcss-simple-vars": "^7.0.1",

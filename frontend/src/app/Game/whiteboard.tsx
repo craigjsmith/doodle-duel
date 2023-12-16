@@ -4,20 +4,32 @@ import ColorButton from './ColorButton';
 import { Player as PlayerModel } from '../Models/Player';
 import styles from './whiteboard.module.css'
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 
-export default function Whiteboard(props: { image: any | undefined, draw: any, enable: boolean, unusuableHeight: number, turn: PlayerModel | undefined, }) {
+export default function Whiteboard({
+    image,
+    emitDrawing,
+    enable,
+    unusuableHeight,
+    turn,
+}: {
+    image: any | undefined;
+    emitDrawing: any;
+    enable: boolean;
+    unusuableHeight: number;
+    turn: PlayerModel | undefined;
+}) {
     const CANVAS_SIZE = 500;
     const COLOR_SELECTOR_SIZE = 40 + 45;
     const COLORS = ['#EF476F', '#FFD166', '#06D6A0', '#118AB2', '#073B4C']
 
-    var pos = { x: 0, y: 0 };
-
+    const pos = useMemo(() => {
+        return { x: 0, y: 0 };
+    }, [])
     const [ctx, setCtx] = useState<any>();
     const [listenersInstalled, setListenersInstalled] = useState<boolean>(false);
     const [selectedColor, _setSelectedColor] = useState<string>(COLORS[0]);
     const [scaleFactor, _setScaleFactor] = useState<number>(1);
-    const [unusuableHeight, _setUnusuableHeight] = useState<number>(0);
 
     const selectedColorRef = useRef(selectedColor);
     const setSelectedColor = (data: string) => {
@@ -31,72 +43,13 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
         _setScaleFactor(data);
     };
 
-    const unusuableHeightRef = useRef(unusuableHeight);
-    const setUnusuableHeight = (data: number) => {
-        unusuableHeightRef.current = data;
-        _setUnusuableHeight(data);
-    };
-
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const colorSwatchesRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            if (props.enable) {
-                save();
-            }
-        }, 500);
-
-        return () => clearInterval(interval);
-    }, [props.enable]);
-
-    useEffect(() => {
-        setUnusuableHeight(props.unusuableHeight)
-    }, [props.unusuableHeight])
-
-    useEffect(() => {
-        // Update scaling when unusable height changes
-        scaleCanvasToScreen();
-    }, [props.unusuableHeight])
-
-    useEffect(() => {
-        // Update canvas image when recieved
-        load();
-    }, [props.image])
-
-    useEffect(() => {
-        if (canvasRef && canvasRef.current) {
-            setListenersInstalled(true);
-            setCtx(canvasRef.current.getContext('2d'));
-
-            window.visualViewport?.addEventListener("resize", scaleCanvasToScreen);
-
-            // Touch events
-            canvasRef.current.addEventListener('touchmove', drawTouch);
-            canvasRef.current.addEventListener('touchstart', setPositionTouch);
-            canvasRef.current.addEventListener('touchend', setPositionTouch);
-
-            // Mouse events
-            canvasRef.current.addEventListener('mousemove', draw);
-            canvasRef.current.addEventListener('mousedown', setPosition);
-            canvasRef.current.addEventListener('mouseenter', setPosition);
-        }
-
-        return () => {
-            canvasRef.current?.removeEventListener('touchmove', drawTouch);
-            canvasRef.current?.removeEventListener('touchstart', setPositionTouch);
-            canvasRef.current?.removeEventListener('touchend', setPositionTouch);
-
-            canvasRef.current?.removeEventListener('mousemove', draw);
-            canvasRef.current?.removeEventListener('mousedown', setPosition);
-            canvasRef.current?.removeEventListener('mouseenter', setPosition);
-        }
-    }, [listenersInstalled]);
-
-    function scaleCanvasToScreen() {
+    const scaleCanvasToScreen = useCallback(() => {
         let yPadding = 40;
         let xPadding = 20;
-        let maxHeight = (window.visualViewport?.height ?? 0) - (unusuableHeightRef.current + (colorSwatchesRef.current?.clientHeight ?? 0) + yPadding);
+        let maxHeight = (window.visualViewport?.height ?? 0) - (unusuableHeight + (colorSwatchesRef.current?.clientHeight ?? 0) + yPadding);
         let maxWidth = window.innerWidth - (xPadding);
         let size = maxHeight < maxWidth ? maxHeight : maxWidth;
         setScaleFactor(size / CANVAS_SIZE);
@@ -105,9 +58,9 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
             canvasRef.current.style.transform = `scale(${size / CANVAS_SIZE})`;
             canvasRef.current.style.transformOrigin = `top center`;
         }
-    }
+    }, [unusuableHeight])
 
-    function setPosition(e: any, isTouch: boolean = false) {
+    const setPosition = useCallback((e: any, isTouch: boolean = false) => {
         var left = 0;
         var top = 0;
         if (canvasRef && canvasRef.current) {
@@ -122,9 +75,9 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
             pos.x = (e.clientX - left) / scaleFactorRef.current;
             pos.y = (e.clientY - top) / scaleFactorRef.current;
         }
-    }
+    }, [pos])
 
-    function draw(e: any, isTouch: boolean = false) {
+    const draw = useCallback((e: any, isTouch: boolean = false) => {
         e.preventDefault();
 
         if (!isTouch && e.buttons !== 1) return;
@@ -141,39 +94,89 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
 
             ctx.stroke();
         }
-    }
+    }, [ctx, pos, setPosition])
 
     // Defining this function prevents passing anonymous function to action listener, which cant be unmounted
-    function setPositionTouch(e: any) {
+    const setPositionTouch = useCallback((e: any) => {
         setPosition(e, true);
-    }
+    }, [setPosition])
 
     // Defining this function prevents passing anonymous function to action listener, which cant be unmounted
-    function drawTouch(e: any) {
+    const drawTouch = useCallback((e: any) => {
         draw(e, true);
-    }
+    }, [draw])
 
-    function save() {
-        props.draw(ctx?.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE).data);
-    }
 
-    function load() {
-        if (!props.image) {
+    const save = useCallback(() => {
+        emitDrawing(ctx?.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE).data);
+    }, [ctx, emitDrawing])
+
+    const clear = useCallback(() => {
+        ctx?.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+    }, [ctx])
+
+    const load = useCallback(() => {
+        if (!image) {
             clear();
-        } else if (!props.enable && !props.turn?.socketId.localeCompare(props.image.artist)) {
+        } else if (!enable && !turn?.socketId.localeCompare(image.artist)) {
             // Only update whiteboard if you're not the artist
-            var array = new Uint8ClampedArray(props.image.img);
+            var array = new Uint8ClampedArray(image.img);
             ctx?.putImageData(new ImageData(array, CANVAS_SIZE, CANVAS_SIZE), 0, 0);
         }
-    }
+    }, [clear, ctx, enable, image, turn])
 
-    function clear() {
-        ctx?.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-    }
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (enable) {
+                save();
+            }
+        }, 500);
+
+        return () => clearInterval(interval);
+    }, [enable, save]);
+
+    useEffect(() => {
+        // Update scaling when unusable height changes
+        scaleCanvasToScreen();
+    }, [scaleCanvasToScreen])
+
+    useEffect(() => {
+        // Update canvas image when recieved
+        load();
+    }, [image, load])
+
+    useEffect(() => {
+        let canvas = canvasRef.current;
+
+        setListenersInstalled(true);
+        setCtx(canvas?.getContext('2d'));
+
+        window.visualViewport?.addEventListener("resize", scaleCanvasToScreen);
+
+        // Touch events
+        canvas?.addEventListener('touchmove', drawTouch);
+        canvas?.addEventListener('touchstart', setPositionTouch);
+        canvas?.addEventListener('touchend', setPositionTouch);
+
+        // Mouse events
+        canvas?.addEventListener('mousemove', draw);
+        canvas?.addEventListener('mousedown', setPosition);
+        canvas?.addEventListener('mouseenter', setPosition);
+
+        return () => {
+            canvas?.removeEventListener('touchmove', drawTouch);
+            canvas?.removeEventListener('touchstart', setPositionTouch);
+            canvas?.removeEventListener('touchend', setPositionTouch);
+
+            canvas?.removeEventListener('mousemove', draw);
+            canvas?.removeEventListener('mousedown', setPosition);
+            canvas?.removeEventListener('mouseenter', setPosition);
+        }
+    }, [listenersInstalled, draw, drawTouch, setPosition, setPositionTouch, scaleCanvasToScreen]);
 
     return (
         <>
-            {props.enable ?
+            {enable ?
                 <div className={styles.colorSwatches} ref={colorSwatchesRef}>
                     {
                         COLORS.map((color) =>
@@ -183,7 +186,7 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
                 </div> : undefined}
 
             <div className={styles.canvasContainer}>
-                <canvas className={`${styles.canvas} ${props.enable ? styles.enabled : styles.disabled} `} ref={canvasRef} width={CANVAS_SIZE} height={CANVAS_SIZE - COLOR_SELECTOR_SIZE} />
+                <canvas className={`${styles.canvas} ${enable ? styles.enabled : styles.disabled} `} ref={canvasRef} width={CANVAS_SIZE} height={CANVAS_SIZE - COLOR_SELECTOR_SIZE} />
             </div>
         </>
     )

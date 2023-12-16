@@ -18,7 +18,7 @@ export default function Game(props: {
     previousWord: string | null,
     endTimestamp: number,
     image: any,
-    draw: (img: any) => void,
+    emitDrawing: (img: any) => void,
     turn: PlayerModel | undefined,
     isMyTurn: boolean
     wordGuess: string | undefined,
@@ -35,7 +35,7 @@ export default function Game(props: {
 
     useEffect(() => {
         setTopBarHeight((staticBarRef.current?.clientHeight ?? 0) + (topControlsRef.current?.clientHeight ?? 0));
-    });
+    }, []);
 
     useEffect(() => {
         if (!props.gameStage?.localeCompare("LEADERBOARD")) {
@@ -43,7 +43,7 @@ export default function Game(props: {
         } else {
             close();
         }
-    }, [props.gameStage]);
+    }, [props.gameStage, close, open]);
 
     return (
         <div className={styles.game}>
@@ -116,7 +116,7 @@ export default function Game(props: {
 
             </Flex>
 
-            <Whiteboard image={props.image} draw={props.draw} enable={props.isMyTurn} unusuableHeight={topBarHeight} turn={props.turn} />
+            <Whiteboard image={props.image} emitDrawing={props.emitDrawing} enable={props.isMyTurn} unusuableHeight={topBarHeight} turn={props.turn} />
 
             <Modal opened={opened} onClose={close} withCloseButton={false} closeOnClickOutside={false} closeOnEscape={false} title="Leaderboard">
                 <Leaderboard players={props.players ?? []} />

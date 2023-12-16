@@ -37,13 +37,13 @@ const PageComponent = () => {
 
   useEffect(() => {
     setLobby(Number(lobbyFromURL));
-  }, []);
+  }, [lobbyFromURL]);
 
   useEffect(() => {
     if (gameState) {
       setIsMyTurn(!socket.id.localeCompare(gameState?.turn?.socketId));
     }
-  }, [gameState?.turn]);
+  }, [gameState]);
 
   useEffect(() => {
     if (gameState?.gameStage == undefined) {
@@ -76,7 +76,7 @@ const PageComponent = () => {
     setScreen(Screens.Lobby);
   };
 
-  const draw = (img: any) => {
+  const emitDrawing = (img: any) => {
     socket.volatile.emit('NEWDRAW', { img: img, artist: socket.id }, lobby);
   };
 
@@ -137,7 +137,7 @@ const PageComponent = () => {
             previousWord={gameState?.previousWord ?? null}
             endTimestamp={gameState?.endTimestamp ?? 0}
             image={image}
-            draw={draw}
+            emitDrawing={emitDrawing}
             turn={gameState?.turn}
             isMyTurn={isMyTurn}
             wordGuess={wordGuess}

@@ -4,50 +4,36 @@ import { useDisclosure } from '@mantine/hooks';
 import { Alert, Flex, Title, Button, Text, SimpleGrid, Modal, Box } from '@mantine/core';
 import { IconInfoCircle } from '@tabler/icons-react';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import LobbyCard from './LobbyCard';
 import Login from './Login';
 import LobbyCreator from './LobbyCreator';
 import Image from 'next/image';
 import { Lobby as LobbyModel } from '../Models/Lobby';
 
-export default function LobbyList(
-    props: {
-        lobby: number | null,
-        setLobby: (lobbyId: number | null) => void, username: string | undefined,
-        setUsername: (username: string) => void,
-        login: () => void,
-        lobbyList: LobbyModel[] | undefined,
-        setLobbyList: (list: any) => void
-    }) {
+export default function LobbyList({
+    lobby,
+    setLobby,
+    username,
+    setUsername,
+    login,
+    lobbyList,
+    setLobbyList,
+}: {
+    lobby: number | null;
+    setLobby: (lobbyId: number | null) => void;
+    username: string | undefined;
+    setUsername: (username: string) => void;
+    login: () => void;
+    lobbyList: LobbyModel[] | undefined;
+    setLobbyList: (list: any) => void;
+}) {
 
     const [loginOpened, { open: loginOpen, close: loginClose }] = useDisclosure(false);
     const [lobbyCreatorOpened, { open: lobbyCreatorOpen, close: lobbyCreatorClose }] = useDisclosure(false);
     const [errorOpened, { open: errorOpen, close: errorClose }] = useDisclosure(false);
 
-    useEffect(() => {
-        getLobbies();
-    }, []);
-
-    useEffect(() => {
-        if (props.lobby) {
-            joinLobby(props.lobby);
-        }
-    }, [props.lobbyList, props.lobby]);
-
-    const joinLobby = async (lobbyId: number) => {
-        let joinable = await isLobbyJoinable(lobbyId);
-        if (joinable) {
-            props.setLobby(lobbyId);
-            loginOpen();
-        } else {
-            props.setLobby(null);
-            errorOpen();
-            getLobbies();
-        }
-    }
-
-    const getLobbies = () => {
+    const getLobbies = useCallback(() => {
         fetch('https://droplet.craigsmith.dev/lobbies')
             .then(response => {
                 if (!response.ok) {
@@ -57,12 +43,34 @@ export default function LobbyList(
             })
             .then(data => {
                 // Handle the data from the response
-                props.setLobbyList(data);
+                setLobbyList(data);
             })
             .catch(error => {
                 console.error('Error fetching lobbies:', error);
             });
-    }
+    }, [setLobbyList])
+
+    const joinLobby = useCallback(async (lobbyId: number) => {
+        let joinable = await isLobbyJoinable(lobbyId);
+        if (joinable) {
+            setLobby(lobbyId);
+            loginOpen();
+        } else {
+            setLobby(null);
+            errorOpen();
+            getLobbies();
+        }
+    }, [errorOpen, getLobbies, loginOpen, setLobby])
+
+    useEffect(() => {
+        getLobbies();
+    }, [getLobbies]);
+
+    useEffect(() => {
+        if (lobby) {
+            joinLobby(lobby);
+        }
+    }, [lobbyList, lobby, joinLobby]);
 
     const createLobby = (lobbyName: string, privateLobby: Boolean) => {
         fetch(`https://droplet.craigsmith.dev/createLobby/?lobbyName=${lobbyName}&privateLobby=${Number(privateLobby)}`, { method: "POST", })
@@ -74,7 +82,7 @@ export default function LobbyList(
             })
             .then(data => {
                 // Refresh Lobby List
-                props.setLobby(data.newLobbyId);
+                setLobby(data.newLobbyId);
             })
             .catch(error => {
                 console.error('Error fetching lobbies:', error);
@@ -135,7 +143,7 @@ export default function LobbyList(
                 </Button>
 
                 <Flex mt={20} px={100}>
-                    {(props.lobbyList?.length ?? 0) > 0
+                    {(lobbyList?.length ?? 0) > 0
                         ?
                         <Text size="lg">or join an open lobby!</Text>
                         :
@@ -144,7 +152,7 @@ export default function LobbyList(
                 </Flex>
 
                 <SimpleGrid my={20} cols={2}>
-                    {props.lobbyList?.map((lobby) =>
+                    {lobbyList?.map((lobby) =>
                         <LobbyCard key={lobby.id} lobbyId={lobby.id} lobbyName={lobby.lobbyName} playerCount={lobby.playerCount} onClick={() => {
                             joinLobby(lobby.id);
                         }} />
@@ -152,7 +160,7 @@ export default function LobbyList(
                 </SimpleGrid>
 
                 <Modal opened={loginOpened} onClose={loginClose} title="Login">
-                    <Login username={props.username || ''} setUsername={props.setUsername} login={props.login} />
+                    <Login username={username || ''} setUsername={setUsername} login={login} />
                 </Modal>
 
                 <Modal opened={lobbyCreatorOpened} onClose={lobbyCreatorClose} title="Create Lobby">

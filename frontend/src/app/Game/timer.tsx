@@ -29,7 +29,7 @@ export default function Timer(props: { endTimestamp: number, duration: number, a
         }, 1000);
 
         return () => clearInterval(interval);
-    }, [props.endTimestamp, secondsRemaining]);
+    }, [props.active, props.duration, props.endTimestamp, secondsRemaining]);
 
     return (
         <Flex
