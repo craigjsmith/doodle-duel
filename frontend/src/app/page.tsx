@@ -82,7 +82,9 @@ const PageComponent = () => {
   };
 
   function onGame(msg: any) {
-    setGameState({ id: msg.id, lobbyName: msg.lobbyName, word: msg.word, previousWord: msg.previousWord, solved: msg.solved, players: msg.players, turn: JSON.parse(msg.turn), guesses: JSON.parse(msg.guesses), endTimestamp: msg.endTimestamp, gameStarted: msg.gameStarted, gameStage: msg.gameStage });
+    if (msg) {
+      setGameState({ id: msg.id, lobbyName: msg.lobbyName, word: msg.word, previousWord: msg.previousWord, solved: msg.solved, players: msg.players, turn: JSON.parse(msg.turn), guesses: JSON.parse(msg.guesses), endTimestamp: msg.endTimestamp, gameStarted: msg.gameStarted, gameStage: msg.gameStage });
+    }
   }
 
   function onDraw(img: any) {
@@ -103,7 +105,7 @@ const PageComponent = () => {
 
       case Screens.Lobby: {
         return (
-          <Lobby lobbyId={lobby} players={gameState?.players} startGame={() => { startLobby() }} />
+          <Lobby lobbyId={lobby} lobbyName={gameState?.lobbyName} players={gameState?.players} startGame={() => { startLobby() }} />
         );
       }
 
@@ -129,7 +131,7 @@ const PageComponent = () => {
 
       case Screens.GameOver: {
         return (
-          <GameOver players={gameState?.players ?? []} back={() => { setScreen(Screens.LobbyList) }} />
+          <GameOver players={gameState?.players ?? []} back={() => { location.reload(); }} />
         );
       }
     }

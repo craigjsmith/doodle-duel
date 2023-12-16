@@ -25,7 +25,7 @@ export default function Game(props: {
     guess: () => void,
     players: Player[] | undefined,
     gameStage: string | undefined,
-    guesses: string[] | undefined
+    guesses: { guess: string, player: { socketId: number, username: string } }[] | undefined
 }) {
     const [opened, { open, close }] = useDisclosure(false);
     const [topBarHeight, setTopBarHeight] = useState<number>(0);
@@ -48,10 +48,19 @@ export default function Game(props: {
         <div className={styles.game}>
             <Flex justify="center" align="center" className={styles.staticBar} ref={staticBarRef}>
                 {/* Show reveal word on reveal and leaderboard stage */}
-                {props.gameStage?.localeCompare("GAME") ? <Title order={3}>{props.previousWord}</Title> : undefined}
+                {
+                    props.gameStage?.localeCompare("GAME") && props.guesses
+                        ? <Title order={3}>{props.guesses[props.guesses.length - 1].player.username} guessed <span className={styles.revealWord}>{props.previousWord}</span></Title>
+                        : undefined
+                }
 
                 {/* Show word to be drawn if it's your turn and it hasn't been revealed yet */}
-                {(props.isMyTurn && !props.gameStage?.localeCompare("GAME")) ? <Title order={3}>You are drawing: {props.secretWord}</Title> : undefined}
+                {
+                    (props.isMyTurn && !props.gameStage?.localeCompare("GAME")) ?
+                        <Title order={3}>You are drawing: <span className={styles.revealWord}>{props.secretWord}</span></Title>
+                        :
+                        undefined
+                }
 
                 {/* Show guess box if it's not your turn and word hasn't been revealed yet */}
                 {(!props.isMyTurn && !props.gameStage?.localeCompare("GAME"))

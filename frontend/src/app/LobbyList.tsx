@@ -10,7 +10,7 @@ import Login from './Login';
 import LobbyCreator from './LobbyCreator';
 import Image from 'next/image';
 
-export default function LobbyList(props: { lobby: number | undefined, setLobby: (lobbyId: number) => void, username: string | undefined, setUsername: (username: string) => void, login: () => void }) {
+export default function LobbyList(props: { lobby: number | null, setLobby: (lobbyId: number) => void, username: string | undefined, setUsername: (username: string) => void, login: () => void }) {
     const [lobbyList, setLobbyList] = useState<{ id: number; lobbyName: string | undefined }[]>();
     const [loginOpened, { open: loginOpen, close: loginClose }] = useDisclosure(false);
     const [lobbyCreatorOpened, { open: lobbyCreatorOpen, close: lobbyCreatorClose }] = useDisclosure(false);

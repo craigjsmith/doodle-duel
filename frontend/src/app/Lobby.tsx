@@ -8,7 +8,7 @@ import styles from './lobby.module.css'
 
 import { useEffect, useState, useRef } from 'react';
 
-export default function Lobby(props: { lobbyId: number | null, players: Player[] | undefined, startGame: () => void | undefined }) {
+export default function Lobby(props: { lobbyId: number | null, lobbyName: string | undefined, players: Player[] | undefined, startGame: () => void | undefined }) {
     const [lobbyList, setLobbyList] = useState<Array<number>>();
 
     const URL = window.location.origin + "/?lobby=" + props.lobbyId;
@@ -34,7 +34,7 @@ export default function Lobby(props: { lobbyId: number | null, players: Player[]
     return (
         <>
             <div className={styles.topBar}>
-                <Title order={1} my={20}>{`Lobby ${props.lobbyId}`}</Title>
+                <Title order={1} my={20}>{props.lobbyName ? props.lobbyName : `Lobby ${props.lobbyId}`}</Title>
             </div>
             <Container>
                 <Flex

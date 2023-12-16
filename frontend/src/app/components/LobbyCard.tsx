@@ -7,7 +7,7 @@ import { Text, Paper } from '@mantine/core';
 export default function LobbyCard(props: {
     lobbyId: number,
     lobbyName: string | undefined,
-    playerCount: number | undefined,
+    playerCount?: number | undefined,
     onClick: () => void
 }) {
     return (

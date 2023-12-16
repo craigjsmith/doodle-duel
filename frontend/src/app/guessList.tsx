@@ -1,14 +1,14 @@
 'use client'
 
-import { Center, Paper } from '@mantine/core';
+import { Center, Paper, Flex, Text } from '@mantine/core';
 import { IconClockHour3 } from '@tabler/icons-react';
 
 import styles from './guessList.module.css'
 
 import { useEffect, useState, useRef } from 'react';
 
-export default function GuessList(props: { guesses: string[] }) {
-    const [guessList, setGuessList] = useState<string[]>();
+export default function GuessList(props: { guesses: { guess: string, player: { socketId: number, username: string } }[] }) {
+    const [guessList, setGuessList] = useState<{ guess: string, player: { socketId: number, username: string } }[]>();
 
     useEffect(() => {
         setGuessList(props.guesses.reverse());
@@ -21,7 +21,10 @@ export default function GuessList(props: { guesses: string[] }) {
                     (guess) =>
                         <div className={styles.innerContainer}>
                             <Paper shadow="xs" radius="md" withBorder className={styles.wordBox}>
-                                <Center>{guess}</Center>
+                                <Flex direction="row">
+                                    <Text c="dimmed" mr={5}>{guess.player.username} :</Text>
+                                    <Text>{guess.guess}</Text>
+                                </Flex>
                             </Paper>
                         </div>
                 )

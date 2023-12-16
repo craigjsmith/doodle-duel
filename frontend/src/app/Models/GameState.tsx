@@ -8,7 +8,7 @@ export interface GameState {
   solved: boolean;
   players: Array<Player> | undefined;
   turn: Player;
-  guesses: Array<string>;
+  guesses: { guess: string, player: { socketId: number, username: string } }[];
   endTimestamp: number;
   gameStarted: boolean;
   gameStage: string;
