@@ -97,7 +97,8 @@ io.on('connection', (socket) => {
     }
 
     async function onGuess(msg, id) {
-        var guess = stripString(msg);
+        var guess = msg;
+        var strippedGuess = stripString(msg);
 
         if (guess) {
             let gameState = await getGameState(id, true);
@@ -110,10 +111,10 @@ io.on('connection', (socket) => {
 
             // Check if guess is correct
             let secretWord = stripString(gameState.word);
-            if (!secretWord.localeCompare(guess)) {
+            if (!secretWord.localeCompare(strippedGuess)) {
                 // If correct answer, award points to guesser and artist
                 bouncer.awardPoints(socket.id, 2);
-                await bouncer.awardPoints(turn.socketId, 1);
+                bouncer.awardPoints(turn.socketId, 1);
 
                 // Check if either point earner has won game
                 if (bouncer.getPoints(socket.id) >= POINTS_TO_WIN || bouncer.getPoints(turn.socketId) >= POINTS_TO_WIN) {
@@ -160,9 +161,9 @@ function onDraw(msg, id) {
 }
 
 async function gameOver(lobbyId) {
-    removeLobby(lobbyId);
-    await emitGameState();
+    emitGameState(lobbyId);
     io.to(lobbyId).emit('GAMEOVER');
+    removeLobby(lobbyId);
 }
 
 async function startNewRound(id) {
