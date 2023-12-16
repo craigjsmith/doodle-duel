@@ -142,7 +142,7 @@ export default function LobbyList({
                     Create a Lobby
                 </Button>
 
-                <Flex mt={20} px={100}>
+                <Flex mt={20} px={100} justify='center'>
                     {(lobbyList?.length ?? 0) > 0
                         ?
                         <Text size="lg">or join an open lobby!</Text>
