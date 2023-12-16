@@ -13,6 +13,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: 'Doodle Duel',
   description: 'Online multiplayer draw and guess game',
+  metadataBase: new URL('https://doodle.craigsmith.dev'),
 
   openGraph: {
     title: 'Doodle Duel',
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
     siteName: 'Doodle Duel',
     images: [
       {
-        url: 'https://doodle.craigsmith.dev/images/og-1200x630.png',
+        url: '/images/og-1200x630.png',
         width: 1200,
         height: 630,
       }
