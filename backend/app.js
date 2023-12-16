@@ -15,7 +15,7 @@ const port = 3001
 const socketPort = 4000
 
 const POINTS_TO_WIN = 10;
-const ROUND_DURATION = 20000;
+const ROUND_DURATION = 30000;
 const GRACE_DURTION = 1000;
 
 app.use(cors())
