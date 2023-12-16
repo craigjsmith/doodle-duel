@@ -50,7 +50,7 @@ function getOpenLobbyList() {
 
 function getAllLobbies() {
     return new Promise((resolve, reject) => {
-        connection.query('SELECT id, lobbyName, playerCount FROM game WHERE gameStarted=0', (err, rows) => {
+        connection.query('SELECT id, lobbyName, playerCount FROM game', (err, rows) => {
             if (err) {
                 return reject(err);
             }

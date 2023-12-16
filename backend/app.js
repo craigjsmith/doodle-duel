@@ -298,6 +298,7 @@ app.listen(port, () => {
 server.listen(socketPort);
 
 setInterval(async () => {
+    // Purge empty lobbies every 10 minutes
     let lobbies = await db.getAllLobbies();
     let lobbyIdList = lobbies.map((lobby) => { return lobby.id });
 
