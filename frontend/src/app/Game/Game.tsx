@@ -102,7 +102,7 @@ export default function Game(props: {
                 </Center>
 
                 <Center pb={10} mt={10}>
-                    <Timer endTimestamp={props.endTimestamp ?? 0} duration={30} />
+                    <Timer endTimestamp={props.endTimestamp ?? 0} duration={30} active={Boolean(!props.gameStage?.localeCompare("GAME"))} />
                 </Center>
 
                 {
