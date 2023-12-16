@@ -79,7 +79,7 @@ export default function LobbyList(props: { lobby: number | null, setLobby: (lobb
                     />
                 </Box>
 
-                <Title order={1}>Doodle Duel</Title>
+                <Title order={1} c="#3b3b3b">Doodle Duel</Title>
 
                 <Button
                     variant="filled"
