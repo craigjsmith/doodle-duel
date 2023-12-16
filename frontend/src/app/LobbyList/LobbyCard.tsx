@@ -12,8 +12,13 @@ export default function LobbyCard(props: {
 }) {
     return (
         <Paper className={styles.lobbyButton} onClick={props.onClick} shadow="sm" withBorder p="xl">
-            <Text ta="center">{props.lobbyName ?? props.lobbyId}</Text>
-            {props.playerCount ? <Text c="dimmed" ta="center">{props.playerCount} players</Text> : undefined}
+            <Text ta="center">
+                {props.lobbyName ?? props.lobbyId}
+            </Text>
+
+            <Text c="dimmed" ta="center">
+                {props.playerCount ? `${props.playerCount} players` : undefined}
+            </Text>
         </Paper >
     )
 }
