@@ -57,7 +57,7 @@ export default function Game(props: {
                 {/* Show word to be drawn if it's your turn and it hasn't been revealed yet */}
                 {
                     (props.isMyTurn && !props.gameStage?.localeCompare("GAME")) ?
-                        <Title order={3}>You are drawing: <span className={styles.revealWord}>{props.secretWord}</span></Title>
+                        <Title order={3}>You are drawing <span className={styles.revealWord}>{props.secretWord}</span></Title>
                         :
                         undefined
                 }
