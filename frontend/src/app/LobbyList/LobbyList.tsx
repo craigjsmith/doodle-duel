@@ -153,9 +153,11 @@ export default function LobbyList({
 
                 <SimpleGrid my={20} cols={2}>
                     {lobbyList?.map((lobby) =>
-                        <LobbyCard key={lobby.id} lobbyId={lobby.id} lobbyName={lobby.lobbyName} playerCount={lobby.playerCount} onClick={() => {
-                            joinLobby(lobby.id);
-                        }} />
+                        lobby.playerCount > 0 ?
+                            <LobbyCard key={lobby.id} lobbyId={lobby.id} lobbyName={lobby.lobbyName} playerCount={lobby.playerCount} onClick={() => {
+                                joinLobby(lobby.id);
+                            }} />
+                            : undefined
                     )}
                 </SimpleGrid>
 

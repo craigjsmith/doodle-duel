@@ -17,7 +17,7 @@ export default function LobbyCard(props: {
             </Text>
 
             <Text c="dimmed" ta="center">
-                {props.playerCount ? `${props.playerCount} players` : undefined}
+                {props.playerCount ? `${props.playerCount} players` : ''}
             </Text>
         </Paper >
     )

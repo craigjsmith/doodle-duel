@@ -1,4 +1,8 @@
 .lobbyButton {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    height: 120px;
     width: 40vw;
     max-width: 300px;
 }
