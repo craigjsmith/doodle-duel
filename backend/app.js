@@ -248,10 +248,6 @@ app.get('/isLobbyJoinable', async (req, res) => {
     let lobbies = await db.getAllJoinableLobbiesList();
     const lobbyId = req.query.lobbyId;
     let lobbyIdList = lobbies.map((lobby) => { return lobby.id });
-
-    console.log("wanted ID: " + lobbyId);
-    console.log(lobbyIdList);
-
     res.send(lobbyIdList.includes(Number(lobbyId)))
 })
 
