@@ -22,7 +22,6 @@ app.use(cors({
     origin: true
 }))
 
-
 const io = new Server(server, {
     cors: {
         origin: "*"
@@ -278,3 +277,12 @@ app.listen(port, () => {
 })
 
 server.listen(socketPort);
+
+setInterval(async () => {
+    let lobbies = await db.getAllLobbies();
+    let lobbyIdList = lobbies.map((lobby) => { return lobby.id });
+
+    lobbyIdList.forEach(lobby => {
+        removeLobbyIfEmpty(lobby);
+    });
+}, 600000);
