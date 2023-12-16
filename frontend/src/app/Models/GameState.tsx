@@ -1,14 +1,14 @@
-import { Guess } from './Guess';
-import { Player } from './Player';
+import { Guess as GuessModel } from './Guess';
+import { Player as PlayerModel } from './Player';
 
 export interface GameState {
   id: number;
   lobbyName: string
   word: string;
   previousWord: string;
-  players: Array<Player> | undefined;
-  turn: Player;
-  guesses: Guess[];
+  players: Array<PlayerModel> | undefined;
+  turn: PlayerModel;
+  guesses: GuessModel[];
   endTimestamp: number;
   gameStarted: boolean;
   gameStage: string;

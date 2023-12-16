@@ -5,10 +5,10 @@ import { Paper, Flex, Text } from '@mantine/core';
 import styles from './guessList.module.css'
 
 import { useEffect, useState } from 'react';
-import { Guess } from '../Models/Guess';
+import { Guess as GuessModel } from '../Models/Guess';
 
-export default function GuessList(props: { guesses: Guess[] }) {
-    const [guessList, setGuessList] = useState<Guess[]>();
+export default function GuessList(props: { guesses: GuessModel[] }) {
+    const [guessList, setGuessList] = useState<GuessModel[]>();
 
     useEffect(() => {
         setGuessList(props.guesses.reverse());

@@ -9,9 +9,9 @@ import { useEffect, useState, useRef } from 'react';
 import Timer from './timer';
 import Whiteboard from './whiteboard';
 import Leaderboard from './Leaderboard';
-import { Player } from '../Models/Player';
+import { Player as PlayerModel } from '../Models/Player';
 import GuessList from './guessList';
-import { Guess } from '../Models/Guess';
+import { Guess as GuessModel } from '../Models/Guess';
 
 export default function Game(props: {
     secretWord: string | null,
@@ -19,14 +19,14 @@ export default function Game(props: {
     endTimestamp: number,
     image: any,
     draw: (img: any) => void,
-    turn: Player | undefined,
+    turn: PlayerModel | undefined,
     isMyTurn: boolean
     wordGuess: string | undefined,
     setWordGuess: (guess: string) => void,
     guess: () => void,
-    players: Player[] | undefined,
+    players: PlayerModel[] | undefined,
     gameStage: string | undefined,
-    guesses: Guess[] | undefined
+    guesses: GuessModel[] | undefined
 }) {
     const [opened, { open, close }] = useDisclosure(false);
     const [topBarHeight, setTopBarHeight] = useState<number>(0);

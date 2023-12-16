@@ -3,12 +3,12 @@
 import { Container, Flex, Title, List, ThemeIcon, rem, Button, Loader, Text, CopyButton, Group, Input } from '@mantine/core';
 import { IconUser } from '@tabler/icons-react';
 
-import { Player } from '../Models/Player';
+import { Player as PlayerModel } from '../Models/Player';
 import styles from './lobby.module.css'
 
 import { useEffect, useState, useRef } from 'react';
 
-export default function Lobby(props: { lobbyId: number | null, lobbyName: string | undefined, players: Player[] | undefined, startGame: () => void | undefined }) {
+export default function Lobby(props: { lobbyId: number | null, lobbyName: string | undefined, players: PlayerModel[] | undefined, startGame: () => void | undefined }) {
     const [lobbyList, setLobbyList] = useState<Array<number>>();
 
     const URL = window.location.origin + "/?lobby=" + props.lobbyId;

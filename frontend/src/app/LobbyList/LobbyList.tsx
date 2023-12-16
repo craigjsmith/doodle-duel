@@ -9,8 +9,18 @@ import LobbyCard from './LobbyCard';
 import Login from './Login';
 import LobbyCreator from './LobbyCreator';
 import Image from 'next/image';
+import { Lobby as LobbyModel } from '../Models/Lobby';
 
-export default function LobbyList(props: { lobby: number | null, setLobby: (lobbyId: number | null) => void, username: string | undefined, setUsername: (username: string) => void, login: () => void, lobbyList: { id: number; lobbyName: string | undefined, playerCount: number }[] | undefined, setLobbyList: (list: any) => void }) {
+export default function LobbyList(
+    props: {
+        lobby: number | null,
+        setLobby: (lobbyId: number | null) => void, username: string | undefined,
+        setUsername: (username: string) => void,
+        login: () => void,
+        lobbyList: LobbyModel[] | undefined,
+        setLobbyList: (list: any) => void
+    }) {
+
     const [loginOpened, { open: loginOpen, close: loginClose }] = useDisclosure(false);
     const [lobbyCreatorOpened, { open: lobbyCreatorOpen, close: lobbyCreatorClose }] = useDisclosure(false);
     const [errorOpened, { open: errorOpen, close: errorClose }] = useDisclosure(false);

@@ -1,12 +1,12 @@
 'use client'
 
 import ColorButton from './ColorButton';
-import { Player } from '../Models/Player';
+import { Player as PlayerModel } from '../Models/Player';
 import styles from './whiteboard.module.css'
 
 import { useEffect, useState, useRef } from 'react';
 
-export default function Whiteboard(props: { image: any | undefined, draw: any, enable: boolean, unusuableHeight: number, turn: Player | undefined, }) {
+export default function Whiteboard(props: { image: any | undefined, draw: any, enable: boolean, unusuableHeight: number, turn: PlayerModel | undefined, }) {
     const CANVAS_SIZE = 500;
     const COLOR_SELECTOR_SIZE = 40 + 45;
     const COLORS = ['#EF476F', '#FFD166', '#06D6A0', '#118AB2', '#073B4C']

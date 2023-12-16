@@ -7,10 +7,11 @@ import { useEffect, useState } from 'react';
 import LobbyList from './LobbyList/LobbyList';
 import Lobby from './Lobby/Lobby';
 
-import { GameState } from './Models/GameState';
+import { GameState as GameStateModel } from './Models/GameState';
 import Game from './Game/Game';
 import GameOver from './Game/GameOver';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { Lobby as LobbyModel } from './Models/Lobby';
 
 enum Screens {
   LobbyList,
@@ -21,7 +22,7 @@ enum Screens {
 
 const PageComponent = () => {
   const [lobby, setLobby] = useState<number | null>(null);
-  const [gameState, setGameState] = useState<GameState>();
+  const [gameState, setGameState] = useState<GameStateModel>();
   const [image, setImage] = useState<any>();
   const [wordGuess, setWordGuess] = useState<string>();
   const [username, setUsername] = useState<string>();
@@ -29,7 +30,7 @@ const PageComponent = () => {
   const [secretWord, setSecretWord] = useState<string | null>(null);
   const [isMyTurn, setIsMyTurn] = useState<boolean>(false);
   const [showLeaderboard, setShowLeaderboard] = useState<boolean>(false);
-  const [lobbyList, setLobbyList] = useState<{ id: number; lobbyName: string | undefined, playerCount: number }[]>();
+  const [lobbyList, setLobbyList] = useState<LobbyModel[]>();
 
   const router = useRouter();
   const lobbyFromURL = useSearchParams().get("lobby");
@@ -103,8 +104,6 @@ const PageComponent = () => {
 
   function onLobbyList(msg: any) {
     if (msg) {
-      console.log("onLobbyList");
-      console.log(msg);
       setLobbyList(msg);
     }
   }

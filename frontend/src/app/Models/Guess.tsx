@@ -1,6 +1,6 @@
-import { Player } from "./Player";
+import { Player as PlayerModel } from "./Player";
 
 export interface Guess {
     guess: string,
-    player: Player,
+    player: PlayerModel,
 }

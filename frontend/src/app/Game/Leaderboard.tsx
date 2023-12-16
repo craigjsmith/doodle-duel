@@ -1,14 +1,14 @@
 'use client'
 
 import { ThemeIcon, Table } from '@mantine/core';
-import { Player } from '../Models/Player';
+import { Player as PlayerModel } from '../Models/Player';
 import { useEffect, useState, useRef } from 'react';
 
-export default function Leaderboard(props: { players: Player[] }) {
-    const [playersSortedByPoints, setPlayersSortedByPoints] = useState<Player[]>();
+export default function Leaderboard(props: { players: PlayerModel[] }) {
+    const [playersSortedByPoints, setPlayersSortedByPoints] = useState<PlayerModel[]>();
 
     useEffect(() => {
-        setPlayersSortedByPoints(props.players.sort((a: Player, b: Player) => { return (b.points ?? 0) - (a.points ?? 0) }));
+        setPlayersSortedByPoints(props.players.sort((a: PlayerModel, b: PlayerModel) => { return (b.points ?? 0) - (a.points ?? 0) }));
     }, [props.players]);
 
     return (
