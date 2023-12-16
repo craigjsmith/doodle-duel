@@ -6,7 +6,6 @@ export interface GameState {
   lobbyName: string
   word: string;
   previousWord: string;
-  solved: boolean;
   players: Array<Player> | undefined;
   turn: Player;
   guesses: Guess[];

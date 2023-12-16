@@ -85,7 +85,19 @@ const PageComponent = () => {
 
   function onGame(msg: any) {
     if (msg) {
-      setGameState({ id: msg.id, lobbyName: msg.lobbyName, word: msg.word, previousWord: msg.previousWord, solved: msg.solved, players: msg.players, turn: JSON.parse(msg.turn), guesses: JSON.parse(msg.guesses), endTimestamp: msg.endTimestamp, gameStarted: msg.gameStarted, gameStage: msg.gameStage, playerCount: msg.playerCount });
+      setGameState({
+        id: msg.id,
+        lobbyName: msg.lobbyName,
+        word: msg.word,
+        previousWord: msg.previousWord,
+        players: msg.players,
+        turn: JSON.parse(msg.turn),
+        guesses: JSON.parse(msg.guesses),
+        endTimestamp: msg.endTimestamp,
+        gameStarted: msg.gameStarted,
+        gameStage: msg.gameStage,
+        playerCount: msg.playerCount
+      });
     }
   }
 
