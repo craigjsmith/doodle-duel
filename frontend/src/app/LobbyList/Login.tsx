@@ -18,6 +18,7 @@ export default function Login(props: { username: string, setUsername: (username:
                             props.login();
                         }
                     }}
+                    data-autofocus
                 />
 
                 <Button

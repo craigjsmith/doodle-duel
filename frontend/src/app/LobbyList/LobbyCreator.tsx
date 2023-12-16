@@ -24,6 +24,7 @@ export default function LobbyCreator(props: { createLobby: (lobbyName: string, p
                                 props.createLobby(lobbyName, checked);
                             }
                         }}
+                        data-autofocus
                     />
 
                     <Switch.Group
