@@ -29,6 +29,7 @@ const PageComponent = () => {
   const [secretWord, setSecretWord] = useState<string | null>(null);
   const [isMyTurn, setIsMyTurn] = useState<boolean>(false);
   const [showLeaderboard, setShowLeaderboard] = useState<boolean>(false);
+  const [lobbyList, setLobbyList] = useState<{ id: number; lobbyName: string | undefined, playerCount: number }[]>();
 
   const router = useRouter();
   const lobbyFromURL = useSearchParams().get("lobby");
@@ -57,6 +58,7 @@ const PageComponent = () => {
 
   useEffect(() => {
     socket.connect();
+    socket.on('LOBBYLIST', onLobbyList);
     socket.on('GAME', onGame);
     socket.on('DRAW', onDraw);
     socket.on('REVEAL', onReveal);
@@ -87,6 +89,14 @@ const PageComponent = () => {
     }
   }
 
+  function onLobbyList(msg: any) {
+    if (msg) {
+      console.log("onLobbyList");
+      console.log(msg);
+      setLobbyList(msg);
+    }
+  }
+
   function onDraw(img: any) {
     setImage(img);
   }
@@ -99,7 +109,7 @@ const PageComponent = () => {
     switch (screen) {
       case Screens.LobbyList: {
         return (
-          <LobbyList lobby={lobby} setLobby={setLobby} username={username} setUsername={setUsername} login={login} />
+          <LobbyList lobby={lobby} setLobby={setLobby} username={username} setUsername={setUsername} login={login} lobbyList={lobbyList} setLobbyList={setLobbyList} />
         );
       }
 

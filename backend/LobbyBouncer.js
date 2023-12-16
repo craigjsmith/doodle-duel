@@ -8,7 +8,12 @@ class LobbyBouncer {
         this.pointsBySocketId = new Map(); // key: socketId, value: points
     }
 
+    subscribeLobbyList(socket) {
+        socket.join("lobbyList");
+    }
+
     addSocket(socket, username) {
+        socket.leave("lobbyList");
         this.sockets.set(socket.id, socket);
         this.usernameBySocketId.set(socket.id, username);
         this.pointsBySocketId.set(socket.id, 0)

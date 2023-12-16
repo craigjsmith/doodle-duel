@@ -10,8 +10,7 @@ import Login from './Login';
 import LobbyCreator from './LobbyCreator';
 import Image from 'next/image';
 
-export default function LobbyList(props: { lobby: number | null, setLobby: (lobbyId: number | null) => void, username: string | undefined, setUsername: (username: string) => void, login: () => void }) {
-    const [lobbyList, setLobbyList] = useState<{ id: number; lobbyName: string | undefined, playerCount: number }[]>();
+export default function LobbyList(props: { lobby: number | null, setLobby: (lobbyId: number | null) => void, username: string | undefined, setUsername: (username: string) => void, login: () => void, lobbyList: { id: number; lobbyName: string | undefined, playerCount: number }[] | undefined, setLobbyList: (list: any) => void }) {
     const [loginOpened, { open: loginOpen, close: loginClose }] = useDisclosure(false);
     const [lobbyCreatorOpened, { open: lobbyCreatorOpen, close: lobbyCreatorClose }] = useDisclosure(false);
     const [errorOpened, { open: errorOpen, close: errorClose }] = useDisclosure(false);
@@ -24,7 +23,7 @@ export default function LobbyList(props: { lobby: number | null, setLobby: (lobb
         if (props.lobby) {
             joinLobby(props.lobby);
         }
-    }, [lobbyList, props.lobby]);
+    }, [props.lobbyList, props.lobby]);
 
     const joinLobby = async (lobbyId: number) => {
         let joinable = await isLobbyJoinable(lobbyId);
@@ -48,7 +47,7 @@ export default function LobbyList(props: { lobby: number | null, setLobby: (lobb
             })
             .then(data => {
                 // Handle the data from the response
-                setLobbyList(data);
+                props.setLobbyList(data);
             })
             .catch(error => {
                 console.error('Error fetching lobbies:', error);
@@ -126,7 +125,7 @@ export default function LobbyList(props: { lobby: number | null, setLobby: (lobb
                 </Button>
 
                 <Flex mt={20} px={100}>
-                    {(lobbyList?.length ?? 0) > 0
+                    {(props.lobbyList?.length ?? 0) > 0
                         ?
                         <Text size="lg">or join an open lobby!</Text>
                         :
@@ -135,7 +134,7 @@ export default function LobbyList(props: { lobby: number | null, setLobby: (lobb
                 </Flex>
 
                 <SimpleGrid my={20} cols={2}>
-                    {lobbyList?.map((lobby) =>
+                    {props.lobbyList?.map((lobby) =>
                         <LobbyCard key={lobby.id} lobbyId={lobby.id} lobbyName={lobby.lobbyName} playerCount={lobby.playerCount} onClick={() => {
                             joinLobby(lobby.id);
                         }} />

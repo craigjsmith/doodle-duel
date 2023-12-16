@@ -44,6 +44,8 @@ app.use(expressSanitizer())
 
 // Socket Server
 io.on('connection', (socket) => {
+    bouncer.subscribeLobbyList(socket);
+
     socket.on('guess', onGuess);
     socket.on('NEWDRAW', onDraw);
     socket.on('LOGIN', onLogin);
@@ -70,12 +72,14 @@ io.on('connection', (socket) => {
         } catch (e) { }
 
         emitGameState(lobbyId);
+        emitLobbyList();
     });
 
     async function onLogin(msg, id) {
         bouncer.addSocket(socket, msg);
         bouncer.joinLobby(socket.id, id);
         emitGameState(id);
+        emitLobbyList();
     }
 
     async function onStart(msg) {
@@ -84,6 +88,7 @@ io.on('connection', (socket) => {
         await db.setGameStage(lobbyId, "NEWGAME");
         startNewRound(lobbyId);
         emitGameState(lobbyId);
+        emitLobbyList();
     }
 
     async function onGuess(msg, id) {
@@ -140,6 +145,7 @@ async function removeLobby(lobbyId) {
 
     console.log(`Deleting lobby ${lobbyId}`);
     db.removeLobby(lobbyId)
+    emitLobbyList();
 
     return true;
 }
@@ -249,6 +255,11 @@ const emitGameState = async (id) => {
     io.to(id).emit('GAME', await getGameState(id));
 }
 
+const emitLobbyList = async () => {
+    let lobbies = await db.getAllPublicOpenLobbies();
+    io.to("lobbyList").emit('LOBBYLIST', lobbies);
+}
+
 app.get('/isLobbyJoinable', async (req, res) => {
     let lobbies = await db.getAllOpenLobbies();
     const lobbyId = req.query.lobbyId;
@@ -270,6 +281,7 @@ app.post('/createLobby', async (req, res) => {
     const privateLobby = req.query.privateLobby;
     let newLobbyId = await db.createLobby(lobbyName, privateLobby);
     res.send({ newLobbyId })
+    emitLobbyList();
 })
 
 // Listen
