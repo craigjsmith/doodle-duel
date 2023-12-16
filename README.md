@@ -1,7 +1,7 @@
 <img src="/frontend/public/images/icon.svg" alt="Doodle Duel Logo" width="200">
 
 # Doodle Duel
-An online multiplayer draw-and-guess game.
+Online multiplayer draw-and-guess game.
 
 https://doodle.craigsmith.dev
 
