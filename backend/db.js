@@ -59,7 +59,7 @@ function getAllLobbies() {
     });
 }
 
-function getAllJoinableLobbiesList() {
+function getAllOpenLobbies() {
     return new Promise((resolve, reject) => {
         connection.query('SELECT id, lobbyName FROM game WHERE gameStarted=0', (err, rows) => {
             if (err) {
@@ -71,7 +71,7 @@ function getAllJoinableLobbiesList() {
     });
 }
 
-function getOpenLobbyNamesList() {
+function getAllPublicOpenLobbies() {
     return new Promise((resolve, reject) => {
         connection.query('SELECT id, lobbyName FROM game WHERE gameStarted=0 AND privateLobby=0', (err, rows) => {
             if (err) {
@@ -226,4 +226,4 @@ function removeLobby(lobbyId) {
     });
 }
 
-module.exports = { getGameState, getOpenLobbyList, getAllLobbies, getAllJoinableLobbiesList, getOpenLobbyNamesList, setWord, setGameStage, setPreviousWord, setRoundEndTimestamp, setGuesses, setTurn, setGameStarted, createLobby, removeLobby };
+module.exports = { getGameState, getOpenLobbyList, getAllLobbies, getAllOpenLobbies, getAllPublicOpenLobbies, setWord, setGameStage, setPreviousWord, setRoundEndTimestamp, setGuesses, setTurn, setGameStarted, createLobby, removeLobby };

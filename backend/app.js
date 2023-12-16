@@ -245,7 +245,7 @@ const emitGameState = async (id) => {
 }
 
 app.get('/isLobbyJoinable', async (req, res) => {
-    let lobbies = await db.getAllJoinableLobbiesList();
+    let lobbies = await db.getAllOpenLobbies();
     const lobbyId = req.query.lobbyId;
     let lobbyIdList = lobbies.map((lobby) => { return lobby.id });
     res.send(lobbyIdList.includes(Number(lobbyId)))
@@ -256,7 +256,7 @@ app.get('/ping', async (req, res) => {
 })
 
 app.get('/lobbies', async (req, res) => {
-    let lobbies = await db.getOpenLobbyNamesList();
+    let lobbies = await db.getAllPublicOpenLobbies();
     res.send(lobbies)
 })
 
