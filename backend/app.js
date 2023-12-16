@@ -91,8 +91,13 @@ io.on('connection', (socket) => {
         emitLobbyList();
     }
 
+    function stripString(str) {
+        // All lower case, remove spaces and dashes
+        return str.toLowerCase().replace(/[\s-]/g, '');
+    }
+
     async function onGuess(msg, id) {
-        var guess = msg.toLowerCase().replace(/[\s-]/g, '');
+        var guess = stripString(msg);
 
         if (guess) {
             let gameState = await getGameState(id, true);
@@ -104,8 +109,8 @@ io.on('connection', (socket) => {
             db.setGuesses(id, JSON.stringify(guesses));
 
             // Check if guess is correct
-            let secretWord = gameState.word.toLowerCase();
-            if (!secretWord.localeCompare(guess.toLowerCase())) {
+            let secretWord = stripString(gameState.word);
+            if (!secretWord.localeCompare(guess)) {
                 // If correct answer, award points to guesser and artist
                 bouncer.awardPoints(socket.id, 2);
                 await bouncer.awardPoints(turn.socketId, 1);
