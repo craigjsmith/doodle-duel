@@ -62,9 +62,12 @@ io.on('connection', (socket) => {
         }
 
         // If current artist leaves, move to next round
-        if (gameState && (socket.id == gameState.turn?.socketId)) {
-            startNewRound(lobbyId);
-        }
+        try {
+            let turn = JSON.parse(gameState?.turn)
+            if (gameState && (socket.id == turn.socketId)) {
+                startNewRound(lobbyId);
+            }
+        } catch (e) { }
 
         emitGameState(lobbyId);
     });
@@ -88,6 +91,7 @@ io.on('connection', (socket) => {
 
         if (guess) {
             let gameState = await getGameState(id, true);
+            let turn = JSON.parse(gameState.turn);
 
             // Add guess to list of guesses
             let guesses = JSON.parse(gameState.guesses) ?? [];
@@ -99,10 +103,10 @@ io.on('connection', (socket) => {
             if (!secretWord.localeCompare(guess.toLowerCase())) {
                 // If correct answer, award points to guesser and artist
                 bouncer.awardPoints(socket.id, 2);
-                bouncer.awardPoints(gameState.turn, 1);
+                await bouncer.awardPoints(turn.socketId, 1);
 
                 // Check if either point earner has won game
-                if (bouncer.getPoints(socket.id) >= POINTS_TO_WIN || bouncer.getPoints(gameState.turn.socketId) >= POINTS_TO_WIN) {
+                if (bouncer.getPoints(socket.id) >= POINTS_TO_WIN || bouncer.getPoints(turn.socketId) >= POINTS_TO_WIN) {
                     gameOver(id);
                 }
 
@@ -146,6 +150,7 @@ function onDraw(msg, id) {
 
 async function gameOver(lobbyId) {
     removeLobby(lobbyId);
+    await emitGameState();
     io.to(lobbyId).emit('GAMEOVER');
 }
 
