@@ -8,7 +8,6 @@ export default function ColorButton(props: { color: string, selected: boolean, o
             component="button"
             color={props.color}
             onClick={() => {
-                // setChecked((c) => !c);
                 props.onClick();
             }}
             style={{ color: '#fff', cursor: 'pointer' }}

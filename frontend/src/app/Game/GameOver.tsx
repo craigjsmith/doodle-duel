@@ -2,7 +2,7 @@
 
 import { Container, Center, Title, Button } from '@mantine/core';
 
-import { Player } from './Models/Player';
+import { Player } from '../Models/Player';
 import Leaderboard from './Leaderboard';
 
 export default function GameOver(props: { players: Player[], back: () => void }) {

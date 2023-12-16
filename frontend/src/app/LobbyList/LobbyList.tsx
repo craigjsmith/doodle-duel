@@ -4,7 +4,7 @@ import { useDisclosure } from '@mantine/hooks';
 import { Container, Flex, Title, Button, Text, SimpleGrid, Modal, Box } from '@mantine/core';
 
 import { useEffect, useState } from 'react';
-import LobbyCard from './components/LobbyCard';
+import LobbyCard from './LobbyCard';
 import Login from './Login';
 import LobbyCreator from './LobbyCreator';
 import Image from 'next/image';

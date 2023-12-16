@@ -1,7 +1,7 @@
 'use client'
 
 import ColorButton from './ColorButton';
-import { Player } from './Models/Player';
+import { Player } from '../Models/Player';
 import styles from './whiteboard.module.css'
 
 import { useEffect, useState, useRef } from 'react';

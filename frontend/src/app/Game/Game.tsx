@@ -9,7 +9,7 @@ import { useEffect, useState, useRef } from 'react';
 import Timer from './timer';
 import Whiteboard from './whiteboard';
 import Leaderboard from './Leaderboard';
-import { Player } from './Models/Player';
+import { Player } from '../Models/Player';
 import GuessList from './guessList';
 
 export default function Game(props: {

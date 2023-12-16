@@ -3,7 +3,7 @@
 import { Container, Flex, Title, List, ThemeIcon, rem, Button, Loader, Text, CopyButton, Group, Input } from '@mantine/core';
 import { IconUser } from '@tabler/icons-react';
 
-import { Player } from './Models/Player';
+import { Player } from '../Models/Player';
 import styles from './lobby.module.css'
 
 import { useEffect, useState, useRef } from 'react';
@@ -34,7 +34,7 @@ export default function Lobby(props: { lobbyId: number | null, lobbyName: string
     return (
         <>
             <div className={styles.topBar}>
-                <Title order={1} my={20}>{props.lobbyName ? props.lobbyName : `Lobby ${props.lobbyId}`}</Title>
+                <Title order={1} my={20}>{props.lobbyName}</Title>
             </div>
             <Container>
                 <Flex

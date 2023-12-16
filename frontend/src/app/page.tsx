@@ -4,12 +4,12 @@ import { socket } from './socket';
 import dynamic from 'next/dynamic'
 
 import { useEffect, useState } from 'react';
-import LobbyList from './LobbyList';
-import Lobby from './Lobby';
+import LobbyList from './LobbyList/LobbyList';
+import Lobby from './Lobby/Lobby';
 
 import { GameState } from './Models/GameState';
-import Game from './game';
-import GameOver from './GameOver';
+import Game from './Game/Game';
+import GameOver from './Game/GameOver';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 enum Screens {
