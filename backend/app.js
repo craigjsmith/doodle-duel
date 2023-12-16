@@ -18,7 +18,10 @@ const POINTS_TO_WIN = 10;
 const ROUND_DURATION = 30000;
 const GRACE_DURTION = 1000;
 
-app.use(cors())
+app.use(cors({
+    origin: true
+}))
+
 
 const io = new Server(server, {
     cors: {
