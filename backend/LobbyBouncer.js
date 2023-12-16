@@ -1,3 +1,5 @@
+const db = require('./db')
+
 class LobbyBouncer {
     constructor() {
         this.sockets = new Map(); // key: socketId, value: socket object
@@ -13,6 +15,9 @@ class LobbyBouncer {
     }
 
     removeSocket(socketId) {
+        let lobbyId = this.lobbyBySocketId.get(socketId);
+        db.incrementPlayerCount(lobbyId, -1)
+
         this.leaveLobby(socketId)
         this.usernameBySocketId.delete(socketId);
         this.lobbyBySocketId.delete(socketId);
@@ -21,6 +26,8 @@ class LobbyBouncer {
     }
 
     joinLobby(socketId, lobbyId) {
+        db.incrementPlayerCount(lobbyId, 1)
+
         let socket = this.sockets.get(socketId);
 
         // Leave current lobby (if in one)

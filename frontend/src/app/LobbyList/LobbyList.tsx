@@ -11,7 +11,7 @@ import LobbyCreator from './LobbyCreator';
 import Image from 'next/image';
 
 export default function LobbyList(props: { lobby: number | null, setLobby: (lobbyId: number | null) => void, username: string | undefined, setUsername: (username: string) => void, login: () => void }) {
-    const [lobbyList, setLobbyList] = useState<{ id: number; lobbyName: string | undefined }[]>();
+    const [lobbyList, setLobbyList] = useState<{ id: number; lobbyName: string | undefined, playerCount: number }[]>();
     const [loginOpened, { open: loginOpen, close: loginClose }] = useDisclosure(false);
     const [lobbyCreatorOpened, { open: lobbyCreatorOpen, close: lobbyCreatorClose }] = useDisclosure(false);
     const [errorOpened, { open: errorOpen, close: errorClose }] = useDisclosure(false);
@@ -136,7 +136,7 @@ export default function LobbyList(props: { lobby: number | null, setLobby: (lobb
 
                 <SimpleGrid my={20} cols={2}>
                     {lobbyList?.map((lobby) =>
-                        <LobbyCard key={lobby.id} lobbyId={lobby.id} lobbyName={lobby.lobbyName} onClick={() => {
+                        <LobbyCard key={lobby.id} lobbyId={lobby.id} lobbyName={lobby.lobbyName} playerCount={lobby.playerCount} onClick={() => {
                             joinLobby(lobby.id);
                         }} />
                     )}

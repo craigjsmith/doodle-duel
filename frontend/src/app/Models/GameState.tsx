@@ -13,4 +13,5 @@ export interface GameState {
   endTimestamp: number;
   gameStarted: boolean;
   gameStage: string;
+  playerCount: number;
 }

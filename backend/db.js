@@ -50,7 +50,7 @@ function getOpenLobbyList() {
 
 function getAllLobbies() {
     return new Promise((resolve, reject) => {
-        connection.query('SELECT id, lobbyName FROM game WHERE gameStarted=0', (err, rows) => {
+        connection.query('SELECT id, lobbyName, playerCount FROM game WHERE gameStarted=0', (err, rows) => {
             if (err) {
                 return reject(err);
             }
@@ -62,7 +62,7 @@ function getAllLobbies() {
 
 function getAllOpenLobbies() {
     return new Promise((resolve, reject) => {
-        connection.query('SELECT id, lobbyName FROM game WHERE gameStarted=0', (err, rows) => {
+        connection.query('SELECT id, lobbyName, playerCount FROM game WHERE gameStarted=0', (err, rows) => {
             if (err) {
                 return reject(err);
             }
@@ -74,7 +74,7 @@ function getAllOpenLobbies() {
 
 function getAllPublicOpenLobbies() {
     return new Promise((resolve, reject) => {
-        connection.query('SELECT id, lobbyName FROM game WHERE gameStarted=0 AND privateLobby=0', (err, rows) => {
+        connection.query('SELECT id, lobbyName, playerCount FROM game WHERE gameStarted=0 AND privateLobby=0', (err, rows) => {
             if (err) {
                 return reject(err);
             }
@@ -196,6 +196,22 @@ function setGameStarted(id, value) {
     });
 }
 
+function incrementPlayerCount(id, value) {
+    return new Promise((resolve, reject) => {
+
+        const query = 'UPDATE game SET playerCount = playerCount + ? WHERE id = ?';
+        const values = [value, id];
+
+        connection.query(query, values, (err, rows) => {
+            if (err) {
+                return reject(err);
+            }
+
+            return resolve(rows[0]);
+        })
+    });
+}
+
 
 function createLobby(lobbyName, privateLobby) {
     return new Promise((resolve, reject) => {
@@ -227,4 +243,4 @@ function removeLobby(lobbyId) {
     });
 }
 
-module.exports = { getGameState, getOpenLobbyList, getAllLobbies, getAllOpenLobbies, getAllPublicOpenLobbies, setWord, setGameStage, setPreviousWord, setRoundEndTimestamp, setGuesses, setTurn, setGameStarted, createLobby, removeLobby };
+module.exports = { getGameState, getOpenLobbyList, getAllLobbies, getAllOpenLobbies, getAllPublicOpenLobbies, setWord, setGameStage, setPreviousWord, setRoundEndTimestamp, setGuesses, setTurn, setGameStarted, incrementPlayerCount, createLobby, removeLobby };
