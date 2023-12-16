@@ -24,11 +24,6 @@ export const metadata: Metadata = {
         url: 'https://doodle.craigsmith.dev/images/og-1200x630.png',
         width: 1200,
         height: 630,
-      },
-      {
-        url: 'https://doodle.craigsmith.dev/images/og-800x600.png',
-        width: 800,
-        height: 600,
       }
     ],
     locale: 'en_US',
