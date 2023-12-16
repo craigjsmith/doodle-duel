@@ -19,7 +19,7 @@ export default function GuessList(props: { guesses: Guess[] }) {
             {
                 guessList?.map(
                     (guess) =>
-                        <div className={styles.innerContainer}>
+                        <div className={styles.innerContainer} key={guess.guess + guess.player.socketId}>
                             <Paper shadow="xs" radius="md" withBorder className={styles.wordBox}>
                                 <Flex direction="row">
                                     <Text c="dimmed" mr={5}>{guess.player.username} :</Text>

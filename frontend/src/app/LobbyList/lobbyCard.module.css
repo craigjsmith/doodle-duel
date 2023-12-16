@@ -1,3 +1,8 @@
+.lobbyButton {
+    width: 40vw;
+    max-width: 300px;
+}
+
 .lobbyButton:hover {
     border: #D55580 1px solid;
     cursor: pointer;

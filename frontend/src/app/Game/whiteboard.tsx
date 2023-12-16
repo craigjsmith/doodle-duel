@@ -154,7 +154,7 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
     }
 
     function save() {
-        props.draw(ctx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE).data);
+        props.draw(ctx?.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE).data);
     }
 
     function load() {
@@ -177,7 +177,7 @@ export default function Whiteboard(props: { image: any | undefined, draw: any, e
                 <div className={styles.colorSwatches} ref={colorSwatchesRef}>
                     {
                         COLORS.map((color) =>
-                            <ColorButton color={color} selected={!color.localeCompare(selectedColor)} onClick={() => { setSelectedColor(color) }} />
+                            <ColorButton key={color} color={color} selected={!color.localeCompare(selectedColor)} onClick={() => { setSelectedColor(color) }} />
                         )
                     }
                 </div> : undefined}

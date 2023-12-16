@@ -25,6 +25,12 @@ export default function LobbyList(props: { lobby: number | null, setLobby: (lobb
         }
     }, [lobbyList, props.lobby]);
 
+    const joinLobby = (lobbyId: number) => {
+        if (isLobbyJoinable(lobbyId)) {
+
+        }
+    }
+
     const getLobbies = () => {
         fetch('https://droplet.craigsmith.dev/lobbies')
             .then(response => {
@@ -35,7 +41,6 @@ export default function LobbyList(props: { lobby: number | null, setLobby: (lobb
             })
             .then(data => {
                 // Handle the data from the response
-                console.log(data);
                 setLobbyList(data);
             })
             .catch(error => {
@@ -60,8 +65,27 @@ export default function LobbyList(props: { lobby: number | null, setLobby: (lobb
             });
     }
 
+    const isLobbyJoinable = (lobbyId: number): Boolean => {
+        fetch(`https://droplet.craigsmith.dev/isLobbyJoinable/?lobbyId=${lobbyId}`, { method: "GET", })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Refresh Lobby List
+                return (Boolean(data));
+            })
+            .catch(error => {
+                console.error('Error checking if lobby is joinable:', error);
+            });
+
+        return false;
+    }
+
     return (
-        <Container>
+        <>
             <Flex
                 mih={50}
                 gap="md"
@@ -99,9 +123,9 @@ export default function LobbyList(props: { lobby: number | null, setLobby: (lobb
                     }
                 </Flex>
 
-                <SimpleGrid my={20} cols={2} style={{ width: '80%' }}>
+                <SimpleGrid my={20} cols={2}>
                     {lobbyList?.map((lobby) =>
-                        <LobbyCard lobbyId={lobby.id} lobbyName={lobby.lobbyName} onClick={() => {
+                        <LobbyCard key={lobby.id} lobbyId={lobby.id} lobbyName={lobby.lobbyName} onClick={() => {
                             props.setLobby(lobby.id);
                             loginOpen();
                         }} />
@@ -121,6 +145,6 @@ export default function LobbyList(props: { lobby: number | null, setLobby: (lobb
                 </Modal>
 
             </Flex>
-        </Container >
+        </ >
     )
 }

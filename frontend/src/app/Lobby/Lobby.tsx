@@ -59,6 +59,7 @@ export default function Lobby(props: { lobbyId: number | null, lobbyName: string
                                         className={styles.linkInput}
                                         onClick={() => { copy() }}
                                         mx={0}
+                                        readOnly
                                     />
 
                                     <Button onClick={() => { copy() }} radius={0} mx={0}>
@@ -79,7 +80,7 @@ export default function Lobby(props: { lobbyId: number | null, lobbyName: string
                             </ThemeIcon>
                         }
                     >
-                        {props.players?.map((player) => <List.Item><Text size="xl">{player.username}</Text></List.Item>)}
+                        {props.players?.map((player) => <List.Item key={player.socketId}><Text size="xl">{player.username}</Text></List.Item>)}
                     </List>
 
                     {

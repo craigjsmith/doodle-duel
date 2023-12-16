@@ -72,7 +72,7 @@ export default function Game(props: {
                             radius="md"
                             type="text"
                             placeholder="Your guess"
-                            value={props.wordGuess}
+                            value={props.wordGuess || ''}
                             onChange={(event) => { props.setWordGuess(event.target.value) }}
                             onKeyDown={(event) => {
                                 if (event.key === 'Enter' && props.wordGuess?.length) {
