@@ -262,6 +262,14 @@ app.get('/ping', async (req, res) => {
 
 app.get('/lobbies', async (req, res) => {
     let lobbies = await db.getAllPublicOpenLobbies();
+
+    lobbies.forEach((lobby) => {
+        console.log("Lobby: " + lobby + " Players " + getGameState(lobby, false).players);
+    })
+
+
+    // let lobbiesWithPlayerCount = lobbies.map((lobby) => { return { "lobby": lobby, "playerCount": JSON.parse(getGameState(id, false)).players.length } })
+
     res.send(lobbies)
 })
 
