@@ -8,7 +8,7 @@ export default function Leaderboard(props: { players: Player[] }) {
     const [playersSortedByPoints, setPlayersSortedByPoints] = useState<Player[]>();
 
     useEffect(() => {
-        setPlayersSortedByPoints(props.players.sort((a: Player, b: Player) => { return b.points - a.points }));
+        setPlayersSortedByPoints(props.players.sort((a: Player, b: Player) => { return (b.points ?? 0) - (a.points ?? 0) }));
     }, [props.players]);
 
     return (
