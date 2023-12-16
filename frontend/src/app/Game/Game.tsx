@@ -51,7 +51,7 @@ export default function Game(props: {
                 {/* Show reveal word on reveal and leaderboard stage */}
                 {
                     props.gameStage?.localeCompare("GAME") && props.guesses
-                        ? <Title order={3}>{props.guesses[props.guesses.length - 1].player.username} guessed <span className={styles.revealWord}>{props.previousWord}</span></Title>
+                        ? <Title order={3}><span className={styles.revealWord}>{props.previousWord}</span></Title>
                         : undefined
                 }
 
