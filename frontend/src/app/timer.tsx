@@ -1,6 +1,6 @@
 'use client'
 
-import { Container, Flex, Title, List, ThemeIcon, rem, Button, Loader, Text, Pill } from '@mantine/core';
+import { Flex, rem } from '@mantine/core';
 import { IconClockHour3 } from '@tabler/icons-react';
 
 import styles from './timer.module.css'

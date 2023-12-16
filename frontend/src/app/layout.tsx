@@ -1,12 +1,8 @@
-import { Inter } from 'next/font/google'
 import './globals.css'
 import '@mantine/core/styles.css';
 
 import { MantineProvider, ColorSchemeScript } from '@mantine/core';
-import Head from 'next/head';
 import { Metadata, Viewport } from 'next';
-
-const inter = Inter({ subsets: ['latin'] })
 
 export const viewport: Viewport = {
   width: 'device-width',

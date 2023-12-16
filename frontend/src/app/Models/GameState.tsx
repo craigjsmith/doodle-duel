@@ -1,3 +1,4 @@
+import { Guess } from './Guess';
 import { Player } from './Player';
 
 export interface GameState {
@@ -8,7 +9,7 @@ export interface GameState {
   solved: boolean;
   players: Array<Player> | undefined;
   turn: Player;
-  guesses: { guess: string, player: { socketId: number, username: string } }[];
+  guesses: Guess[];
   endTimestamp: number;
   gameStarted: boolean;
   gameStage: string;

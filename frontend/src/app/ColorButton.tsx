@@ -2,11 +2,7 @@
 
 import { ColorSwatch, CheckIcon, rem } from '@mantine/core';
 
-import { useState } from 'react';
-
 export default function ColorButton(props: { color: string, selected: boolean, onClick: () => void }) {
-    // const [checked, setChecked] = useState(true);
-
     return (
         <ColorSwatch
             component="button"

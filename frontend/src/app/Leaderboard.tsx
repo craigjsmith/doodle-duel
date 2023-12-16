@@ -1,9 +1,7 @@
 'use client'
 
 import { ThemeIcon, Table } from '@mantine/core';
-
 import { Player } from './Models/Player';
-
 import { useEffect, useState, useRef } from 'react';
 
 export default function Leaderboard(props: { players: Player[] }) {

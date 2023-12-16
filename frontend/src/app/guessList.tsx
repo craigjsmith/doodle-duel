@@ -1,11 +1,10 @@
 'use client'
 
-import { Center, Paper, Flex, Text } from '@mantine/core';
-import { IconClockHour3 } from '@tabler/icons-react';
+import { Paper, Flex, Text } from '@mantine/core';
 
 import styles from './guessList.module.css'
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function GuessList(props: { guesses: { guess: string, player: { socketId: number, username: string } }[] }) {
     const [guessList, setGuessList] = useState<{ guess: string, player: { socketId: number, username: string } }[]>();

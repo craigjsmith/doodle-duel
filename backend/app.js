@@ -1,6 +1,5 @@
 const express = require('express')
 const { createServer } = require('node:http');
-const { join } = require('node:path');
 
 const db = require('./db')
 const bodyParser = require('body-parser')
