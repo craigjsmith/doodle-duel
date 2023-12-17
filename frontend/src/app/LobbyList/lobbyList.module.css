@@ -1,3 +1,10 @@
 .lobbyGrid {
     min-height: 35vh;
 }
+
+.helpButton {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 15px;
+}

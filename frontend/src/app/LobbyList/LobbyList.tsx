@@ -1,8 +1,8 @@
 'use client'
 
 import { useDisclosure } from '@mantine/hooks';
-import { Alert, Flex, Title, Button, Text, SimpleGrid, Modal, Box } from '@mantine/core';
-import { IconInfoCircle } from '@tabler/icons-react';
+import { Alert, Flex, Title, Button, Text, SimpleGrid, Modal, Box, ActionIcon } from '@mantine/core';
+import { IconInfoCircle, IconQuestionMark } from '@tabler/icons-react';
 
 import styles from './lobbyList.module.css'
 
@@ -13,6 +13,7 @@ import LobbyCreator from './LobbyCreator';
 import Image from 'next/image';
 import { Lobby as LobbyModel } from '../Models/Lobby';
 import Footer from './Footer';
+import Rules from './Rules';
 
 export default function LobbyList({
     lobby,
@@ -35,6 +36,8 @@ export default function LobbyList({
     const [loginOpened, { open: loginOpen, close: loginClose }] = useDisclosure(false);
     const [lobbyCreatorOpened, { open: lobbyCreatorOpen, close: lobbyCreatorClose }] = useDisclosure(false);
     const [errorOpened, { open: errorOpen, close: errorClose }] = useDisclosure(false);
+    const [rulesOpened, { open: rulesOpen, close: rulesClose }] = useDisclosure(false);
+
 
     const getLobbies = useCallback(() => {
         fetch('https://droplet.craigsmith.dev/lobbies')
@@ -136,6 +139,10 @@ export default function LobbyList({
 
                 <Title order={1} c="#3b3b3b">Doodle Duel</Title>
 
+                <ActionIcon variant="outline" color="pink" radius="xl" size="xl" aria-label="Help" onClick={rulesOpen} className={styles.helpButton}>
+                    <IconQuestionMark style={{ width: '70%', height: '70%' }} stroke={1.5} />
+                </ActionIcon>
+
                 <Button
                     variant="filled"
                     radius="lg"
@@ -174,6 +181,10 @@ export default function LobbyList({
                         lobbyCreatorClose();
                         loginOpen();
                     }} />
+                </Modal>
+
+                <Modal opened={rulesOpened} onClose={rulesClose}>
+                    <Rules />
                 </Modal>
 
                 <Modal.Root opened={errorOpened} onClose={errorClose}>
