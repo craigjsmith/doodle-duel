@@ -34,7 +34,6 @@ export default function LobbyCreator(props: { createLobby: (lobbyName: string, p
                     >
                         <Group mt="xs">
                             <Switch
-                                // label="Private Lobby"
                                 value="private"
                                 checked={checked}
                                 onChange={(event) => setChecked(event.currentTarget.checked)}

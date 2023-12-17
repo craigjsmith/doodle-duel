@@ -22,6 +22,7 @@ app.use(cors({
     origin: true
 }))
 
+// No need for CORS policy, this is handled by nginx
 const io = new Server(server, {
     cors: {
         origin: "*"
