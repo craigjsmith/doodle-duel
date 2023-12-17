@@ -37,6 +37,7 @@ export default function LobbyList({
     const [lobbyCreatorOpened, { open: lobbyCreatorOpen, close: lobbyCreatorClose }] = useDisclosure(false);
     const [errorOpened, { open: errorOpen, close: errorClose }] = useDisclosure(false);
     const [rulesOpened, { open: rulesOpen, close: rulesClose }] = useDisclosure(false);
+    const [serverError, setServerError] = useState<Boolean>(false);
 
 
     const getLobbies = useCallback(() => {
@@ -53,6 +54,7 @@ export default function LobbyList({
             })
             .catch(error => {
                 console.error('Error fetching lobbies:', error);
+                setServerError(true);
             });
     }, [setLobbyList])
 
@@ -143,21 +145,28 @@ export default function LobbyList({
                     <IconQuestionMark style={{ width: '70%', height: '70%' }} stroke={1.5} />
                 </ActionIcon>
 
-                <Button
-                    variant="filled"
-                    radius="lg"
-                    mt={20}
-                    onClick={() => { lobbyCreatorOpen(); }}
-                >
-                    Create a Lobby
-                </Button>
+                {
+                    !serverError ?
+                        <Button
+                            variant="filled"
+                            radius="lg"
+                            mt={20}
+                            onClick={() => { lobbyCreatorOpen(); }}
+                        >
+                            Create a Lobby
+                        </Button> :
+                        undefined
+                }
 
                 <Flex mt={20} px={100} justify='center'>
-                    {(lobbyList?.length ?? 0) > 0
-                        ?
-                        <Text size="lg">or join an open lobby!</Text>
-                        :
-                        <Text c="dimmed" size="lg" ta="center">There are no open lobbies</Text>
+                    {
+                        serverError ? (
+                            <Text size="lg">Server appears to be offline, please try again later.</Text>
+                        ) : (lobbyList?.length ?? 0) ? (
+                            <Text size="lg">or join an open lobby!</Text>
+                        ) : (
+                            <Text c="dimmed" size="lg" ta="center">There are no open lobbies</Text>
+                        )
                     }
                 </Flex>
 
