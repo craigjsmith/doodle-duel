@@ -15,8 +15,8 @@ export default function Rules() {
 
             <Text size="md" fw={700} mt={16} mb={6}>Scoring:</Text>
             <List>
-                <List.Item>Correct Guess: Guess correctly and score 2 points! The artist also gets 1 point.</List.Item>
-                <List.Item>No Guess: No points if nobody figures it out.</List.Item>
+                <List.Item>Guess correctly and score 2 points! The artist also gets 1 point.</List.Item>
+                <List.Item>No points if nobody figures it out.</List.Item>
             </List>
 
             <Text size="md" fw={700} mt={16} mb={6}>Winning:</Text>
