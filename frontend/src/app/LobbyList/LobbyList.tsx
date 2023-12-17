@@ -4,6 +4,8 @@ import { useDisclosure } from '@mantine/hooks';
 import { Alert, Flex, Title, Button, Text, SimpleGrid, Modal, Box } from '@mantine/core';
 import { IconInfoCircle } from '@tabler/icons-react';
 
+import styles from './lobbyList.module.css'
+
 import { useCallback, useEffect, useState } from 'react';
 import LobbyCard from './LobbyCard';
 import Login from './Login';
@@ -152,7 +154,7 @@ export default function LobbyList({
                     }
                 </Flex>
 
-                <SimpleGrid my={20} cols={2}>
+                <SimpleGrid my={20} cols={2} className={styles.lobbyGrid}>
                     {lobbyList?.map((lobby) =>
                         lobby.playerCount > 0 ?
                             <LobbyCard key={lobby.id} lobbyId={lobby.id} lobbyName={lobby.lobbyName} playerCount={lobby.playerCount} onClick={() => {
