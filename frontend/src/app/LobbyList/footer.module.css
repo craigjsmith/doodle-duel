@@ -1,0 +1,26 @@
+.footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    bottom: 0;
+    margin-bottom: 25px;
+}
+
+.link {
+    text-decoration: none;
+    color: black;
+}
+
+.link:hover {
+    text-decoration: underline dotted;
+}
+
+.portfolioLink {
+    text-decoration: none;
+    color: #BF456C;
+}
+
+.portfolioLink:hover {
+    text-decoration: underline dotted;
+}

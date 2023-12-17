@@ -10,6 +10,7 @@ import Login from './Login';
 import LobbyCreator from './LobbyCreator';
 import Image from 'next/image';
 import { Lobby as LobbyModel } from '../Models/Lobby';
+import Footer from './Footer';
 
 export default function LobbyList({
     lobby,
@@ -122,7 +123,7 @@ export default function LobbyList({
                 direction="column"
                 wrap="wrap"
             >
-                <Box mt={20}>
+                <Box mt={25}>
                     <Image
                         src="images/icon.svg"
                         width={85}
@@ -147,7 +148,7 @@ export default function LobbyList({
                         ?
                         <Text size="lg">or join an open lobby!</Text>
                         :
-                        <Text c="dimmed" size="lg">There are no open lobbies</Text>
+                        <Text c="dimmed" size="lg" ta="center">There are no open lobbies</Text>
                     }
                 </Flex>
 
@@ -181,6 +182,8 @@ export default function LobbyList({
                         </Alert>
                     </Modal.Content>
                 </Modal.Root>
+
+                <Footer />
 
             </Flex>
         </ >
