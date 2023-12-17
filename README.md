@@ -1,7 +1,7 @@
 <img src="/frontend/public/images/icon.svg" alt="Doodle Duel Logo" width="200">
 
 # Doodle Duel
-Online multiplayer draw-and-guess game.
+Online multiplayer draw and guess game.
 
 https://doodle.craigsmith.dev
 
@@ -18,10 +18,10 @@ https://doodle.craigsmith.dev
  - [React](https://react.dev/)
  - [Next.js](https://nextjs.org/)
  - [TypeScript](https://www.typescriptlang.org/)
+ - [Mantine](https://mantine.dev/)
  - [Node.js](https://nodejs.org/)
  - [Express](https://expressjs.com/)
  - [Socket.IO](https://socket.io/)
- - [Mantine](https://mantine.dev/)
  - [MySQL](https://www.mysql.com/)
 
 ## Local Deployment
