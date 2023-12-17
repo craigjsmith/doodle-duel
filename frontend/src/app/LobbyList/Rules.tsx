@@ -4,7 +4,7 @@ import { Container, Text, List } from '@mantine/core';
 
 export default function Rules() {
     return (
-        <Container>
+        <Container data-autofocus>
             <Text size="md">Welcome to Doodle Duel, the fast-paced drawing game that&apos;s all about quick sketches and sharp guesses!</Text>
 
             <Text size="md" fw={700} mt={16} mb={6}>How to Play:</Text>

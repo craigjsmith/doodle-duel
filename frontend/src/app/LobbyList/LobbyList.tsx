@@ -121,93 +121,91 @@ export default function LobbyList({
     }
 
     return (
-        <>
-            <Flex
-                mih={50}
-                gap="md"
-                justify="center"
-                align="center"
-                direction="column"
-                wrap="wrap"
-            >
-                <Box mt={25}>
-                    <Image
-                        src="images/icon.svg"
-                        width={85}
-                        height={85}
-                        alt="Doodle Duel"
-                    />
-                </Box>
+        <Flex
+            mih={50}
+            gap="md"
+            justify="center"
+            align="center"
+            direction="column"
+            wrap="wrap"
+        >
+            <Box mt={25}>
+                <Image
+                    src="images/icon.svg"
+                    width={85}
+                    height={85}
+                    alt="Doodle Duel"
+                />
+            </Box>
 
-                <Title order={1} c="#3b3b3b">Doodle Duel</Title>
+            <Title order={1} c="#3b3b3b">Doodle Duel</Title>
 
-                <ActionIcon variant="outline" color="pink" radius="xl" size="xl" aria-label="Help" onClick={rulesOpen} className={styles.helpButton}>
-                    <IconQuestionMark style={{ width: '70%', height: '70%' }} stroke={1.5} />
-                </ActionIcon>
+            <ActionIcon variant="outline" color="pink" radius="xl" size="xl" aria-label="Help" onClick={rulesOpen} className={styles.helpButton}>
+                <IconQuestionMark style={{ width: '70%', height: '70%' }} stroke={1.5} />
+            </ActionIcon>
 
+            {
+                !serverError ?
+                    <Button
+                        variant="filled"
+                        radius="lg"
+                        mt={20}
+                        onClick={() => { lobbyCreatorOpen(); }}
+                    >
+                        Create a Lobby
+                    </Button> :
+                    undefined
+            }
+
+            <Flex mt={20} px={100} justify='center'>
                 {
-                    !serverError ?
-                        <Button
-                            variant="filled"
-                            radius="lg"
-                            mt={20}
-                            onClick={() => { lobbyCreatorOpen(); }}
-                        >
-                            Create a Lobby
-                        </Button> :
-                        undefined
+                    serverError ? (
+                        <Text size="lg">Server appears to be offline, please try again later.</Text>
+                    ) : (lobbyList?.length ?? 0) ? (
+                        <Text size="lg">or join an open lobby!</Text>
+                    ) : (
+                        <Text c="dimmed" size="lg" ta="center">There are no open lobbies</Text>
+                    )
                 }
-
-                <Flex mt={20} px={100} justify='center'>
-                    {
-                        serverError ? (
-                            <Text size="lg">Server appears to be offline, please try again later.</Text>
-                        ) : (lobbyList?.length ?? 0) ? (
-                            <Text size="lg">or join an open lobby!</Text>
-                        ) : (
-                            <Text c="dimmed" size="lg" ta="center">There are no open lobbies</Text>
-                        )
-                    }
-                </Flex>
-
-                <SimpleGrid my={20} cols={2} className={styles.lobbyGrid}>
-                    {lobbyList?.map((lobby) =>
-                        lobby.playerCount > 0 ?
-                            <LobbyCard key={lobby.id} lobbyId={lobby.id} lobbyName={lobby.lobbyName} playerCount={lobby.playerCount} onClick={() => {
-                                joinLobby(lobby.id);
-                            }} />
-                            : undefined
-                    )}
-                </SimpleGrid>
-
-                <Modal opened={loginOpened} onClose={loginClose} title="Login">
-                    <Login username={username || ''} setUsername={setUsername} login={login} />
-                </Modal>
-
-                <Modal opened={lobbyCreatorOpened} onClose={lobbyCreatorClose} title="Create Lobby">
-                    <LobbyCreator createLobby={(lobbyName: string, privateLobby: Boolean) => {
-                        createLobby(lobbyName, privateLobby);
-                        lobbyCreatorClose();
-                        loginOpen();
-                    }} />
-                </Modal>
-
-                <Modal opened={rulesOpened} onClose={rulesClose}>
-                    <Rules />
-                </Modal>
-
-                <Modal.Root opened={errorOpened} onClose={errorClose}>
-                    <Modal.Overlay />
-                    <Modal.Content>
-                        <Alert data-autofocus variant="outline" color="pink" title="Error" withCloseButton icon={<IconInfoCircle />} onClose={errorClose}>
-                            This lobby can not be joined.
-                        </Alert>
-                    </Modal.Content>
-                </Modal.Root>
-
-                <Footer />
-
             </Flex>
-        </ >
+
+            <SimpleGrid my={20} cols={2} className={styles.lobbyGrid}>
+                {lobbyList?.map((lobby) =>
+                    lobby.playerCount > 0 ?
+                        <LobbyCard key={lobby.id} lobbyId={lobby.id} lobbyName={lobby.lobbyName} playerCount={lobby.playerCount} onClick={() => {
+                            joinLobby(lobby.id);
+                        }} />
+                        : undefined
+                )}
+            </SimpleGrid>
+
+            <Modal opened={loginOpened} onClose={loginClose} title="Login">
+                <Login username={username || ''} setUsername={setUsername} login={login} />
+            </Modal>
+
+            <Modal opened={lobbyCreatorOpened} onClose={lobbyCreatorClose} title="Create Lobby">
+                <LobbyCreator createLobby={(lobbyName: string, privateLobby: Boolean) => {
+                    createLobby(lobbyName, privateLobby);
+                    lobbyCreatorClose();
+                    loginOpen();
+                }} />
+            </Modal>
+
+            <Modal opened={rulesOpened} onClose={rulesClose}>
+                <Rules />
+            </Modal>
+
+            <Modal.Root opened={errorOpened} onClose={errorClose}>
+                <Modal.Overlay />
+                <Modal.Content>
+                    <Alert data-autofocus variant="outline" color="pink" title="Error" withCloseButton icon={<IconInfoCircle />} onClose={errorClose}>
+                        This lobby can not be joined.
+                    </Alert>
+                </Modal.Content>
+            </Modal.Root>
+
+            <Footer />
+
+        </Flex>
     )
 }
