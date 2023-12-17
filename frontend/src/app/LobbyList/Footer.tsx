@@ -12,7 +12,7 @@ export default function Footer() {
             </Text>
 
             <Flex direction='row' align='center'>
-                <img src='/images/github.svg' height={20} width={20} />
+                <img src='/images/github.svg' height={20} width={20} alt='GitHub' />
 
                 <Text size={'lg'} ml={6}>
                     <a className={styles.link} href='https://github.com/craigjsmith/doodle-duel' target='_blank'>
