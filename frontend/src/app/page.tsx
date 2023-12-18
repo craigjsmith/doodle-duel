@@ -42,7 +42,7 @@ const PageComponent = () => {
 
   useEffect(() => {
     if (gameState) {
-      setIsMyTurn(!socket.id.localeCompare(gameState?.turn?.socketId));
+      setIsMyTurn(socket.id === gameState?.turn?.socketId);
     }
   }, [gameState]);
 

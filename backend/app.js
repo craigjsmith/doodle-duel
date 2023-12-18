@@ -112,7 +112,7 @@ io.on('connection', (socket) => {
 
             // Check if guess is correct
             let secretWord = stripString(gameState.word);
-            if (!secretWord.localeCompare(strippedGuess)) {
+            if (secretWord === strippedGuess) {
                 // If correct answer, award points to guesser and artist
                 bouncer.awardPoints(socket.id, 2);
                 bouncer.awardPoints(turn.socketId, 1);
@@ -179,7 +179,7 @@ async function startNewRound(id) {
     }
 
     // If first round, skip reveal and leaderboard
-    if (!gameState.gameStage.localeCompare("NEWGAME")) {
+    if (gameState.gameStage === "NEWGAME") {
         firstRound = true;
     }
 

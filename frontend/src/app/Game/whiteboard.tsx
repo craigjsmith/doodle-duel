@@ -14,7 +14,7 @@ export default function Whiteboard({
     unusuableHeight,
     turn,
 }: {
-    image: ImageModel | null;
+    image: ImageModel | undefined | null;
     emitDrawing: (img: ImageModel) => void;
     enable: boolean;
     unusuableHeight: number;
@@ -108,7 +108,7 @@ export default function Whiteboard({
     const load = useCallback(() => {
         if (!image) {
             clear();
-        } else if (!enable && !turn?.socketId.localeCompare(image.artist)) {
+        } else if (!enable && turn?.socketId === image.artist) {
             var array = new Uint8ClampedArray(image.img);
             ctx?.putImageData(new ImageData(array, CANVAS_SIZE, CANVAS_SIZE), 0, 0);
         }
@@ -170,7 +170,7 @@ export default function Whiteboard({
                 <div className={styles.colorSwatches} ref={colorSwatchesRef}>
                     {
                         COLORS.map((color) =>
-                            <ColorButton key={color} color={color} selected={!color.localeCompare(selectedColor)} onClick={() => { setSelectedColor(color) }} />
+                            <ColorButton key={color} color={color} selected={color === selectedColor} onClick={() => { setSelectedColor(color) }} />
                         )
                     }
                 </div> : undefined}

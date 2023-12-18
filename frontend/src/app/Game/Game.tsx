@@ -39,7 +39,7 @@ export default function Game(props: {
     }, []);
 
     useEffect(() => {
-        if (!props.gameStage?.localeCompare("LEADERBOARD")) {
+        if (props.gameStage === "LEADERBOARD") {
             open();
         } else {
             close();
@@ -51,21 +51,21 @@ export default function Game(props: {
             <Flex justify="center" align="center" className={styles.staticBar} ref={staticBarRef}>
                 {/* Show reveal word on reveal and leaderboard stage */}
                 {
-                    props.gameStage?.localeCompare("GAME") && props.guesses
+                    props.gameStage !== "GAME" && props.guesses
                         ? <Title order={3}><span className={styles.revealWord}>{props.previousWord}</span></Title>
                         : undefined
                 }
 
                 {/* Show word to be drawn if it's your turn and it hasn't been revealed yet */}
                 {
-                    (props.isMyTurn && !props.gameStage?.localeCompare("GAME")) ?
+                    (props.isMyTurn && props.gameStage === "GAME") ?
                         <Title order={3}>You are drawing <span className={styles.revealWord}>{props.secretWord}</span></Title>
                         :
                         undefined
                 }
 
                 {/* Show guess box if it's not your turn and word hasn't been revealed yet */}
-                {(!props.isMyTurn && !props.gameStage?.localeCompare("GAME"))
+                {(!props.isMyTurn && props.gameStage === "GAME")
                     ?
                     <Group>
                         <Input
@@ -103,7 +103,7 @@ export default function Game(props: {
                 </Center>
 
                 <Center pb={10} mt={10}>
-                    <Timer endTimestamp={props.endTimestamp ?? 0} duration={30} active={Boolean(!props.gameStage?.localeCompare("GAME"))} />
+                    <Timer endTimestamp={props.endTimestamp ?? 0} duration={30} active={Boolean(props.gameStage === "GAME")} />
                 </Center>
 
                 {
