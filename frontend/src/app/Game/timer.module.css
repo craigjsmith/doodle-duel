@@ -3,12 +3,16 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    background-color: #F7EBF0;
+    background-color: #FFFFFF;
     height: 35px;
     width: 80px;
     border-radius: 20px;
     padding: 15px;
     border: 1px solid #BF456C;
+}
+
+.timerContainerStopped {
+    background-color: #F7EBF0;
 }
 
 .timeNumber {

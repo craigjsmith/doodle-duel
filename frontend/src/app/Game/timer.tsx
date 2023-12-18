@@ -8,7 +8,7 @@ import styles from './timer.module.css'
 import { useEffect, useState, useRef } from 'react';
 
 export default function Timer(props: { endTimestamp: number, duration: number, active: boolean }) {
-    const [secondsRemaining, setSecondsRemaining] = useState<number>();
+    const [secondsRemaining, setSecondsRemaining] = useState<number>(props.duration);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -38,7 +38,8 @@ export default function Timer(props: { endTimestamp: number, duration: number, a
             align="center"
             direction="row"
         >
-            <div className={styles.timerContainer}>
+            <div className={`${styles.timerContainer} ${props.active ? '' : styles.timerContainerStopped}`
+            }>
                 <IconClockHour3 color="#BF456C" style={{ width: rem(18), height: rem(18) }} />
 
                 <h3 className={styles.timeNumber}>
