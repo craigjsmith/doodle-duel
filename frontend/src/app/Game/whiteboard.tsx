@@ -2,6 +2,7 @@
 
 import ColorButton from './ColorButton';
 import { Player as PlayerModel } from '../Models/Player';
+import { Image as ImageModel } from '../Models/Image';
 import styles from './whiteboard.module.css'
 
 import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
@@ -13,8 +14,8 @@ export default function Whiteboard({
     unusuableHeight,
     turn,
 }: {
-    image: any | undefined;
-    emitDrawing: any;
+    image: ImageModel | null;
+    emitDrawing: (img: ImageModel) => void;
     enable: boolean;
     unusuableHeight: number;
     turn: PlayerModel | undefined;
@@ -106,7 +107,6 @@ export default function Whiteboard({
         draw(e, true);
     }, [draw])
 
-
     const save = useCallback(() => {
         emitDrawing(ctx?.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE).data);
     }, [ctx, emitDrawing])
@@ -119,7 +119,6 @@ export default function Whiteboard({
         if (!image) {
             clear();
         } else if (!enable && !turn?.socketId.localeCompare(image.artist)) {
-            // Only update whiteboard if you're not the artist
             var array = new Uint8ClampedArray(image.img);
             ctx?.putImageData(new ImageData(array, CANVAS_SIZE, CANVAS_SIZE), 0, 0);
         }

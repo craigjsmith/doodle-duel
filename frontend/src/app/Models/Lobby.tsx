@@ -1,5 +1,5 @@
 export interface Lobby {
-  id: number;
+  id: number,
   lobbyName: string | undefined,
   playerCount: number
 }

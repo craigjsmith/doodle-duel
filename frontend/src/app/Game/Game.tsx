@@ -9,16 +9,17 @@ import { useEffect, useState, useRef } from 'react';
 import Timer from './timer';
 import Whiteboard from './whiteboard';
 import Leaderboard from './Leaderboard';
-import { Player as PlayerModel } from '../Models/Player';
 import GuessList from './guessList';
+import { Player as PlayerModel } from '../Models/Player';
 import { Guess as GuessModel } from '../Models/Guess';
+import { Image as ImageModel } from '../Models/Image';
 
 export default function Game(props: {
     secretWord: string | null,
     previousWord: string | null,
     endTimestamp: number,
-    image: any,
-    emitDrawing: (img: any) => void,
+    image: ImageModel,
+    emitDrawing: (img: ImageModel) => void,
     turn: PlayerModel | undefined,
     isMyTurn: boolean
     wordGuess: string | undefined,

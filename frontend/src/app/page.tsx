@@ -8,6 +8,7 @@ import LobbyList from './LobbyList/LobbyList';
 import Lobby from './Lobby/Lobby';
 
 import { GameState as GameStateModel } from './Models/GameState';
+import { Image as ImageModel } from './Models/Image';
 import Game from './Game/Game';
 import GameOver from './Game/GameOver';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -23,7 +24,7 @@ enum Screens {
 const PageComponent = () => {
   const [lobby, setLobby] = useState<number | null>(null);
   const [gameState, setGameState] = useState<GameStateModel>();
-  const [image, setImage] = useState<any>();
+  const [image, setImage] = useState<ImageModel | null>();
   const [wordGuess, setWordGuess] = useState<string>();
   const [username, setUsername] = useState<string>();
   const [screen, setScreen] = useState<Screens>(Screens.LobbyList);
@@ -76,7 +77,7 @@ const PageComponent = () => {
     setScreen(Screens.Lobby);
   };
 
-  const emitDrawing = (img: any) => {
+  const emitDrawing = (img: ImageModel) => {
     socket.volatile.emit('NEWDRAW', { img: img, artist: socket.id }, lobby);
   };
 
@@ -108,7 +109,7 @@ const PageComponent = () => {
     }
   }
 
-  function onDraw(img: any) {
+  function onDraw(img: ImageModel) {
     setImage(img);
   }
 
