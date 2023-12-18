@@ -103,7 +103,7 @@ const PageComponent = () => {
     }
   }
 
-  function onLobbyList(msg: any) {
+  function onLobbyList(msg: LobbyModel[]) {
     if (msg) {
       setLobbyList(msg);
     }
@@ -113,7 +113,7 @@ const PageComponent = () => {
     setImage(img);
   }
 
-  function onReveal(msg: any) {
+  function onReveal(msg: string) {
     setSecretWord(msg);
   }
 
