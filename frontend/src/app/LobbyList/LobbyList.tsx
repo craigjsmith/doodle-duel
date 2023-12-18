@@ -30,7 +30,7 @@ export default function LobbyList({
     setUsername: (username: string) => void;
     login: () => void;
     lobbyList: LobbyModel[] | undefined;
-    setLobbyList: (list: any) => void;
+    setLobbyList: (list: LobbyModel[]) => void;
 }) {
 
     const [loginOpened, { open: loginOpen, close: loginClose }] = useDisclosure(false);

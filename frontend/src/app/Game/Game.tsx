@@ -18,7 +18,7 @@ export default function Game(props: {
     secretWord: string | null,
     previousWord: string | null,
     endTimestamp: number,
-    image: ImageModel,
+    image: ImageModel | undefined | null,
     emitDrawing: (img: ImageModel) => void,
     turn: PlayerModel | undefined,
     isMyTurn: boolean
