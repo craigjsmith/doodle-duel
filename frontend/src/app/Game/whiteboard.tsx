@@ -61,7 +61,7 @@ export default function Whiteboard({
         }
     }, [unusuableHeight])
 
-    const setPosition = useCallback((e: any, isTouch: boolean = false) => {
+    const setPosition = useCallback((e: MouseEvent | TouchEvent) => {
         var left = 0;
         var top = 0;
         if (canvasRef && canvasRef.current) {
@@ -69,19 +69,19 @@ export default function Whiteboard({
             top = canvasRef.current.getBoundingClientRect().top;
         }
 
-        if (isTouch) {
+        if (window.TouchEvent && e instanceof TouchEvent) {
             pos.x = (e.changedTouches[0].clientX - left) / scaleFactorRef.current;
             pos.y = (e.changedTouches[0].clientY - top) / scaleFactorRef.current;
-        } else {
+        } else if (window.MouseEvent && e instanceof MouseEvent) {
             pos.x = (e.clientX - left) / scaleFactorRef.current;
             pos.y = (e.clientY - top) / scaleFactorRef.current;
         }
     }, [pos])
 
-    const draw = useCallback((e: any, isTouch: boolean = false) => {
+    const draw = useCallback((e: MouseEvent | TouchEvent) => {
         e.preventDefault();
 
-        if (!isTouch && e.buttons !== 1) return;
+        if (window.MouseEvent && e instanceof MouseEvent && e.buttons !== 1) return;
 
         if (ctx) {
             ctx.beginPath();
@@ -90,22 +90,12 @@ export default function Whiteboard({
             ctx.strokeStyle = selectedColorRef.current;
 
             ctx.moveTo(pos.x, pos.y); // from
-            setPosition(e, isTouch);
+            setPosition(e);
             ctx.lineTo(pos.x, pos.y); // to
 
             ctx.stroke();
         }
     }, [ctx, pos, setPosition])
-
-    // Defining this function prevents passing anonymous function to action listener, which cant be unmounted
-    const setPositionTouch = useCallback((e: any) => {
-        setPosition(e, true);
-    }, [setPosition])
-
-    // Defining this function prevents passing anonymous function to action listener, which cant be unmounted
-    const drawTouch = useCallback((e: any) => {
-        draw(e, true);
-    }, [draw])
 
     const save = useCallback(() => {
         emitDrawing(ctx?.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE).data);
@@ -154,9 +144,9 @@ export default function Whiteboard({
         window.visualViewport?.addEventListener("resize", scaleCanvasToScreen);
 
         // Touch events
-        canvas?.addEventListener('touchmove', drawTouch);
-        canvas?.addEventListener('touchstart', setPositionTouch);
-        canvas?.addEventListener('touchend', setPositionTouch);
+        canvas?.addEventListener('touchmove', draw);
+        canvas?.addEventListener('touchstart', setPosition);
+        canvas?.addEventListener('touchend', setPosition);
 
         // Mouse events
         canvas?.addEventListener('mousemove', draw);
@@ -164,15 +154,15 @@ export default function Whiteboard({
         canvas?.addEventListener('mouseenter', setPosition);
 
         return () => {
-            canvas?.removeEventListener('touchmove', drawTouch);
-            canvas?.removeEventListener('touchstart', setPositionTouch);
-            canvas?.removeEventListener('touchend', setPositionTouch);
+            canvas?.removeEventListener('touchmove', draw);
+            canvas?.removeEventListener('touchstart', setPosition);
+            canvas?.removeEventListener('touchend', setPosition);
 
             canvas?.removeEventListener('mousemove', draw);
             canvas?.removeEventListener('mousedown', setPosition);
             canvas?.removeEventListener('mouseenter', setPosition);
         }
-    }, [listenersInstalled, draw, drawTouch, setPosition, setPositionTouch, scaleCanvasToScreen]);
+    }, [listenersInstalled, draw, setPosition, scaleCanvasToScreen]);
 
     return (
         <>
