@@ -14,18 +14,19 @@ const server = createServer(app);
 const port = 3001
 const socketPort = 4000
 
+const CORS_ORGINS = ["https://doodle.craigsmith.dev", "http://localhost:3000"]
+
 const POINTS_TO_WIN = 10;
 const ROUND_DURATION = 30000;
 const GRACE_DURTION = 1000;
 
 app.use(cors({
-    origin: true
+    origin: CORS_ORGINS
 }))
 
-// No need for CORS policy, this is handled by nginx
 const io = new Server(server, {
     cors: {
-        origin: "*"
+        origin: CORS_ORGINS
     }
 });
 
