@@ -44,11 +44,10 @@ export default function Whiteboard({
     };
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const colorSwatchesRef = useRef<HTMLDivElement>(null);
 
     const scaleCanvasToScreen = useCallback(() => {
         let padding = 20;
-        let maxHeight = (window.visualViewport?.height ?? 0) - (unusuableHeight + (colorSwatchesRef.current?.clientHeight ?? 0) + padding);
+        let maxHeight = (window.visualViewport?.height ?? 0) - (unusuableHeight + padding);
         let maxWidth = window.innerWidth - (padding);
         let size = maxHeight < maxWidth ? maxHeight : maxWidth;
         setScaleFactor(size / CANVAS_SIZE);
@@ -57,7 +56,7 @@ export default function Whiteboard({
             canvasRef.current.style.transform = `scale(${size / CANVAS_SIZE})`;
             canvasRef.current.style.transformOrigin = `top center`;
         }
-    }, [unusuableHeight, colorSwatchesRef])
+    }, [unusuableHeight])
 
     const setPosition = useCallback((e: MouseEvent | TouchEvent) => {
         var left = 0;
@@ -166,7 +165,7 @@ export default function Whiteboard({
     return (
         <>
             {enable ?
-                <div className={styles.colorSwatches} ref={colorSwatchesRef}>
+                <div className={styles.colorSwatches}>
                     {
                         COLORS.map((color) =>
                             <ColorButton key={color} color={color} selected={color === selectedColor} onClick={() => { setSelectedColor(color) }} />
