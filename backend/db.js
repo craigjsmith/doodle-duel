@@ -132,22 +132,6 @@ function setPreviousWord(id, value) {
     });
 }
 
-function setRoundWinner(id, value) {
-    return new Promise((resolve, reject) => {
-
-        const query = 'UPDATE game SET roundWinner = ? WHERE id = ?';
-        const values = [value, id];
-
-        connection.query(query, values, (err, rows) => {
-            if (err) {
-                return reject(err);
-            }
-
-            return resolve(rows[0]);
-        })
-    });
-}
-
 function setRoundEndTimestamp(id, value) {
     return new Promise((resolve, reject) => {
 
@@ -259,4 +243,4 @@ function removeLobby(lobbyId) {
     });
 }
 
-module.exports = { getGameState, getOpenLobbyList, getAllLobbies, getAllOpenLobbies, getAllPublicOpenLobbies, setWord, setGameStage, setPreviousWord, setRoundWinner, setRoundEndTimestamp, setGuesses, setTurn, setGameStarted, incrementPlayerCount, createLobby, removeLobby };
+module.exports = { getGameState, getOpenLobbyList, getAllLobbies, getAllOpenLobbies, getAllPublicOpenLobbies, setWord, setGameStage, setPreviousWord, setRoundEndTimestamp, setGuesses, setTurn, setGameStarted, incrementPlayerCount, createLobby, removeLobby };

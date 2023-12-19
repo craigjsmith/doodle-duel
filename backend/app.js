@@ -19,9 +19,10 @@ const ROUND_DURATION = 30000;
 const GRACE_DURTION = 1000;
 
 app.use(cors({
-    origin: '*'
+    origin: true
 }))
 
+// No need for CORS policy, this is handled by nginx
 const io = new Server(server, {
     cors: {
         origin: "*"
@@ -121,7 +122,7 @@ io.on('connection', (socket) => {
                     gameOver(id);
                 }
 
-                startNewRound(id, socket.id);
+                startNewRound(id);
             } else {
                 await emitGameState(id);
             }
@@ -166,12 +167,12 @@ async function gameOver(lobbyId) {
     removeLobby(lobbyId);
 }
 
-async function startNewRound(lobbyId, roundWinnerId) {
-    clearTimeout(RoundEndTimeoutMap[lobbyId]);
-    delete RoundEndTimeoutMap[lobbyId];
+async function startNewRound(id) {
+    clearTimeout(RoundEndTimeoutMap[id]);
+    delete RoundEndTimeoutMap[id];
 
     let firstRound = false;
-    let gameState = await getGameState(lobbyId, true);
+    let gameState = await getGameState(id, true);
 
     if (!gameState) {
         return;
@@ -185,22 +186,15 @@ async function startNewRound(lobbyId, roundWinnerId) {
     if (!firstRound) {
         // Game stage: Reveal
         let previousWord = gameState.word;
-        await db.setGameStage(lobbyId, "REVEAL");
-        await db.setPreviousWord(lobbyId, previousWord);
+        await db.setGameStage(id, "REVEAL");
+        await db.setPreviousWord(id, previousWord);
 
-        if (roundWinnerId) {
-            let winner = gameState.players.findIndex(player => player.socketId == roundWinnerId);
-            await db.setRoundWinner(id, winner);
-        } else {
-            await db.setRoundWinner(id, null);
-        }
-
-        await emitGameState(lobbyId);
+        await emitGameState(id);
 
         // Game stage: Leaderboard
         setTimeout(async () => {
-            await db.setGameStage(lobbyId, "LEADERBOARD");
-            await emitGameState(lobbyId);
+            await db.setGameStage(id, "LEADERBOARD");
+            await emitGameState(id);
         }, 3000);
     }
 

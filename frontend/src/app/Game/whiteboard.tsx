@@ -15,7 +15,7 @@ export default function Whiteboard({
     turn,
 }: {
     image: ImageModel | undefined | null;
-    emitDrawing: (img: any) => void;
+    emitDrawing: (img: ImageModel) => void;
     enable: boolean;
     unusuableHeight: number;
     turn: PlayerModel | undefined;
@@ -27,7 +27,7 @@ export default function Whiteboard({
     const pos = useMemo(() => {
         return { x: 0, y: 0 };
     }, [])
-    const [ctx, setCtx] = useState<any>();
+    const [ctx, setCtx] = useState<CanvasRenderingContext2D>();
     const [listenersInstalled, setListenersInstalled] = useState<boolean>(false);
     const [selectedColor, _setSelectedColor] = useState<string>(COLORS[0]);
     const [scaleFactor, _setScaleFactor] = useState<number>(1);
