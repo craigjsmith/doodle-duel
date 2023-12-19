@@ -109,6 +109,7 @@ export default function Whiteboard({
         if (!image) {
             clear();
         } else if (!enable && turn?.socketId === image.artist) {
+            // Don't load if 1) you're currently drawing or 2) incoming drawing from a previous round
             var array = new Uint8ClampedArray(image.img);
             ctx?.putImageData(new ImageData(array, CANVAS_SIZE, CANVAS_SIZE), 0, 0);
         }

@@ -47,7 +47,7 @@ const PageComponent = () => {
   }, [gameState]);
 
   useEffect(() => {
-    if (gameState?.gameStage == undefined) {
+    if (gameState?.gameStage == "LEADERBOARD") {
       setImage(null);
     }
   }, [gameState?.gameStage])
