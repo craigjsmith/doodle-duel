@@ -12,7 +12,7 @@ export default function Whiteboard({
     emitDrawing,
     enable,
     unusuableHeight,
-    turn,
+    turn
 }: {
     image: ImageModel | undefined | null;
     emitDrawing: (img: Uint8ClampedArray | undefined) => void;

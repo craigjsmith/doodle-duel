@@ -189,7 +189,6 @@ async function startNewRound(id) {
         let previousWord = gameState.word;
         await db.setGameStage(id, "REVEAL");
         await db.setPreviousWord(id, previousWord);
-        db.setTurn(id, null);
 
         await emitGameState(id);
 

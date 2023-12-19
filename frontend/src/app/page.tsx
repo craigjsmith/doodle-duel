@@ -50,6 +50,7 @@ const PageComponent = () => {
     if (gameState?.gameStage == "LEADERBOARD") {
       setImage(null);
     }
+
   }, [gameState?.gameStage])
 
   useEffect(() => {

@@ -117,7 +117,7 @@ export default function Game(props: {
                 <GuessList guesses={props.guesses ?? []} />
             </div>
 
-            <Whiteboard image={props.image} emitDrawing={props.emitDrawing} enable={props.isMyTurn} unusuableHeight={unusableHeight} turn={props.turn} />
+            <Whiteboard image={props.image} emitDrawing={props.emitDrawing} enable={props.isMyTurn && props.gameStage === "GAME"} unusuableHeight={unusableHeight} turn={props.turn} />
 
             <Modal opened={opened} onClose={close} withCloseButton={false} closeOnClickOutside={false} closeOnEscape={false} title="Leaderboard">
                 <Leaderboard players={props.players ?? []} />
