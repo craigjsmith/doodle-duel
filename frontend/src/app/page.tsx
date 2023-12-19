@@ -90,6 +90,7 @@ const PageComponent = () => {
     if (msg) {
       setGameState({
         id: msg.id,
+        roundWinner: JSON.parse(msg.roundWinner),
         lobbyName: msg.lobbyName,
         word: msg.word,
         previousWord: msg.previousWord,
@@ -136,6 +137,7 @@ const PageComponent = () => {
         return (
           <Game
             secretWord={secretWord}
+            roundWinner={gameState?.roundWinner}
             previousWord={gameState?.previousWord ?? null}
             endTimestamp={gameState?.endTimestamp ?? 0}
             image={image}

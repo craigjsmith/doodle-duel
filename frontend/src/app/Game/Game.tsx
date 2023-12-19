@@ -17,6 +17,7 @@ import { Image as ImageModel } from '../Models/Image';
 export default function Game(props: {
     secretWord: string | null,
     previousWord: string | null,
+    roundWinner: PlayerModel | undefined,
     endTimestamp: number,
     image: ImageModel | undefined | null,
     emitDrawing: (img: Uint8ClampedArray | undefined) => void,
@@ -53,7 +54,7 @@ export default function Game(props: {
                 {/* Show reveal word on reveal and leaderboard stage */}
                 {
                     props.gameStage !== "GAME" && props.guesses
-                        ? <Title order={3}><span className={styles.revealWord}>{props.previousWord}</span></Title>
+                        ? <Title order={3}>{props.roundWinner ? `${props.roundWinner.username} got it: ` : undefined}<span className={styles.revealWord}>{props.previousWord}</span></Title>
                         : undefined
                 }
 

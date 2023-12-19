@@ -3,7 +3,8 @@ import { Player as PlayerModel } from './Player';
 
 export interface GameState {
   id: number;
-  lobbyName: string
+  roundWinner: PlayerModel | undefined;
+  lobbyName: string;
   word: string;
   previousWord: string;
   players: Array<PlayerModel> | undefined;

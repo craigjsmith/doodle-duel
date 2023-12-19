@@ -118,6 +118,8 @@ io.on('connection', (socket) => {
                 bouncer.awardPoints(socket.id, 2);
                 bouncer.awardPoints(turn.socketId, 1);
 
+                await db.setRoundWinner(id, JSON.stringify({ "socketId": socket.id, "username": bouncer.getUsername(socket.id) }));
+
                 // Check if either point earner has won game
                 if (bouncer.getPoints(socket.id) >= POINTS_TO_WIN || bouncer.getPoints(turn.socketId) >= POINTS_TO_WIN) {
                     gameOver(id);
@@ -196,6 +198,7 @@ async function startNewRound(id) {
         setTimeout(async () => {
             await db.setGameStage(id, "LEADERBOARD");
             await db.setTurn(id, null);
+            await db.setRoundWinner(id, null);
             await emitGameState(id);
         }, 3000);
     }
