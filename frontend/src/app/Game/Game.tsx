@@ -104,7 +104,7 @@ export default function Game(props: {
                 </Center>
 
                 {
-                    (!props.isMyTurn
+                    (!props.isMyTurn && props.gameStage !== "LEADERBOARD"
                         ?
                         <Center pb={10}>
                             <Title order={5}>{props.turn?.username} is drawing</Title>

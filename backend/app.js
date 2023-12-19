@@ -195,6 +195,7 @@ async function startNewRound(id) {
         // Game stage: Leaderboard
         setTimeout(async () => {
             await db.setGameStage(id, "LEADERBOARD");
+            await db.setTurn(id, null);
             await emitGameState(id);
         }, 3000);
     }
