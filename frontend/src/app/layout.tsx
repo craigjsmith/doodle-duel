@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     siteName: 'Doodle Duel',
     images: [
       {
-        url: '/images/og-1200x630.png',
+        url: '/images/thumb.png',
         width: 1200,
         height: 630,
       }
