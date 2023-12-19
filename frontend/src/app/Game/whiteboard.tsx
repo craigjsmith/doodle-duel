@@ -21,7 +21,6 @@ export default function Whiteboard({
     turn: PlayerModel | undefined;
 }) {
     const CANVAS_SIZE = 500;
-    const COLOR_SELECTOR_SIZE = 40 + 45;
     const COLORS = ['#EF476F', '#FFD166', '#06D6A0', '#118AB2', '#073B4C']
 
     const pos = useMemo(() => {
@@ -48,10 +47,9 @@ export default function Whiteboard({
     const colorSwatchesRef = useRef<HTMLDivElement>(null);
 
     const scaleCanvasToScreen = useCallback(() => {
-        let yPadding = 40;
-        let xPadding = 20;
-        let maxHeight = (window.visualViewport?.height ?? 0) - (unusuableHeight + (colorSwatchesRef.current?.clientHeight ?? 0) + yPadding);
-        let maxWidth = window.innerWidth - (xPadding);
+        let padding = 20;
+        let maxHeight = (window.visualViewport?.height ?? 0) - (unusuableHeight + (colorSwatchesRef.current?.clientHeight ?? 0) + padding);
+        let maxWidth = window.innerWidth - (padding);
         let size = maxHeight < maxWidth ? maxHeight : maxWidth;
         setScaleFactor(size / CANVAS_SIZE);
 
@@ -59,7 +57,7 @@ export default function Whiteboard({
             canvasRef.current.style.transform = `scale(${size / CANVAS_SIZE})`;
             canvasRef.current.style.transformOrigin = `top center`;
         }
-    }, [unusuableHeight])
+    }, [unusuableHeight, colorSwatchesRef])
 
     const setPosition = useCallback((e: MouseEvent | TouchEvent) => {
         var left = 0;
@@ -127,7 +125,7 @@ export default function Whiteboard({
     }, [enable, save]);
 
     useEffect(() => {
-        // Update scaling when unusable height changes
+        // Scale canvas to screen on load
         scaleCanvasToScreen();
     }, [scaleCanvasToScreen])
 
@@ -177,7 +175,7 @@ export default function Whiteboard({
                 </div> : undefined}
 
             <div className={styles.canvasContainer}>
-                <canvas className={`${styles.canvas} ${enable ? styles.enabled : styles.disabled} `} ref={canvasRef} width={CANVAS_SIZE} height={CANVAS_SIZE - COLOR_SELECTOR_SIZE} />
+                <canvas className={`${styles.canvas} ${enable ? styles.enabled : styles.disabled} `} ref={canvasRef} width={CANVAS_SIZE} height={CANVAS_SIZE} />
             </div>
         </>
     )

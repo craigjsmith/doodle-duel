@@ -1,28 +1,29 @@
 .game {
-  position: fixed; 
-  overflow-y: scroll;
-  width: 100%;
-  height: 100%;
+	position: fixed;
+	overflow-y: scroll;
+	width: 100%;
+	height: 100%;
 }
 
 .staticBar {
-  height: 75px;
-  position: absolute;
-  top: 0;
-  width: 100%;
-  background-color: #f0f0f0;
-  padding: 10px;
-  box-sizing: border-box;
+	height: 75px;
+	width: 100%;
+	background-color: #f0f0f0;
+	padding: 10px;
+	box-sizing: border-box;
 }
 
 .guessButton {
-  &:disabled,
-  &[data-disabled] {
-    border-color: light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-5));
-    background-color: transparent;
-  }
+	&:disabled,
+	&[data-disabled] {
+		border-color: light-dark(
+			var(--mantine-color-gray-5),
+			var(--mantine-color-dark-5)
+		);
+		background-color: transparent;
+	}
 }
 
 .revealWord {
-  color: #BF456C;
+	color: #bf456c;
 }

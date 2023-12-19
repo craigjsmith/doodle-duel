@@ -1,24 +1,23 @@
 .canvas {
-  border: 1px solid black;
-  display: flex;
+	border: 1px solid black;
+	display: flex;
 }
 
 .canvasContainer {
-  width: 100%;
-  display: flex;
-  justify-content: center;
+	display: flex;
+	justify-content: center;
 }
 
 .enabled {
-  border: 3px solid blue;
+	border: 3px solid blue;
 }
 
 .disabled {
-  pointer-events: none
+	pointer-events: none;
 }
 
 .colorSwatches {
-  display: flex;
-  justify-content: center;
-  height: 40px;
+	display: flex;
+	justify-content: center;
+	height: 40px;
 }

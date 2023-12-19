@@ -30,13 +30,14 @@ export default function Game(props: {
     guesses: GuessModel[] | undefined
 }) {
     const [opened, { open, close }] = useDisclosure(false);
-    const [topBarHeight, setTopBarHeight] = useState<number>(0);
-    const staticBarRef = useRef<HTMLDivElement>(null);
-    const topControlsRef = useRef<HTMLDivElement>(null);
+    const [unusableHeight, setUnusableHeight] = useState<number>(0);
+    const topBarRef = useRef<HTMLDivElement>(null);
+    const timerBarRef = useRef<HTMLDivElement>(null);
+    const GUESS_LIST_HEIGHT = 50;
 
     useEffect(() => {
-        setTopBarHeight((staticBarRef.current?.clientHeight ?? 0) + (topControlsRef.current?.clientHeight ?? 0));
-    }, []);
+        setUnusableHeight((topBarRef.current?.clientHeight ?? 0) + (timerBarRef.current?.clientHeight ?? 0) + GUESS_LIST_HEIGHT);
+    }, [topBarRef.current, timerBarRef.current]);
 
     useEffect(() => {
         if (props.gameStage === "LEADERBOARD") {
@@ -48,7 +49,7 @@ export default function Game(props: {
 
     return (
         <div className={styles.game}>
-            <Flex justify="center" align="center" className={styles.staticBar} ref={staticBarRef}>
+            <Flex justify="center" align="center" className={styles.staticBar} ref={topBarRef}>
                 {/* Show reveal word on reveal and leaderboard stage */}
                 {
                     props.gameStage !== "GAME" && props.guesses
@@ -97,12 +98,8 @@ export default function Game(props: {
                     : undefined}
             </Flex>
 
-            <Flex mt={75} direction="column" ref={staticBarRef}>
-                <Center>
-                    <GuessList guesses={props.guesses ?? []} />
-                </Center>
-
-                <Center pb={10} mt={10}>
+            <Flex direction="column" ref={timerBarRef}>
+                <Center pb={10} pt={10}>
                     <Timer endTimestamp={props.endTimestamp ?? 0} duration={30} active={Boolean(props.gameStage === "GAME")} />
                 </Center>
 
@@ -114,10 +111,13 @@ export default function Game(props: {
                         </Center>
                         : undefined)
                 }
-
             </Flex>
 
-            <Whiteboard image={props.image} emitDrawing={props.emitDrawing} enable={props.isMyTurn} unusuableHeight={topBarHeight} turn={props.turn} />
+            <div>
+                <GuessList guesses={props.guesses ?? []} />
+            </div>
+
+            <Whiteboard image={props.image} emitDrawing={props.emitDrawing} enable={props.isMyTurn} unusuableHeight={unusableHeight} turn={props.turn} />
 
             <Modal opened={opened} onClose={close} withCloseButton={false} closeOnClickOutside={false} closeOnEscape={false} title="Leaderboard">
                 <Leaderboard players={props.players ?? []} />
