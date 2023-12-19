@@ -22,7 +22,7 @@ const WORDS = [
     "Firefly", "Cookie jar", "Mosquito", "Bulldozer", "Zebra", "Caterpillar", "Compass", "Cappuccino", "Castle", "Garbage can",
     "Seagull", "Helicopter", "Cello", "Snow globe", "Bathtub", "Toaster", "Crayon", "Seashell", "Saxophone", "Chainsaw",
     "Eiffel Tower", "Giraffe", "Dragon", "Rainbow", "Pineapple", "Cupcake", "Pretzel", "Ambulance", "Beach ball", "Toaster",
-    "Saxophone", "Penguin", "Sphinx", "Ice cream truck", "Lemonade", "French fries", "Chessboard", "Jack-o'-lantern", "Disco ball",
+    "Saxophone", "Penguin", "Sphinx", "Ice cream truck", "Lemonade", "French fries", "Chessboard", "Jack-o-lantern", "Disco ball",
     "Panda", "Eiffel Tower", "Pineapple", "Submarine", "Raccoon", "Pajamas", "Tornado", "Pencil sharpener", "Stapler", "Seashell",
     "Cactus", "Pufferfish", "Giraffe", "Mitten", "Ice cream cone", "Firefly", "Cookie jar", "Mosquito", "Bulldozer", "Zebra",
     "Caterpillar", "Compass", "Cappuccino", "Castle", "Garbage can", "Seagull", "Helicopter", "Cello", "Snow globe", "Bathtub",
