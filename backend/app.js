@@ -199,6 +199,8 @@ async function startNewRound(id) {
             await db.setGameStage(id, "LEADERBOARD");
             await db.setTurn(id, null);
             await db.setRoundWinner(id, null);
+            await db.setRoundEndTimestamp(id, null);
+            await db.setGuesses(id, null);
             await emitGameState(id);
         }, 3000);
     }
@@ -207,7 +209,6 @@ async function startNewRound(id) {
     setTimeout(async () => {
         onDraw(null, id)
         await db.setGameStage(id, "GAME");
-        await db.setGuesses(id, JSON.stringify([]));
 
         await setNextPlayerAsArtist(id);
         await setNewWord(id);

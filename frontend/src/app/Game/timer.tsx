@@ -26,6 +26,11 @@ export default function Timer(props: { endTimestamp: number, duration: number, a
                     clearInterval(interval);
                 }
             }
+
+            if (!props.endTimestamp) {
+                setSecondsRemaining(props.duration);
+            }
+
         }, 1000);
 
         return () => clearInterval(interval);

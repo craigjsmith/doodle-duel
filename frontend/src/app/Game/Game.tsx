@@ -38,7 +38,7 @@ export default function Game(props: {
 
     useEffect(() => {
         setUnusableHeight((topBarRef.current?.clientHeight ?? 0) + (timerBarRef.current?.clientHeight ?? 0) + GUESS_LIST_HEIGHT);
-    }, [topBarRef.current, timerBarRef.current]);
+    }, []);
 
     useEffect(() => {
         if (props.gameStage === "LEADERBOARD") {
@@ -51,9 +51,9 @@ export default function Game(props: {
     return (
         <div className={styles.game}>
             <Flex justify="center" align="center" className={styles.staticBar} ref={topBarRef}>
-                {/* Show reveal word on reveal and leaderboard stage */}
+                {/* Show reveal word on reveal stage */}
                 {
-                    props.gameStage !== "GAME" && props.guesses
+                    props.gameStage === "REVEAL" && props.guesses
                         ? <Title order={3}>{props.roundWinner ? `${props.roundWinner.username} got it: ` : undefined}<span className={styles.revealWord}>{props.previousWord}</span></Title>
                         : undefined
                 }
