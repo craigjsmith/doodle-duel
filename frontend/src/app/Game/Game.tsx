@@ -53,7 +53,7 @@ export default function Game(props: {
             <Flex justify="center" align="center" className={styles.staticBar} ref={topBarRef}>
                 {/* Show reveal word on reveal stage */}
                 {
-                    props.gameStage === "REVEAL" && props.guesses
+                    props.gameStage === "REVEAL"
                         ? <Title order={3}>{props.roundWinner ? `${props.roundWinner.username} got it: ` : undefined}<span className={styles.revealWord}>{props.previousWord}</span></Title>
                         : undefined
                 }

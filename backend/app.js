@@ -197,7 +197,6 @@ async function startNewRound(id) {
         // Game stage: Leaderboard
         setTimeout(async () => {
             await db.setGameStage(id, "LEADERBOARD");
-            await db.setTurn(id, null);
             await db.setRoundWinner(id, null);
             await db.setRoundEndTimestamp(id, null);
             await db.setGuesses(id, null);
