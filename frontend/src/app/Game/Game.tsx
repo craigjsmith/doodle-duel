@@ -19,7 +19,7 @@ export default function Game(props: {
     previousWord: string | null,
     endTimestamp: number,
     image: ImageModel | undefined | null,
-    emitDrawing: (img: ImageModel) => void,
+    emitDrawing: (img: Uint8ClampedArray | undefined) => void,
     turn: PlayerModel | undefined,
     isMyTurn: boolean
     wordGuess: string | undefined,

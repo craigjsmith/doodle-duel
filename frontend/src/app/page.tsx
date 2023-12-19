@@ -77,7 +77,7 @@ const PageComponent = () => {
     setScreen(Screens.Lobby);
   };
 
-  const emitDrawing = (img: ImageModel) => {
+  const emitDrawing = (img: Uint8ClampedArray | undefined) => {
     socket.volatile.emit('NEWDRAW', { img: img, artist: socket.id }, lobby);
   };
 

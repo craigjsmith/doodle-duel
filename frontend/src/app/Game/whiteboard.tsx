@@ -15,7 +15,7 @@ export default function Whiteboard({
     turn,
 }: {
     image: ImageModel | undefined | null;
-    emitDrawing: (img: ImageModel) => void;
+    emitDrawing: (img: Uint8ClampedArray | undefined) => void;
     enable: boolean;
     unusuableHeight: number;
     turn: PlayerModel | undefined;
@@ -27,7 +27,7 @@ export default function Whiteboard({
     const pos = useMemo(() => {
         return { x: 0, y: 0 };
     }, [])
-    const [ctx, setCtx] = useState<CanvasRenderingContext2D>();
+    const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>();
     const [listenersInstalled, setListenersInstalled] = useState<boolean>(false);
     const [selectedColor, _setSelectedColor] = useState<string>(COLORS[0]);
     const [scaleFactor, _setScaleFactor] = useState<number>(1);
@@ -115,7 +115,7 @@ export default function Whiteboard({
     }, [clear, ctx, enable, image, turn])
 
     useEffect(() => {
-        // Save whiteboard 5 times per second.
+        // Save whiteboard 2 times per second.
         const interval = setInterval(() => {
             if (enable) {
                 save();
@@ -139,7 +139,7 @@ export default function Whiteboard({
         let canvas = canvasRef.current;
 
         setListenersInstalled(true);
-        setCtx(canvas?.getContext('2d'));
+        setCtx(canvas?.getContext('2d', { willReadFrequently: true }));
 
         window.visualViewport?.addEventListener("resize", scaleCanvasToScreen);
 
