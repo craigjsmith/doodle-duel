@@ -19,10 +19,9 @@ const ROUND_DURATION = 30000;
 const GRACE_DURTION = 1000;
 
 app.use(cors({
-    origin: true
+    origin: '*'
 }))
 
-// No need for CORS policy, this is handled by nginx
 const io = new Server(server, {
     cors: {
         origin: "*"
@@ -122,7 +121,7 @@ io.on('connection', (socket) => {
                     gameOver(id);
                 }
 
-                startNewRound(id);
+                startNewRound(id, socket.id);
             } else {
                 await emitGameState(id);
             }
@@ -167,12 +166,12 @@ async function gameOver(lobbyId) {
     removeLobby(lobbyId);
 }
 
-async function startNewRound(id) {
-    clearTimeout(RoundEndTimeoutMap[id]);
-    delete RoundEndTimeoutMap[id];
+async function startNewRound(lobbyId, roundWinnerId) {
+    clearTimeout(RoundEndTimeoutMap[lobbyId]);
+    delete RoundEndTimeoutMap[lobbyId];
 
     let firstRound = false;
-    let gameState = await getGameState(id, true);
+    let gameState = await getGameState(lobbyId, true);
 
     if (!gameState) {
         return;
@@ -186,15 +185,22 @@ async function startNewRound(id) {
     if (!firstRound) {
         // Game stage: Reveal
         let previousWord = gameState.word;
-        await db.setGameStage(id, "REVEAL");
-        await db.setPreviousWord(id, previousWord);
+        await db.setGameStage(lobbyId, "REVEAL");
+        await db.setPreviousWord(lobbyId, previousWord);
 
-        await emitGameState(id);
+        if (roundWinnerId) {
+            let winner = gameState.players.findIndex(player => player.socketId == roundWinnerId);
+            await db.setRoundWinner(id, winner);
+        } else {
+            await db.setRoundWinner(id, null);
+        }
+
+        await emitGameState(lobbyId);
 
         // Game stage: Leaderboard
         setTimeout(async () => {
-            await db.setGameStage(id, "LEADERBOARD");
-            await emitGameState(id);
+            await db.setGameStage(lobbyId, "LEADERBOARD");
+            await emitGameState(lobbyId);
         }, 3000);
     }
 
