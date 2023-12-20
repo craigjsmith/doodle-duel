@@ -4,8 +4,13 @@ import { Button, Switch, TextInput, Center, Flex, Group } from '@mantine/core';
 import { useState } from 'react';
 
 export default function LobbyCreator(props: { createLobby: (lobbyName: string, privateLobby: Boolean) => void }) {
-    const [checked, setChecked] = useState(false);
+    const [values, setValues] = useState<string[]>([]);
     const [lobbyName, setLobbyName] = useState('');
+
+    const createLobby = () => {
+        let isPrivate = values.includes("private");
+        props.createLobby(lobbyName, isPrivate);
+    }
 
     return (
         <>
@@ -21,26 +26,23 @@ export default function LobbyCreator(props: { createLobby: (lobbyName: string, p
                         onChange={(event) => { setLobbyName(event.target.value) }}
                         onKeyDown={(event) => {
                             if (event.key === 'Enter' && lobbyName) {
-                                props.createLobby(lobbyName, checked);
+                                createLobby();
                             }
                         }}
                         data-autofocus
                     />
 
                     <Switch.Group
+                        value={values}
+                        onChange={setValues}
                         label="Private Lobby"
                         description="Lobby can only be joined via link"
                         mt="md"
                     >
                         <Group mt="xs">
-                            <Switch
-                                value="private"
-                                checked={checked}
-                                onChange={(event) => setChecked(event.currentTarget.checked)}
-                            />
+                            <Switch value="private" />
                         </Group>
                     </Switch.Group>
-
                 </Flex>
             </Center>
 
@@ -51,7 +53,7 @@ export default function LobbyCreator(props: { createLobby: (lobbyName: string, p
                     radius="md"
                     my="lg"
                     disabled={!lobbyName}
-                    onClick={() => { props.createLobby(lobbyName, checked) }}
+                    onClick={() => { createLobby() }}
                 >
                     Start
                 </Button>
