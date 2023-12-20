@@ -18,8 +18,8 @@ export default function GuessList(props: { guesses: GuessModel[] }) {
         <div className={styles.outerContainer}>
             {
                 guessList?.map(
-                    (guess) =>
-                        <div className={styles.innerContainer} key={guess.guess + guess.player.socketId}>
+                    (guess, index) =>
+                        <div className={styles.innerContainer} key={index}>
                             <Paper shadow="xs" radius="md" withBorder className={styles.wordBox}>
                                 <Flex direction="row">
                                     <Text c="dimmed" mr={5}>{guess.player.username} :</Text>
