@@ -201,7 +201,7 @@ async function startNewRound(id) {
             await db.setRoundEndTimestamp(id, null);
             await db.setGuesses(id, null);
             await emitGameState(id);
-        }, 3000);
+        }, 5000);
     }
 
     // Game stage: New round
@@ -221,7 +221,7 @@ async function startNewRound(id) {
         RoundEndTimeoutMap[id] = setTimeout(() => {
             startNewRound(id);
         }, ROUND_DURATION + GRACE_DURTION);
-    }, firstRound ? 0 : 6000);
+    }, firstRound ? 0 : 10000);
 }
 
 const setNewWord = async (id) => {
