@@ -1,12 +1,11 @@
 'use client'
 
-import { Container, Flex, Title, List, ThemeIcon, rem, Button, Loader, Text, CopyButton, Group, Input } from '@mantine/core';
+import { Button, Container, CopyButton, Flex, Group, Input,List, Loader, rem, Text, ThemeIcon, Title } from '@mantine/core';
 import { IconUser } from '@tabler/icons-react';
+import { useEffect, useRef,useState } from 'react';
 
 import { Player as PlayerModel } from '../Models/Player';
 import styles from './lobby.module.css'
-
-import { useEffect, useState, useRef } from 'react';
 
 export default function Lobby(props: { lobbyId: number | null, lobbyName: string | undefined, players: PlayerModel[] | undefined, startGame: () => void | undefined }) {
     const [lobbyList, setLobbyList] = useState<Array<number>>();

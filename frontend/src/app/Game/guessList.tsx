@@ -1,11 +1,10 @@
 'use client'
 
-import { Paper, Flex, Text } from '@mantine/core';
-
-import styles from './guessList.module.css'
-
+import { Flex, Paper, Text } from '@mantine/core';
 import { useEffect, useState } from 'react';
+
 import { Guess as GuessModel } from '../Models/Guess';
+import styles from './guessList.module.css'
 
 export default function GuessList(props: { guesses: GuessModel[] }) {
     const [guessList, setGuessList] = useState<GuessModel[]>();

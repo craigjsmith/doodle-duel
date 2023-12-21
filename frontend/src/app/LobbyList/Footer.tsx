@@ -1,8 +1,8 @@
 'use client'
 
-import styles from './footer.module.css'
+import { Flex, Stack,Text } from '@mantine/core';
 
-import { Flex, Text, Stack } from '@mantine/core';
+import styles from './footer.module.css'
 
 export default function Footer() {
     return (

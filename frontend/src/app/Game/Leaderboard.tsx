@@ -1,8 +1,9 @@
 'use client'
 
-import { ThemeIcon, Table } from '@mantine/core';
+import { Table,ThemeIcon } from '@mantine/core';
+import { useEffect, useRef,useState } from 'react';
+
 import { Player as PlayerModel } from '../Models/Player';
-import { useEffect, useState, useRef } from 'react';
 
 export default function Leaderboard(props: { players: PlayerModel[] }) {
     const [playersSortedByPoints, setPlayersSortedByPoints] = useState<PlayerModel[]>();

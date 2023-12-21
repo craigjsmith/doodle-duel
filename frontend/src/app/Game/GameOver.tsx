@@ -1,6 +1,6 @@
 'use client'
 
-import { Container, Center, Title, Button } from '@mantine/core';
+import { Button,Center, Container, Title } from '@mantine/core';
 
 import { Player as PlayerModel } from '../Models/Player';
 import Leaderboard from './Leaderboard';

@@ -1,11 +1,11 @@
 'use client'
 
-import ColorButton from './ColorButton';
-import { Player as PlayerModel } from '../Models/Player';
-import { Image as ImageModel } from '../Models/Image';
-import styles from './whiteboard.module.css'
+import { useCallback, useEffect, useMemo,useRef, useState } from 'react';
 
-import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
+import { Image as ImageModel } from '../Models/Image';
+import { Player as PlayerModel } from '../Models/Player';
+import ColorButton from './ColorButton';
+import styles from './whiteboard.module.css'
 
 export default function Whiteboard({
     image,

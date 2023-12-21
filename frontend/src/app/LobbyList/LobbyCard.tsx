@@ -1,8 +1,8 @@
 'use client'
 
-import styles from './lobbyCard.module.css'
+import { Paper,Text } from '@mantine/core';
 
-import { Text, Paper } from '@mantine/core';
+import styles from './lobbyCard.module.css'
 
 export default function LobbyCard(props: {
     lobbyId: number,

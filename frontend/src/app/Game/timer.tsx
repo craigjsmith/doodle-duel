@@ -1,11 +1,10 @@
 'use client'
 
-import { Flex, rem, Button } from '@mantine/core';
+import { Button,Flex, rem } from '@mantine/core';
 import { IconClockHour3 } from '@tabler/icons-react';
+import { useEffect, useRef,useState } from 'react';
 
 import styles from './timer.module.css'
-
-import { useEffect, useState, useRef } from 'react';
 
 export default function Timer(props: { endTimestamp: number, duration: number, active: boolean }) {
     const [secondsRemaining, setSecondsRemaining] = useState<number>(props.duration);

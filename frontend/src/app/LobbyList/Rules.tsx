@@ -1,6 +1,6 @@
 'use client'
 
-import { Container, Text, List } from '@mantine/core';
+import { Container, List,Text } from '@mantine/core';
 
 export default function Rules() {
     return (

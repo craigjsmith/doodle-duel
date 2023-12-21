@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, Switch, TextInput, Center, Flex, Group } from '@mantine/core';
+import { Button, Center, Flex, Group,Switch, TextInput } from '@mantine/core';
 import { useState } from 'react';
 
 export default function LobbyCreator(props: { createLobby: (lobbyName: string, privateLobby: Boolean) => void }) {

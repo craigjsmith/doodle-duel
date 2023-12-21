@@ -1,18 +1,17 @@
 'use client'
 
-import { socket } from './socket';
 import dynamic from 'next/dynamic'
-
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import LobbyList from './LobbyList/LobbyList';
-import Lobby from './Lobby/Lobby';
 
-import { GameState as GameStateModel } from './Models/GameState';
-import { Image as ImageModel } from './Models/Image';
 import Game from './Game/Game';
 import GameOver from './Game/GameOver';
-import { useRouter, useSearchParams } from 'next/navigation';
+import Lobby from './Lobby/Lobby';
+import LobbyList from './LobbyList/LobbyList';
+import { GameState as GameStateModel } from './Models/GameState';
+import { Image as ImageModel } from './Models/Image';
 import { Lobby as LobbyModel } from './Models/Lobby';
+import { socket } from './socket';
 
 enum Screens {
   LobbyList,

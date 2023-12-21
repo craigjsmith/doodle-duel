@@ -1,6 +1,6 @@
 'use client'
 
-import { ColorSwatch, CheckIcon, rem } from '@mantine/core';
+import { CheckIcon, ColorSwatch, rem } from '@mantine/core';
 
 export default function ColorButton(props: { color: string, selected: boolean, onClick: () => void }) {
     return (

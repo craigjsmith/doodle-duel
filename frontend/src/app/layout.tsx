@@ -1,7 +1,7 @@
 import './globals.css'
 import '@mantine/core/styles.css';
 
-import { MantineProvider, ColorSchemeScript } from '@mantine/core';
+import { ColorSchemeScript,MantineProvider } from '@mantine/core';
 import { Metadata, Viewport } from 'next';
 
 export const viewport: Viewport = {

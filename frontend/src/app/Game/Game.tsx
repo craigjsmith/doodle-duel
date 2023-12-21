@@ -1,18 +1,17 @@
 'use client'
 
-import styles from './game.module.css'
-
+import { Button, Center, Flex, Group, Input, Modal, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { Button, Input, Center, Group, Flex, Modal, Title } from '@mantine/core';
+import { useEffect, useRef,useState } from 'react';
 
-import { useEffect, useState, useRef } from 'react';
-import Timer from './timer';
-import Whiteboard from './whiteboard';
-import Leaderboard from './Leaderboard';
-import GuessList from './guessList';
-import { Player as PlayerModel } from '../Models/Player';
 import { Guess as GuessModel } from '../Models/Guess';
 import { Image as ImageModel } from '../Models/Image';
+import { Player as PlayerModel } from '../Models/Player';
+import styles from './game.module.css'
+import GuessList from './guessList';
+import Leaderboard from './Leaderboard';
+import Timer from './timer';
+import Whiteboard from './whiteboard';
 
 export default function Game(props: {
     secretWord: string | null,

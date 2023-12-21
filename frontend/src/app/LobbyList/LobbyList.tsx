@@ -1,18 +1,17 @@
 'use client'
 
+import { ActionIcon,Alert, Box, Button, Flex, Modal, SimpleGrid, Text, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { Alert, Flex, Title, Button, Text, SimpleGrid, Modal, Box, ActionIcon } from '@mantine/core';
 import { IconInfoCircle, IconQuestionMark } from '@tabler/icons-react';
-
-import styles from './lobbyList.module.css'
-
-import { useCallback, useEffect, useState } from 'react';
-import LobbyCard from './LobbyCard';
-import Login from './Login';
-import LobbyCreator from './LobbyCreator';
 import Image from 'next/image';
+import { useCallback, useEffect, useState } from 'react';
+
 import { Lobby as LobbyModel } from '../Models/Lobby';
 import Footer from './Footer';
+import LobbyCard from './LobbyCard';
+import LobbyCreator from './LobbyCreator';
+import styles from './lobbyList.module.css'
+import Login from './Login';
 import Rules from './Rules';
 
 export default function LobbyList({
