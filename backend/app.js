@@ -5,6 +5,7 @@ const db = require('./db')
 const bodyParser = require('body-parser')
 const expressSanitizer = require('express-sanitizer');
 const { Server } = require("socket.io");
+const parser = require("socket.io-msgpack-parser");
 const { LobbyBouncer } = require('./LobbyBouncer');
 const WORDS = require('./words.js');
 
@@ -25,6 +26,7 @@ app.use(cors({
 }))
 
 const io = new Server(server, {
+    parser,
     cors: {
         origin: CORS_ORGINS
     }
