@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo,useRef, useState } from 'react';
 
 import { Image as ImageModel } from '../Models/Image';
 import { Player as PlayerModel } from '../Models/Player';
@@ -118,7 +118,7 @@ export default function Whiteboard({
             if (enable) {
                 save();
             }
-        }, 1000);
+        }, 500);
 
         return () => clearInterval(interval);
     }, [enable, save]);
