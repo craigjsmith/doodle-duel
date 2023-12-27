@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useMemo,useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Image as ImageModel } from '../Models/Image';
 import { Player as PlayerModel } from '../Models/Player';
@@ -15,7 +15,7 @@ export default function Whiteboard({
     turn
 }: {
     image: ImageModel | undefined | null;
-    emitDrawing: (img: Uint8ClampedArray | undefined) => void;
+    emitDrawing: (img: string | undefined) => void;
     enable: boolean;
     unusuableHeight: number;
     turn: PlayerModel | undefined;
@@ -31,6 +31,10 @@ export default function Whiteboard({
     const [selectedColor, _setSelectedColor] = useState<string>(COLORS[0]);
     const [scaleFactor, _setScaleFactor] = useState<number>(1);
 
+    // A blank 500x500px png
+    let defaultImg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAAH0CAQAAABh3xcBAAAEM0lEQVR42u3TMQ0AAAzDsJU/6Z3lUNkQIiUHzIsEYHTA6IDRAaMDRgeMDhgdMDoYHTA6YHTA6IDRAaMDRgeMDkYHjA4YHTA6YHTA6IDRAaOD0QGjA0YHjA4YHTA6YHTA6IDRweiA0QGjA0YHjA4YHTA6YHQwOmB0wOiA0QGjA0YHjA4YHYwOGB0wOmB0wOiA0QGjA0YHjA5GB4wOGB0wOmB0wOiA0QGjg9EBowNGB4wOGB0wOmB0wOhgdMDogNEBowNGB4wOGB0wOmB0MDpgdMDogNEBowNGB4wOGB2MDhgdMDpgdMDogNEBowNGB6MDRgeMDhgdMDpgdMDogNEBo4PRAaMDRgeMDhgdMDpgdMDoYHTA6IDRAaMDRgeMDhgdMDoYHTA6YHTA6IDRAaMDRgeMDhgdjA4YHTA6YHTA6IDRAaMDRgejA0YHjA4YHTA6YHTA6IDRweiA0QGjA0YHjA4YHTA6YHTA6GB0wOiA0QGjA0YHjA4YHTA6GB0wOmB0wOiA0QGjA0YHjA5GB4wOGB0wOmB0wOiA0QGjA0YHowNGB4wOGB0wOmB0wOiA0cHogNEBowNGB4wOGB0wOmB0MDpgdMDogNEBowNGB4wOGB0wOhgdMDpgdMDogNEBowNGB4wORgeMDhgdMDpgdMDogNEBo4PRAaMDRgeMDhgdMDpgdMDogNHB6IDRAaMDRgeMDhgdMDpgdDA6YHTA6IDRAaMDRgeMDhgdjA4YHTA6YHTA6IDRAaMDRgejSwBGB4wOGB0wOmB0wOiA0QGjg9EBowNGB4wOGB0wOmB0wOhgdMDogNEBowNGB4wOGB0wOhgdMDpgdMDogNEBowNGB4wOGB2MDhgdMDpgdMDogNEBowNGB6MDRgeMDhgdMDpgdMDogNHB6IDRAaMDRgeMDhgdMDpgdMDoYHTA6IDRAaMDRgeMDhgdMDoYHTA6YHTA6IDRAaMDRgeMDkYHjA4YHTA6YHTA6IDRAaMDRgejA0YHjA4YHTA6YHTA6IDRweiA0QGjA0YHjA4YHTA6YHQwOmB0wOiA0QGjA0YHjA4YHTA6GB0wOmB0wOiA0QGjA0YHjA5GB4wOGB0wOmB0wOiA0QGjg9EBowNGB4wOGB0wOmB0wOiA0cHogNEBowNGB4wOGB0wOmB0MDpgdMDogNEBowNGB4wOGB2MDhgdMDpgdMDogNEBowNGB4wORgeMDhgdMDpgdMDogNEBo4PRAaMDRgeMDhgdMDpgdMDoYHTA6IDRAaMDRgeMDhgdMDpgdDA6YHTA6IDRAaMDRgeMDhgdjA4YHTA6YHTA6IDRAaMDRgejA0YHjA4YHTA6YHTA6IDRAaOD0QGjA0YHjA4YHTA6YHTA6GB0wOiA0QGjA0YHjA4YHTA6GB0wOmB0wOiA0QGjA0YHjA4YHYwOGB0wOmB0wOiA0QGjA/UmtQH1f8NoAQAAAABJRU5ErkJggg=="
+    const [dummyCanvas, setDummyCanvas] = useState<any>(defaultImg);
+
     const selectedColorRef = useRef(selectedColor);
     const setSelectedColor = (data: string) => {
         selectedColorRef.current = data;
@@ -44,6 +48,7 @@ export default function Whiteboard({
     };
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const dummyCanvasRef = useRef<HTMLImageElement>(null);
 
     const scaleCanvasToScreen = useCallback(() => {
         let padding = 20;
@@ -55,6 +60,11 @@ export default function Whiteboard({
         if (canvasRef && canvasRef.current) {
             canvasRef.current.style.transform = `scale(${size / CANVAS_SIZE})`;
             canvasRef.current.style.transformOrigin = `top center`;
+        }
+
+        if (dummyCanvasRef && dummyCanvasRef.current) {
+            dummyCanvasRef.current.style.transform = `scale(${size / CANVAS_SIZE})`;
+            dummyCanvasRef.current.style.transformOrigin = `top center`;
         }
     }, [unusuableHeight])
 
@@ -95,11 +105,13 @@ export default function Whiteboard({
     }, [ctx, pos, setPosition])
 
     const save = useCallback(() => {
-        emitDrawing(ctx?.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE).data);
+        let jpg = canvasRef.current?.toDataURL("image/png", 0.1);
+        emitDrawing(jpg);
     }, [ctx, emitDrawing])
 
     const clear = useCallback(() => {
         ctx?.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+        setDummyCanvas(defaultImg);
     }, [ctx])
 
     const load = useCallback(() => {
@@ -107,18 +119,17 @@ export default function Whiteboard({
             clear();
         } else if (!enable && turn?.socketId === image.artist) {
             // Don't load if 1) you're currently drawing or 2) incoming drawing from a previous round
-            var array = new Uint8ClampedArray(image.img);
-            ctx?.putImageData(new ImageData(array, CANVAS_SIZE, CANVAS_SIZE), 0, 0);
+            setDummyCanvas(image.img);
         }
     }, [clear, ctx, enable, image, turn])
 
     useEffect(() => {
-        // Save whiteboard 2 times per second.
+        // Save whiteboard 5 times per second.
         const interval = setInterval(() => {
             if (enable) {
                 save();
             }
-        }, 500);
+        }, 200);
 
         return () => clearInterval(interval);
     }, [enable, save]);
@@ -174,7 +185,9 @@ export default function Whiteboard({
                 </div> : undefined}
 
             <div className={styles.canvasContainer}>
-                <canvas className={`${styles.canvas} ${enable ? styles.enabled : styles.disabled} `} ref={canvasRef} width={CANVAS_SIZE} height={CANVAS_SIZE} />
+                <canvas className={`${enable ? styles.drawableCanvas : styles.disabled}`} ref={canvasRef} width={CANVAS_SIZE} height={CANVAS_SIZE} />
+
+                <img src={dummyCanvas} ref={dummyCanvasRef} className={`${enable ? styles.disabled : styles.canvas}`} />
             </div>
         </>
     )

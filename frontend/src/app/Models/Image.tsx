@@ -1,4 +1,4 @@
 export interface Image {
-    img: Buffer,
+    img: string,
     artist: string
 }

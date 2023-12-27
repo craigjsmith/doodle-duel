@@ -3,17 +3,19 @@
 	display: flex;
 }
 
+.drawableCanvas {
+	border: 3px solid blue;
+	display: flex;
+}
+
 .canvasContainer {
 	display: flex;
 	justify-content: center;
 }
 
-.enabled {
-	border: 3px solid blue;
-}
-
 .disabled {
 	pointer-events: none;
+	display: none;
 }
 
 .colorSwatches {

@@ -2,7 +2,7 @@
 
 import { Button, Center, Flex, Group, Input, Modal, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { useEffect, useRef,useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Guess as GuessModel } from '../Models/Guess';
 import { Image as ImageModel } from '../Models/Image';
@@ -19,7 +19,7 @@ export default function Game(props: {
     roundWinner: PlayerModel | undefined,
     endTimestamp: number,
     image: ImageModel | undefined | null,
-    emitDrawing: (img: Uint8ClampedArray | undefined) => void,
+    emitDrawing: (img: string | undefined) => void,
     turn: PlayerModel | undefined,
     isMyTurn: boolean
     wordGuess: string | undefined,
