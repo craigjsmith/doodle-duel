@@ -107,29 +107,29 @@ export default function Whiteboard({
     const save = useCallback(() => {
         let jpg = canvasRef.current?.toDataURL("image/png", 0.1);
         emitDrawing(jpg);
-    }, [ctx, emitDrawing])
+    }, [emitDrawing])
 
     const clear = useCallback(() => {
         ctx?.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
         setDummyCanvas(defaultImg);
-    }, [ctx])
+    }, [ctx, defaultImg])
 
     const load = useCallback(() => {
         if (!image) {
             clear();
-        } else if (!enable && turn?.socketId === image.artist) {
-            // Don't load if 1) you're currently drawing or 2) incoming drawing from a previous round
+        } else if (turn?.socketId === image.artist) {
+            // Don't load if incoming drawing from a previous round
             setDummyCanvas(image.img);
         }
-    }, [clear, ctx, enable, image, turn])
+    }, [clear, image, turn])
 
     useEffect(() => {
-        // Save whiteboard 5 times per second.
+        // Save whiteboard 2 times per second.
         const interval = setInterval(() => {
             if (enable) {
                 save();
             }
-        }, 200);
+        }, 500);
 
         return () => clearInterval(interval);
     }, [enable, save]);
@@ -187,7 +187,7 @@ export default function Whiteboard({
             <div className={styles.canvasContainer}>
                 <canvas className={`${enable ? styles.drawableCanvas : styles.disabled}`} ref={canvasRef} width={CANVAS_SIZE} height={CANVAS_SIZE} />
 
-                <img src={dummyCanvas} ref={dummyCanvasRef} className={`${enable ? styles.disabled : styles.canvas}`} />
+                <img src={dummyCanvas} ref={dummyCanvasRef} className={`${enable ? styles.disabled : styles.canvas}`} alt="Canvas" />
             </div>
         </>
     )
