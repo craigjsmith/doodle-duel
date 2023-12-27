@@ -78,7 +78,7 @@ const PageComponent = () => {
   };
 
   const emitDrawing = (img: Uint8ClampedArray | undefined) => {
-    socket.volatile.emit('NEWDRAW', { img: img, artist: socket.id }, lobby);
+    socket.emit('NEWDRAW', { img: img, artist: socket.id }, lobby);
   };
 
   const startLobby = async () => {
