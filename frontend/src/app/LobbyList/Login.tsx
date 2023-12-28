@@ -1,12 +1,12 @@
 'use client'
 
-import { Button, Center,Group, Input } from '@mantine/core';
+import { Button, Center, Group, TextInput } from '@mantine/core';
 
 export default function Login(props: { username: string, setUsername: (username: string) => void, login: () => void }) {
     return (
         <Center>
             <Group>
-                <Input
+                <TextInput
                     size="s"
                     radius="md"
                     type="text"
