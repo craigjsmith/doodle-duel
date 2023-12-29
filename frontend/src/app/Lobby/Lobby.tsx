@@ -1,8 +1,8 @@
 'use client'
 
-import { Button, Container, CopyButton, Flex, Group, Input,List, Loader, rem, Text, ThemeIcon, Title } from '@mantine/core';
+import { Button, Container, CopyButton, Flex, Group, Input, List, Loader, rem, Text, ThemeIcon, Title } from '@mantine/core';
 import { IconUser } from '@tabler/icons-react';
-import { useEffect, useRef,useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Player as PlayerModel } from '../Models/Player';
 import styles from './lobby.module.css'

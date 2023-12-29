@@ -1,8 +1,8 @@
 'use client'
 
-import { Button,Flex, rem } from '@mantine/core';
+import { Flex, rem } from '@mantine/core';
 import { IconClockHour3 } from '@tabler/icons-react';
-import { useEffect, useRef,useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import styles from './timer.module.css'
 

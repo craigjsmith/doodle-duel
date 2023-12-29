@@ -1,7 +1,7 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import Game from './Game/Game';
@@ -29,10 +29,8 @@ const PageComponent = () => {
   const [screen, setScreen] = useState<Screens>(Screens.LobbyList);
   const [secretWord, setSecretWord] = useState<string | null>(null);
   const [isMyTurn, setIsMyTurn] = useState<boolean>(false);
-  const [showLeaderboard, setShowLeaderboard] = useState<boolean>(false);
   const [lobbyList, setLobbyList] = useState<LobbyModel[]>();
 
-  const router = useRouter();
   const lobbyFromURL = useSearchParams().get("lobby");
   if (typeof window !== "undefined") {
     window.history.replaceState(null, '', '/lobby');

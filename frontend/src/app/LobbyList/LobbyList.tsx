@@ -1,6 +1,6 @@
 'use client'
 
-import { ActionIcon,Alert, Box, Button, Flex, Modal, SimpleGrid, Text, Title } from '@mantine/core';
+import { ActionIcon, Alert, Box, Button, Flex, Modal, SimpleGrid, Text, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconInfoCircle, IconQuestionMark } from '@tabler/icons-react';
 import Image from 'next/image';

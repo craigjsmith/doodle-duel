@@ -1,7 +1,7 @@
 'use client'
 
-import { Table,ThemeIcon } from '@mantine/core';
-import { useEffect, useRef,useState } from 'react';
+import { Table, ThemeIcon } from '@mantine/core';
+import { useEffect, useState } from 'react';
 
 import { Player as PlayerModel } from '../Models/Player';
 

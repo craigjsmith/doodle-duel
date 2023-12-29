@@ -1,6 +1,6 @@
 'use client'
 
-import { Flex, Stack,Text } from '@mantine/core';
+import { Flex, Text } from '@mantine/core';
 
 import styles from './footer.module.css'
 
