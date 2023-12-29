@@ -34,6 +34,9 @@ const PageComponent = () => {
 
   const router = useRouter();
   const lobbyFromURL = useSearchParams().get("lobby");
+  if (typeof window !== "undefined") {
+    window.history.replaceState(null, '', '/lobby');
+  }
 
   useEffect(() => {
     setLobby(Number(lobbyFromURL));
