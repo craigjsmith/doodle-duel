@@ -15,7 +15,7 @@ import Whiteboard from './whiteboard';
 
 export default function Game(props: {
     secretWord: string | null,
-    usedWords: Array<string>,
+    usedWords: Set<string>,
     roundWinner: PlayerModel | undefined,
     endTimestamp: number,
     image: ImageModel | undefined | null,
@@ -53,7 +53,7 @@ export default function Game(props: {
                 {/* Show reveal word on reveal stage */}
                 {
                     props.gameStage === "REVEAL"
-                        ? <Title order={3}>{props.roundWinner ? `${props.roundWinner.username} got it: ` : undefined}<span className={styles.revealWord}>{props.usedWords[props.usedWords.length - 1]}</span></Title>
+                        ? <Title order={3}>{props.roundWinner ? `${props.roundWinner.username} got it: ` : undefined}<span className={styles.revealWord}>{Array.from(props.usedWords).pop()}</span></Title>
                         : undefined
                 }
 

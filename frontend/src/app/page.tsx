@@ -135,7 +135,7 @@ const PageComponent = () => {
           <Game
             secretWord={secretWord}
             roundWinner={gameState?.roundWinner}
-            usedWords={gameState?.usedWords ?? []}
+            usedWords={gameState?.usedWords ?? new Set()}
             endTimestamp={gameState?.endTimestamp ?? 0}
             image={image}
             emitDrawing={emitDrawing}

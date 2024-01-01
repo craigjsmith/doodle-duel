@@ -193,8 +193,8 @@ async function startNewRound(id, gameIsOver = false) {
 
         // Add previous word to list of used words
         let previousWord = gameState.word;
-        let usedWords = JSON.parse(gameState.usedWords) ?? [];
-        usedWords.push(previousWord);
+        let usedWords = new Set(JSON.parse(gameState.usedWords)) ?? new Set();
+        usedWords.add(previousWord);
         await db.setUsedWords(id, JSON.stringify(usedWords));
 
         await emitGameState(id);
@@ -240,16 +240,16 @@ const setNewWord = async (id) => {
     let gameState = await getGameState(id, true);
 
     // Get list of used words
-    let usedWords = JSON.parse(gameState.usedWords) ?? [];
+    let usedWords = new Set(JSON.parse(gameState.usedWords));
 
     // If all words are exhausted, reset used words list
-    if (usedWords.length >= WORDS.length) {
-        db.setUsedWords(id, JSON.stringify([]));
-        usedWords = [];
+    if (usedWords.size >= WORDS.length) {
+        usedWords = new Set();
+        db.setUsedWords(id, JSON.stringify(usedWords));
     }
 
     // Randomly select new, unused word
-    let unusedWords = WORDS.filter((word) => !usedWords.includes(word));
+    let unusedWords = WORDS.filter((word) => !usedWords.has(word));
 
     let newRandomWord = unusedWords[Math.floor(Math.random() * unusedWords.length)];
     await db.setWord(id, newRandomWord);
