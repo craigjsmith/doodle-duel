@@ -32,9 +32,6 @@ const PageComponent = () => {
   const [lobbyList, setLobbyList] = useState<LobbyModel[]>();
 
   const lobbyFromURL = useSearchParams().get("lobby");
-  if (typeof window !== "undefined") {
-    window.history.replaceState(null, '', '/lobby');
-  }
 
   useEffect(() => {
     setLobby(Number(lobbyFromURL));

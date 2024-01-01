@@ -8,26 +8,13 @@ import { Player as PlayerModel } from '../Models/Player';
 import styles from './lobby.module.css'
 
 export default function Lobby(props: { lobbyId: number | null, lobbyName: string | undefined, players: PlayerModel[] | undefined, startGame: () => void | undefined }) {
-    const [lobbyList, setLobbyList] = useState<Array<number>>();
-
     const URL = window.location.origin + "/?lobby=" + props.lobbyId;
 
     useEffect(() => {
-        fetch('https://droplet.craigsmith.dev/lobbies')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                // Handle the data from the response
-                setLobbyList(data);
-            })
-            .catch(error => {
-                console.error('Error fetching lobbies:', error);
-            });
-
+        // Clear out URL params
+        if (typeof window !== "undefined") {
+            window.history.replaceState(null, '', '/');
+        }
     }, []);
 
     return (
