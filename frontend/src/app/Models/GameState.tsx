@@ -6,7 +6,7 @@ export interface GameState {
   roundWinner: PlayerModel | undefined;
   lobbyName: string;
   word: string;
-  usedWords: Set<string>;
+  usedWords: Array<string>;
   players: Array<PlayerModel> | undefined;
   turn: PlayerModel;
   guesses: GuessModel[];
