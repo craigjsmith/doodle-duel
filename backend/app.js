@@ -121,11 +121,12 @@ io.on('connection', (socket) => {
                 await db.setRoundWinner(id, JSON.stringify({ "socketId": socket.id, "username": bouncer.getUsername(socket.id) }));
 
                 // Check if either point earner has won game
+                let gameWon = false;
                 if (bouncer.getPoints(socket.id) >= POINTS_TO_WIN || bouncer.getPoints(turn.socketId) >= POINTS_TO_WIN) {
-                    gameOver(id);
+                    gameWon = true;
                 }
 
-                startNewRound(id);
+                startNewRound(id, gameWon);
             } else {
                 await emitGameState(id);
             }
@@ -170,7 +171,7 @@ async function gameOver(lobbyId) {
     removeLobby(lobbyId);
 }
 
-async function startNewRound(id) {
+async function startNewRound(id, gameIsOver = false) {
     clearTimeout(RoundEndTimeoutMap[id]);
     delete RoundEndTimeoutMap[id];
 
@@ -204,24 +205,31 @@ async function startNewRound(id) {
         }, 5000);
     }
 
-    // Game stage: New round
-    setTimeout(async () => {
-        onDraw(null, id)
-        await db.setGameStage(id, "GAME");
+    if (!gameIsOver) {
+        // Game stage: New round
+        setTimeout(async () => {
+            onDraw(null, id)
+            await db.setGameStage(id, "GAME");
 
-        await setNextPlayerAsArtist(id);
-        await setNewWord(id);
+            await setNextPlayerAsArtist(id);
+            await setNewWord(id);
 
-        var date = new Date();
-        date.setTime(date.getTime() + ROUND_DURATION + GRACE_DURTION);
-        await db.setRoundEndTimestamp(id, date.getTime());
+            var date = new Date();
+            date.setTime(date.getTime() + ROUND_DURATION + GRACE_DURTION);
+            await db.setRoundEndTimestamp(id, date.getTime());
 
-        await emitGameState(id);
+            await emitGameState(id);
 
-        RoundEndTimeoutMap[id] = setTimeout(() => {
-            startNewRound(id);
-        }, ROUND_DURATION + GRACE_DURTION);
-    }, firstRound ? 0 : 10000);
+            RoundEndTimeoutMap[id] = setTimeout(() => {
+                startNewRound(id);
+            }, ROUND_DURATION + GRACE_DURTION);
+        }, firstRound ? 0 : 10000);
+    } else {
+        // Game stage: Game over
+        setTimeout(async () => {
+            gameOver(id);
+        }, 10000);
+    }
 }
 
 const setNewWord = async (id) => {
