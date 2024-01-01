@@ -90,7 +90,7 @@ const PageComponent = () => {
         roundWinner: JSON.parse(msg.roundWinner),
         lobbyName: msg.lobbyName,
         word: msg.word,
-        previousWord: msg.previousWord,
+        usedWords: JSON.parse(msg.usedWords),
         players: msg.players,
         turn: JSON.parse(msg.turn),
         guesses: JSON.parse(msg.guesses),
@@ -135,7 +135,7 @@ const PageComponent = () => {
           <Game
             secretWord={secretWord}
             roundWinner={gameState?.roundWinner}
-            previousWord={gameState?.previousWord ?? null}
+            usedWords={gameState?.usedWords ?? []}
             endTimestamp={gameState?.endTimestamp ?? 0}
             image={image}
             emitDrawing={emitDrawing}

@@ -132,22 +132,6 @@ function setGameStage(id, value) {
     });
 }
 
-function setPreviousWord(id, value) {
-    return new Promise((resolve, reject) => {
-
-        const query = 'UPDATE game SET previousWord = ? WHERE id = ?';
-        const values = [value, id];
-
-        connection.query(query, values, (err, rows) => {
-            if (err) {
-                return reject(err);
-            }
-
-            return resolve(rows[0]);
-        })
-    });
-}
-
 function setRoundEndTimestamp(id, value) {
     return new Promise((resolve, reject) => {
 
@@ -168,6 +152,22 @@ function setGuesses(id, value) {
     return new Promise((resolve, reject) => {
 
         const query = 'UPDATE game SET guesses = ? WHERE id = ?';
+        const values = [value, id];
+
+        connection.query(query, values, (err, rows) => {
+            if (err) {
+                return reject(err);
+            }
+
+            return resolve(rows[0]);
+        })
+    });
+}
+
+function setUsedWords(id, value) {
+    return new Promise((resolve, reject) => {
+
+        const query = 'UPDATE game SET usedWords = ? WHERE id = ?';
         const values = [value, id];
 
         connection.query(query, values, (err, rows) => {
@@ -259,4 +259,4 @@ function removeLobby(lobbyId) {
     });
 }
 
-module.exports = { getGameState, getOpenLobbyList, getAllLobbies, getAllOpenLobbies, getAllPublicOpenLobbies, setRoundWinner, setWord, setGameStage, setPreviousWord, setRoundEndTimestamp, setGuesses, setTurn, setGameStarted, incrementPlayerCount, createLobby, removeLobby };
+module.exports = { getGameState, getOpenLobbyList, getAllLobbies, getAllOpenLobbies, getAllPublicOpenLobbies, setRoundWinner, setWord, setGameStage, setRoundEndTimestamp, setUsedWords, setGuesses, setTurn, setGameStarted, incrementPlayerCount, createLobby, removeLobby };

@@ -189,9 +189,13 @@ async function startNewRound(id, gameIsOver = false) {
 
     if (!firstRound) {
         // Game stage: Reveal
-        let previousWord = gameState.word;
         await db.setGameStage(id, "REVEAL");
-        await db.setPreviousWord(id, previousWord);
+
+        // Add previous word to list of used words
+        let previousWord = gameState.word;
+        let usedWords = JSON.parse(gameState.usedWords) ?? [];
+        usedWords.push(previousWord);
+        await db.setUsedWords(id, JSON.stringify(usedWords));
 
         await emitGameState(id);
 
@@ -234,18 +238,25 @@ async function startNewRound(id, gameIsOver = false) {
 
 const setNewWord = async (id) => {
     let gameState = await getGameState(id, true);
-    let previousWord = gameState.word;
 
-    let wordsListExcludingPreviousWord = WORDS.filter((word) => word.localeCompare(previousWord));
-    let newWord = wordsListExcludingPreviousWord[Math.floor(Math.random() * wordsListExcludingPreviousWord.length)];
+    // Get list of used words
+    let usedWords = JSON.parse(gameState.usedWords) ?? [];
 
-    await db.setWord(id, newWord);
-    await db.setPreviousWord(id, previousWord);
+    // If all words are exhausted, reset used words list
+    if (usedWords.length >= WORDS.length) {
+        db.setUsedWords(id, JSON.stringify([]));
+        usedWords = [];
+    }
 
+    // Randomly select new, unused word
+    let unusedWords = WORDS.filter((word) => !usedWords.includes(word));
+
+    let newRandomWord = unusedWords[Math.floor(Math.random() * unusedWords.length)];
+    await db.setWord(id, newRandomWord);
+
+    // Reveal new secret word only to the artist
     let artist = JSON.parse(gameState.turn);
-
-    // Reveal secret word only to the artist
-    io.to(artist.socketId).emit('REVEAL', newWord);
+    io.to(artist.socketId).emit('REVEAL', newRandomWord);
 }
 
 const setNextPlayerAsArtist = async (id) => {
