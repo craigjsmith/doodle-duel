@@ -1,8 +1,15 @@
 'use client'
 
 import { Button, Center, Group, TextInput } from '@mantine/core';
+import { useEffect, useRef } from 'react';
 
 export default function Login(props: { username: string, setUsername: (username: string) => void, login: () => void }) {
+    const usernameFieldRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        usernameFieldRef.current?.focus();
+    })
+
     return (
         <Center>
             <Group>
@@ -18,6 +25,7 @@ export default function Login(props: { username: string, setUsername: (username:
                             props.login();
                         }
                     }}
+                    ref={usernameFieldRef}
                     data-autofocus
                 />
 
