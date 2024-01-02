@@ -78,7 +78,7 @@ const PageComponent = () => {
   const emitDrawing = (img: string | undefined) => {
     setTimeout(() => {
       socket.volatile.emit('NEWDRAW', { img: img, artist: socket.id }, lobby);
-    }, 500);
+    });
   };
 
   const startLobby = async () => {
