@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic'
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import Game from './Game/Game';
 import GameOver from './Game/GameOver';
@@ -46,6 +46,8 @@ const PageComponent = () => {
   useEffect(() => {
     if (gameState?.gameStage == "LEADERBOARD") {
       setImage(null);
+    } else if (gameState?.gameStage == "GAME") {
+      window.addEventListener('beforeunload', preventNavigation);
     }
 
   }, [gameState?.gameStage])
@@ -62,8 +64,17 @@ const PageComponent = () => {
     socket.on('GAME', onGame);
     socket.on('DRAW', onDraw);
     socket.on('REVEAL', onReveal);
-    socket.on('GAMEOVER', () => { setScreen(Screens.GameOver) });
+    socket.on('GAMEOVER', () => {
+      setScreen(Screens.GameOver);
+      window.removeEventListener('beforeunload', preventNavigation);
+    });
   }, []);
+
+  const preventNavigation = useCallback((e: BeforeUnloadEvent) => {
+    var confirmationMessage = 'Are you sure you want to leave the game?';
+    e.returnValue = confirmationMessage;
+    return confirmationMessage;
+  }, [])
 
   const guess = async () => {
     await socket.emit('guess', wordGuess, lobby);
@@ -155,7 +166,10 @@ const PageComponent = () => {
 
       case Screens.GameOver: {
         return (
-          <GameOver players={gameState?.players ?? []} back={() => { location.reload(); }} />
+          <GameOver players={gameState?.players ?? []} back={() => {
+            setLobby(null);
+            setScreen(Screens.LobbyList);
+          }} />
         );
       }
     }
