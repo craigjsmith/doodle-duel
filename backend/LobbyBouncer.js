@@ -50,6 +50,7 @@ class LobbyBouncer {
         let currentLobby = this.lobbyBySocketId.get(socketId);
         if (currentLobby) {
             socket.leave(currentLobby);
+            socket.join("lobbyList");
         }
 
         // Remove records
