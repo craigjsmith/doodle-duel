@@ -167,8 +167,7 @@ const PageComponent = () => {
       case Screens.GameOver: {
         return (
           <GameOver players={gameState?.players ?? []} back={() => {
-            setLobby(null);
-            setScreen(Screens.LobbyList);
+            location.reload();
           }} />
         );
       }
