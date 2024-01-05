@@ -33,6 +33,12 @@ const PageComponent = () => {
 
   const lobbyFromURL = useSearchParams().get("lobby");
 
+  const preventNavigation = useCallback((e: BeforeUnloadEvent) => {
+    var confirmationMessage = 'Are you sure you want to leave the game?';
+    e.returnValue = confirmationMessage;
+    return confirmationMessage;
+  }, [])
+
   useEffect(() => {
     setLobby(Number(lobbyFromURL));
   }, [lobbyFromURL]);
@@ -50,7 +56,7 @@ const PageComponent = () => {
       window.addEventListener('beforeunload', preventNavigation);
     }
 
-  }, [gameState?.gameStage])
+  }, [gameState?.gameStage, preventNavigation])
 
   useEffect(() => {
     if (gameState?.gameStarted) {
@@ -68,13 +74,7 @@ const PageComponent = () => {
       setScreen(Screens.GameOver);
       window.removeEventListener('beforeunload', preventNavigation);
     });
-  }, []);
-
-  const preventNavigation = useCallback((e: BeforeUnloadEvent) => {
-    var confirmationMessage = 'Are you sure you want to leave the game?';
-    e.returnValue = confirmationMessage;
-    return confirmationMessage;
-  }, [])
+  }, [preventNavigation]);
 
   const guess = async () => {
     await socket.emit('guess', wordGuess, lobby);

@@ -1,8 +1,8 @@
 'use client'
 
 import { Button, Center, Container, Title } from '@mantine/core';
-import { useEffect } from 'react';
 import confetti from 'canvas-confetti';
+import { useEffect } from 'react';
 
 import { Player as PlayerModel } from '../Models/Player';
 import Leaderboard from './Leaderboard';
