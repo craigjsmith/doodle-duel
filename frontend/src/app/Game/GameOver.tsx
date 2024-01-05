@@ -1,11 +1,21 @@
 'use client'
 
-import { Button,Center, Container, Title } from '@mantine/core';
+import { Button, Center, Container, Title } from '@mantine/core';
+import { useEffect } from 'react';
+import confetti from 'canvas-confetti';
 
 import { Player as PlayerModel } from '../Models/Player';
 import Leaderboard from './Leaderboard';
 
 export default function GameOver(props: { players: PlayerModel[], back: () => void }) {
+    useEffect(() => {
+        // Only show confetti if there's a winner (don't show if everyone leaves)
+        if (props.players.length >= 2) {
+            confetti({
+                spread: 100
+            });
+        }
+    }, [props.players])
 
     return (
         <Container>
