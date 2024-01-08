@@ -134,6 +134,7 @@ export default function LobbyList({
                     width={85}
                     height={85}
                     alt="Doodle Duel"
+                    priority={true}
                 />
             </Box>
 
