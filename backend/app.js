@@ -166,7 +166,7 @@ function onDraw(msg, id) {
 }
 
 async function gameOver(lobbyId) {
-    emitGameState(lobbyId);
+    await emitGameState(lobbyId);
     io.to(lobbyId).emit('GAMEOVER');
     removeLobby(lobbyId);
 }
