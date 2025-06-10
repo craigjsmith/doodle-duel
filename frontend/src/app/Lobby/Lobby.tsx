@@ -8,24 +8,25 @@ import { Player as PlayerModel } from '../Models/Player';
 import styles from './lobby.module.css'
 
 export default function Lobby(props: { lobbyId: number | null, lobbyName: string | undefined, players: PlayerModel[] | undefined, startGame: () => void | undefined }) {
-    const URL = window.location.origin + "/?lobby=" + props.lobbyId;
+    const [url, setUrl] = useState<string>('');
 
     useEffect(() => {
-        // Clear out URL params
-        if (typeof window !== "undefined") {
+        if (typeof window !== "undefined" && props.lobbyId != null) {
+            const generatedURL = `${window.location.origin}/?lobby=${props.lobbyId}`;
+            setUrl(generatedURL);
+
+            // Clean up URL
             window.history.replaceState(null, '', '/');
         }
-    }, []);
+    }, [props.lobbyId]);
 
     return (
         <>
-            <Flex>
-                <div className={styles.topBar} key={'top'}>
-                    <Title order={1} my={20}>{props.lobbyName}</Title>
-                </div>
-            </Flex>
+            <div className={styles.topBar} key={'top'}>
+                <Title order={1} my={20}>{props.lobbyName}</Title>
+            </div>
 
-            <Container>
+            <Container className={styles.lobbyContainer}>
                 <Flex
                     mih={50}
                     gap="md"
@@ -37,14 +38,15 @@ export default function Lobby(props: { lobbyId: number | null, lobbyName: string
 
                     <Flex direction="column" align="center" my={50}>
                         <Text size="md" mb={4}>Share this link to invite players</Text>
-                        <CopyButton value={URL}>
+                        <CopyButton value={url}>
                             {({ copied, copy }) => (
                                 <Group gap={0}>
                                     <Input
                                         variant='filled'
                                         radius={0}
                                         type="text"
-                                        value={URL}
+                                        autoComplete="off"
+                                        value={url}
                                         className={styles.linkInput}
                                         onClick={() => { copy() }}
                                         mx={0}

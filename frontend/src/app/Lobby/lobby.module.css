@@ -4,10 +4,15 @@
 
 .topBar {
     display: flex;
+    position: absolute;
+    top: 0;
     height: 75px;
     width: 100%;
     background-color: #f0f0f0;
-    padding: 10px;
     justify-content: center;
     align-items: center;
+}
+
+.lobbyContainer {
+    margin-top: 75px;
 }
