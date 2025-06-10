@@ -21,7 +21,7 @@ export default function Whiteboard({
     turn: PlayerModel | undefined;
 }) {
     const CANVAS_SIZE = 500;
-    const COLORS = ['#EF476F', '#FFD166', '#06D6A0', '#118AB2', '#073B4C']
+    const COLORS = ['#EF476F', '#FFD166', '#06D6A0', '#118AB2', '#DA77F2', '#073B4C']
 
     const pos = useMemo(() => { return { x: 0, y: 0 } }, [])
     const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>();
