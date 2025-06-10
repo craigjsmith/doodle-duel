@@ -16,7 +16,7 @@ const port = 3001
 const CORS_ORGINS = ["https://doodle.craigsmith.dev", "http://localhost:3000"]
 
 const POINTS_TO_WIN = 10;
-const ROUND_DURATION = 30000;
+const ROUND_DURATION = 45000;
 const GRACE_DURTION = 1000;
 
 app.use(cors({

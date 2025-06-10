@@ -100,7 +100,7 @@ export default function Game(props: {
 
             <Flex direction="column" ref={timerBarRef}>
                 <Center pb={10} pt={10}>
-                    <Timer endTimestamp={props.endTimestamp ?? 0} duration={30} active={Boolean(props.gameStage === "GAME")} />
+                    <Timer endTimestamp={props.endTimestamp ?? 0} duration={45} active={Boolean(props.gameStage === "GAME")} />
                 </Center>
 
                 {

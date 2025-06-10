@@ -9,7 +9,7 @@ export default function Rules() {
 
             <Text size="md" fw={700} mt={16} mb={6}>How to Play:</Text>
             <List>
-                <List.Item>Players take turns drawing a prompt in just 30 seconds.</List.Item>
+                <List.Item>Players take turns drawing a prompt in just 45 seconds.</List.Item>
                 <List.Item>The rest of the players try to guess what&apos;s being drawn.</List.Item>
             </List>
 
