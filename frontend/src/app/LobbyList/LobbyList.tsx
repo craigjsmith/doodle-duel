@@ -40,7 +40,7 @@ export default function LobbyList({
 
 
     const getLobbies = useCallback(() => {
-        fetch('https://droplet.craigsmith.dev/lobbies')
+        fetch('https://doodle-duel-896989562989.europe-west1.run.app/lobbies')
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -80,7 +80,7 @@ export default function LobbyList({
     }, [lobbyList, lobby, joinLobby]);
 
     const createLobby = (lobbyName: string, privateLobby: Boolean) => {
-        fetch(`https://droplet.craigsmith.dev/createLobby/?lobbyName=${lobbyName}&privateLobby=${Number(privateLobby)}`, { method: "POST", })
+        fetch(`https://doodle-duel-896989562989.europe-west1.run.app/createLobby/?lobbyName=${lobbyName}&privateLobby=${Number(privateLobby)}`, { method: "POST", })
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -98,7 +98,7 @@ export default function LobbyList({
 
     const isLobbyJoinable = (lobbyId: number): Promise<Boolean> => {
         let joinable = new Promise<boolean>(async (resolve, reject) => {
-            await fetch(`https://droplet.craigsmith.dev/isLobbyJoinable/?lobbyId=${lobbyId}`, { method: "GET", })
+            await fetch(`https://doodle-duel-896989562989.europe-west1.run.app/isLobbyJoinable/?lobbyId=${lobbyId}`, { method: "GET", })
                 .then(response => {
                     if (!response.ok) {
                         throw new Error(`HTTP error! Status: ${response.status}`);
