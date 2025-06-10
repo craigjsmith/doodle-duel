@@ -19,9 +19,12 @@ export default function Lobby(props: { lobbyId: number | null, lobbyName: string
 
     return (
         <>
-            <div className={styles.topBar}>
-                <Title order={1} my={20}>{props.lobbyName}</Title>
-            </div>
+            <Flex>
+                <div className={styles.topBar} key={'top'}>
+                    <Title order={1} my={20}>{props.lobbyName}</Title>
+                </div>
+            </Flex>
+
             <Container>
                 <Flex
                     mih={50}
