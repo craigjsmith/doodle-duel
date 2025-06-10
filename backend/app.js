@@ -12,7 +12,6 @@ const cors = require('cors')
 const app = express()
 const server = createServer(app);
 const port = 3001
-const socketPort = 4000
 
 const CORS_ORGINS = ["https://doodle.craigsmith.dev", "http://localhost:3000"]
 
@@ -316,11 +315,9 @@ app.post('/createLobby', async (req, res) => {
 })
 
 // Listen
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`Doodle Duel listening on port ${port}`)
-})
-
-server.listen(socketPort);
+});
 
 setInterval(async () => {
     // Purge empty lobbies every 10 minutes

@@ -5,7 +5,6 @@ services:
     build: .
     ports:
       - "3001:3001"
-      - "4000:4000"
     working_dir: /app
     command: sh -c "npm install && node app.js"
     restart: always
