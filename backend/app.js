@@ -52,28 +52,38 @@ io.on('connection', (socket) => {
     socket.on('LOGIN', onLogin);
     socket.on('START', onStart);
 
-    socket.on('disconnect', async () => {
-        let lobbyId = bouncer.getLobby(socket.id);
-        let gameState = await getGameState(lobbyId);
+    socket.on('disconnect', async (reason) => {
+        const lobbyId = bouncer.getLobby(socket.id);
+        const GRACE_PERIOD = 5000;
 
-        // Remove disconnected player from records
-        bouncer.removeSocket(socket.id);
-
-        // If lobby has 1 (or less) players, delete it
-        if (await removeLobbyIfEmpty(lobbyId)) {
-            return;
-        }
-
-        // If current artist leaves, move to next round
-        try {
-            let turn = JSON.parse(gameState?.turn)
-            if (gameState && (socket.id == turn.socketId)) {
-                startNewRound(lobbyId);
+        setTimeout(async () => {
+            if (io.sockets.sockets.has(socket.id)) {
+                // Player reconnected
+                return;
             }
-        } catch (e) { }
 
-        emitGameState(lobbyId);
-        emitLobbyList();
+            // Player did not reconnect — clean up
+            const gameState = await getGameState(lobbyId);
+
+            // Remove disconnected player from records
+            bouncer.removeSocket(socket.id);
+
+            // If lobby has 1 (or less) players, delete it
+            if (await removeLobbyIfEmpty(lobbyId)) return;
+
+            // If current artist leaves, move to next round
+            try {
+                const turn = JSON.parse(gameState?.turn);
+                if (gameState && socket.id === turn.socketId) {
+                    startNewRound(lobbyId);
+                }
+            } catch (e) {
+                console.error('Turn parse/start round error:', e);
+            }
+
+            emitGameState(lobbyId);
+            emitLobbyList();
+        }, GRACE_PERIOD);
     });
 
     async function onLogin(msg, id) {
