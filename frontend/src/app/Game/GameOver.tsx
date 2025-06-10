@@ -1,6 +1,7 @@
 'use client'
 
 import { Button, Center, Container, Title } from '@mantine/core';
+// @ts-ignore
 import confetti from 'canvas-confetti';
 import { useEffect } from 'react';
 
