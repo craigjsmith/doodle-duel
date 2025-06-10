@@ -122,12 +122,12 @@ export default function Whiteboard({
     }, [clear, image, turn])
 
     useEffect(() => {
-        // Save whiteboard 2 times per second.
+        // Save whiteboard 10 times per second.
         const interval = setInterval(() => {
             if (enable) {
                 save();
             }
-        }, 500);
+        }, 100);
 
         return () => clearInterval(interval);
     }, [enable, save]);
