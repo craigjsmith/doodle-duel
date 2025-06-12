@@ -22,7 +22,7 @@ https://doodle.craigsmith.dev
  - [Node.js](https://nodejs.org/)
  - [Express](https://expressjs.com/)
  - [Socket.IO](https://socket.io/)
- - [MySQL](https://www.mysql.com/)
+ - [SQLite](https://sqlite.org)
 
 ## Local Deployment
 Frontend

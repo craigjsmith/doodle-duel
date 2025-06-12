@@ -1,8 +1,10 @@
 import './globals.css'
 import '@mantine/core/styles.css';
 
-import { ColorSchemeScript,MantineProvider } from '@mantine/core';
+import { ColorSchemeScript, MantineProvider } from '@mantine/core';
 import { Metadata, Viewport } from 'next';
+
+import { PHProvider } from '../components/PostHogProvider';
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -46,24 +48,27 @@ export default function RootLayout({
       </head>
 
       <body>
-        <MantineProvider
-          theme={{
-            primaryColor: 'pink',
-            colors: {
-              'pink': [
-                "#ffebf4",
-                "#fbd7e4",
-                "#edaec3",
-                "#e182a2",
-                "#d75d86",
-                "#d14675",
-                "#cf396c",
-                "#b82a5b",
-                "#a62251",
-                "#921545"
-              ],
-            },
-          }}>{children}</MantineProvider>
+        <PHProvider>
+          <MantineProvider
+            theme={{
+              primaryColor: 'pink',
+              colors: {
+                'pink': [
+                  "#ffebf4",
+                  "#fbd7e4",
+                  "#edaec3",
+                  "#e182a2",
+                  "#d75d86",
+                  "#d14675",
+                  "#cf396c",
+                  "#b82a5b",
+                  "#a62251",
+                  "#921545"
+                ],
+              },
+            }}
+          >{children}</MantineProvider>
+        </PHProvider>
       </body>
     </html>
   )

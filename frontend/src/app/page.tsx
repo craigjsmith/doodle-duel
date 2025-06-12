@@ -2,6 +2,7 @@
 
 import dynamic from 'next/dynamic'
 import { useSearchParams } from 'next/navigation';
+import posthog from 'posthog-js';
 import { useCallback, useEffect, useState } from 'react';
 
 import Game from './Game/Game';
@@ -83,6 +84,7 @@ const PageComponent = () => {
 
   const login = async () => {
     socket.emit('LOGIN', username, lobby);
+    posthog.identify(username)
     setScreen(Screens.Lobby);
   };
 
